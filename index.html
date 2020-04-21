@@ -91,6 +91,9 @@
 
         .sidebar button {
             width: 100%;
+            border: none;
+            /* border-top: var(--line-border); */
+            border-radius: 0px;
         }
 
         .main {
@@ -119,10 +122,21 @@
             height: 12px;
         }
 
+        #infos {
+            padding-bottom: var(--btn-h);
+        }
+
         #infos p {
             padding: 5px 10px;
-            /* border-bottom: var(--line-border); */
+            border-bottom: var(--line-border);
             overflow-x: hidden;
+        }
+
+        .fix-btn {
+            width: calc(var(--side-bar-w) - 1px) !important;
+            position: fixed;
+            right: 0;
+            bottom: 0px;
         }
     </style>
 </head>
@@ -153,7 +167,8 @@
                 </tbody>
             </table>
         </div>
-        <div class="sidebar">
+        <div class="sidebar" id="sidebar">
+            <button onclick="clean_infos()" class="fix-btn"><img src="static/img/refresh.png" class="btn-icon"></button>
             <div id="infos">
 
             </div>

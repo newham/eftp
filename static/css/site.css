@@ -234,3 +234,7 @@ table tr:nth-child(odd) {
 p {
     padding: 12px;
 }
+
+.txt-danger{
+    color: rgb(214, 15, 15);
+}

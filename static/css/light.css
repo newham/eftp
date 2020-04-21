@@ -8,13 +8,13 @@
     --foot-bar-h: 0px;
     --side-bar-bg-color: #fff;
     --side-bar-font-color: #111;
-    --main-color: #eee;
+    --main-color: #E6E6E6;
     --title-bar-bg-color: var(--main-color);
-    --foot-bar-bg-color: #eee;
+    --foot-bar-bg-color: var(--main-color);
     --btn-h: 26px;
     --title-bar-padding: 78px;
     --body-bg-color: #fdfdfd;
-    --line-border: 1px solid #eee;
+    --line-border: 1px solid var(--main-color);
     --bar-border: 1px solid #ccc;
     --font-color: #555;
     --font-color-light: #ddd;

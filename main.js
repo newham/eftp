@@ -33,8 +33,8 @@ function createMenu() {
         {
             label: "显示",
             submenu: [
-                { label: "Light Theme", click: function () { setTheme(false) }},
-                { label: "Dark Theme", click: function () { setTheme(true) }},
+                { label: "Light Theme", click: function () { setTheme(false) } },
+                { label: "Dark Theme", click: function () { setTheme(true) } },
             ]
         }
     ];
@@ -44,6 +44,7 @@ function createMenu() {
         {
             label: '新窗口',
             click() {
+                createWindow()
             }
         }
     ])
@@ -104,6 +105,9 @@ app.on('activate', () => {
     // 通常在应用程序中重新创建一个窗口。
     if (BrowserWindow.getAllWindows().length === 0) {
         createWindow()
+    } else {
+        //使最后创建的窗口激活
+        BrowserWindow.getAllWindows()[BrowserWindow.getAllWindows().length - 1].focus()
     }
 })
 
@@ -117,6 +121,11 @@ ipcMain.on('go_ssh', (event, userSSHInfo) => {
     // console.log('go_ssh:', userSSHInfo)
     global.userSSHInfo = userSSHInfo
     BrowserWindow.getFocusedWindow().loadFile('index.html')
+})
+
+ipcMain.on('new_win', (event) => {
+    // console.log('new win')
+    createWindow()
 })
 
 //切换暗-亮模式触发

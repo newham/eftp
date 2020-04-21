@@ -17,7 +17,14 @@ let getHome = () => {
 }
 
 function addInfo(msg, file) {
-    document.getElementById('infos').innerHTML += '<p>' + msg + ' : ' + file + '</p>\n'
+    p_html = '<p>'
+    if (msg == 'error') {
+        p_html = '<p class="txt-danger">'
+    }
+    document.getElementById('infos').innerHTML += p_html + msg + ' : ' + file + '</p>\n'
+    //滑动到底部
+    sidebar = document.getElementById('sidebar')
+    sidebar.scrollTop = sidebar.scrollHeight;
 }
 
 var currentDir = getHome()
@@ -64,6 +71,7 @@ let ls = (dir) => {
         }
     }).catch((res) => {
         console.log("exception", res)
+        addInfo('error', res)
     })
 }
 
@@ -250,12 +258,14 @@ function mkdir() {
 }
 
 function to_login() {
-    if (!confirm("确定断开连接,并返回主页？")) {
-        return
-    }
-    ssh.dispose()
-    // document.body.innerHTML = ""
-    window.location.href = 'login.html'
+    ipcRenderer.send('new_win')
+    // ****old*****
+    // if (!confirm("确定断开连接,并返回主页？")) {
+    //     return
+    // }
+    // ssh.dispose()
+    // // document.body.innerHTML = ""
+    // window.location.href = 'login.html'
 }
 
 function connectSSH() {
@@ -278,6 +288,16 @@ function connectSSH() {
 
 }
 
+function setTitle() {
+    document.getElementById('head-title').innerHTML = userSSHInfo.label
+}
+
+function clean_infos(){
+    document.getElementById('infos').innerHTML = ''
+}
+
+//设置窗口标题
+setTitle()
 //设置主题
 setTheme()
 //加载list

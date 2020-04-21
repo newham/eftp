@@ -84,7 +84,8 @@ function addUserSSHInfo() {
     ssh = false
 
     if (host == "" || username == "" || (password == "" && privateKey == "")) {
-        show_dialog(false)
+        // show_dialog(false)
+        alert('请正确输入必填项!')
         return
     }
 
