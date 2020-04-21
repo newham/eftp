@@ -3,17 +3,177 @@
 
 <head>
     <meta charset="UTF-8">
-    <title id="head-title">demo</title>
+    <title id="head-title">eftp</title>
     <!-- https://electronjs.org/docs/tutorial/security#csp-meta-tag -->
     <meta http-equiv="Content-Security-Policy" content="script-src 'self' 'unsafe-inline';" />
     <!-- load css -->
-    <link rel="stylesheet" type="text/css" href="static/css/demo.css" id="theme-css" />
+    <link rel="stylesheet" type="text/css" href="static/css/demo.css" />
+    <link rel="stylesheet" type="text/css" href="static/css/light.css" id="theme-css" />
+    <!-- <link rel="stylesheet" type="text/css" href="static/css/dark.css" id="theme-css" /> -->
+    <link rel="stylesheet" type="text/css" href="static/css/site.css" />
     <!-- load js -->
-    <script src="static/js/demo.js"></script>
+    <!-- <script src="static/js/jquery-3.5.0.min.js"></script> -->
+    <!-- <script src="static/js/vue.min.js"></script> -->
+    <style>
+        html,
+        body {
+            margin: 0;
+            padding: 0;
+            background: var(--body-bg-color);
+            font-size: 15px;
+            color: var(--font-color);
+            height: 100%;
+            overflow: hidden;
+        }
+
+        #file_list div {
+            max-width: 380px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        #title-bar {
+            width: 100%;
+            position: fixed;
+            left: 0;
+            top: 0;
+            -webkit-app-region: drag;
+            padding-left: var(--title-bar-padding);
+            background: var(--title-bar-bg-color);
+            margin: 0px;
+            height: var(--title-bar-h);
+            line-height: var(--title-bar-h);
+            border-bottom: var(--bar-border);
+            padding-bottom: 1px;
+        }
+
+
+
+        .container {
+            /* margin: 0px; */
+            margin-top: var(--title-bar-h);
+            height: calc(100% - var(--foot-bar-h) - var(--title-bar-h));
+        }
+
+        .sidebar {
+            float: right;
+            width: calc(var(--side-bar-w) - 1px);
+            height: 100%;
+            background-color: var(--side-bar-bg-color);
+            color: var(--side-bar-font-color);
+            /* text-align: center; */
+            padding: 0px var(--side-bar-padding);
+            overflow-y: scroll;
+        }
+
+        .path {
+            margin-left: 10px;
+            padding-top: 1px;
+            /* height: var(--btn-h); */
+            /* background: #fff; */
+            color: var(--font-color);
+            /* margin: 0 auto;
+            height: var(--btn-h);
+            line-height: calc(var(--btn-h) - 2px);
+            padding: 0 5px;
+            border-radius: 5px; */
+            font-size: 14px;
+
+            /* background: red; */
+            width: 290px;
+            display: block;
+            float: left;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            overflow: hidden;
+        }
+
+        .sidebar button {
+            width: 100%;
+        }
+
+        .main {
+            float: left;
+            width: calc(100% - var(--side-bar-w) - var(--side-bar-padding) * 2);
+            height: 100%;
+            overflow-y: scroll;
+            border-right: var(--bar-border);
+        }
+
+        .foot-bar {
+            height: var(--foot-bar-h);
+            overflow-y: scroll;
+            width: 100%;
+            background: var(--foot-bar-bg-color);
+        }
+
+        .icon {
+            height: 14px;
+            /* margin-right: 5px; */
+            margin-bottom: -2px;
+        }
+
+        .btn-icon {
+            margin-bottom: -2px;
+            height: 12px;
+        }
+
+        #infos p {
+            padding: 5px 10px;
+            /* border-bottom: var(--line-border); */
+            overflow-x: hidden;
+        }
+    </style>
 </head>
 
 <body>
-<h1>Demo</h1>
+    <!-- <h1>Demo</h1> -->
+    <div id="title-bar" ondblclick="maxWindow()">
+        <div style="display: block;float: left;">
+
+            <div style="float: left;">
+                <button onclick="to_login()"><img class="btn-icon" src="static/img/host_add.png"></button>
+                <button onclick="ls('$HOME')"><img class="btn-icon" src="static/img/home.png"></button>
+                <button onclick="ls('')"><img class="btn-icon" src="static/img/refresh.png"></button>
+            </div>
+            <div id="path" class="path"></div>
+        </div>
+        <div style="display: block;float: right;padding-right: 85px;">
+            <button onclick="show_dialog(true)"><img class="btn-icon" src="static/img/folder_add.png"></button>
+            <button onclick="upload_folder()"><img class="btn-icon" src="static/img/folder_upload.png"></button>
+            <button onclick="upload()"><img class="btn-icon" src="static/img/file_upload.png"></button>
+        </div>
+    </div>
+    <div class="container">
+        <div class="main">
+            <table>
+                <tbody id="file_list">
+
+                </tbody>
+            </table>
+        </div>
+        <div class="sidebar">
+            <div id="infos">
+
+            </div>
+        </div>
+    </div>
+    <div class="foot-bar">
+
+    </div>
+    <div class="dialog" id="new_folder_dialog">
+        <p>Folder Name:</p>
+        <input type="text" id="dir_name">
+        <button onclick="mkdir()" class="btn-half">OK</button>
+        <button onclick="show_dialog(false)" class="btn-half">Cancel</button>
+    </div>
+    <script src="static/js/demo.js"></script>
+    <script src="static/js/common.js"></script>
+    <script src="static/js/dialog.js"></script>
+    <script src="static/js/buf.js"></script>
+    <script src="static/js/index.js"></script>
+    <script src="static/js/menu.js"></script>
 </body>
 
 </html>

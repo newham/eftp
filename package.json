@@ -1,16 +1,16 @@
 {
-  "name": "electron-demo",
-  "version": "0.0.1",
-  "description": "demo",
+  "name": "eftp",
+  "version": "0.1.1",
+  "description": "a cool sftp client",
   "main": "main.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "start":"electron .",
+    "test": "electron . -t",
+    "start": "electron .",
     "build_mac": "electron-builder build --mac --x64"
   },
   "build": {
-    "productName": "demo",
-    "appId": "cn.liuhan.demo",
+    "productName": "eftp",
+    "appId": "cn.liuhan.eftp",
     "electronDownload": {
       "mirror": "https://npm.taobao.org/mirrors/electron/"
     },
@@ -22,25 +22,17 @@
     },
     "win": {
       "icon": "./static/img/icon.ico"
-    },
-    "fileAssociations": [
-      {
-        "ext": [
-          "jpg",
-          "jpeg"
-        ],
-        "description": "Jpg Image",
-        "icon": "./static/img/icon.icns",
-        "role": "Viewer",
-        "isPackage": false
-      }
-    ]
+    }
   },
   "keywords": [
-    "demo"
+    "ftp",
+    "sftp"
   ],
   "author": "liu han",
   "license": "ISC",
+  "dependencies": {
+    "node-ssh": "^8.0.0"
+  },
   "devDependencies": {
     "electron": "^8.2.0",
     "electron-builder": "^22.4.1"

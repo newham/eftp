@@ -1,0 +1,236 @@
+:root {
+    --dialog-w: 60%;
+    --btn-radius: 5px;
+    --input-radius: 2px;
+    --box-shadow:0 9px 30px -6px rgba(0, 0, 0, .2), 0 18px 20px -10px rgba(0, 0, 0, .04), 0 18px 20px -10px rgba(0, 0, 0, .04), 0 10px 20px -10px rgba(0, 0, 0, .04);
+}
+
+button {
+    text-align: center;
+    min-width: 32px;
+    height: var(--btn-h);
+    line-height: var(--btn-h - 2px);
+    border-radius: var(--btn-radius);
+    background: var(--btn-bg-color);
+    color: var(--btn-color);
+    border: var(--btn-border);
+    padding: 0 5px;
+    margin: 0px;
+    outline: none;
+}
+
+button:hover {
+    background: var(--btn-hover-bg-color);
+}
+
+button:active {
+    background: var(--btn-active-bg-color);
+}
+
+a {
+    text-decoration: none;
+    color: var(--font-color);
+    cursor: pointer;
+}
+
+a:hover {
+    color: var(--font-color);
+}
+
+a:active {
+    color: var(--font-color);
+}
+
+p {
+    margin: 0;
+}
+
+input {
+    height: 30px;
+    background: #fff;
+    border: none;
+    border-radius: var(--input-radius);
+    padding-left: 5px;
+}
+
+.c-2 {
+    width: calc(20% - 20px);
+    padding: 10px;
+    display: grid;
+    float: left;
+}
+
+.c-2-5 {
+    width: calc(25% - 20px);
+    padding: 10px;
+    display: grid;
+    float: left;
+}
+
+.c-3 {
+    width: calc(33.33% - 20px);
+    padding: 10px;
+    display: grid;
+    float: left;
+}
+
+.c-5 {
+    width: calc(50% - 20px);
+    padding: 10px;
+    display: grid;
+    float: left;
+}
+
+.box {
+    border-radius: 5px;
+    /* border: 1px solid #ddd; */
+    text-align: center;
+    background: var(--blue-1);
+    color: #fff !important;
+    padding: 30px 10px;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+}
+
+.box:hover {
+    background: var(--blue-2);
+    box-shadow: var(--box-shadow);
+}
+
+.box:active {
+    background: var(--blue-3);
+    box-shadow: none;
+}
+
+.box a {
+    overflow: hidden;
+}
+
+.box label {
+    font-size: 12px;
+    color: var(--font-color-light) !important;
+    cursor: pointer;
+}
+
+.input-half {
+    width: calc(50% - 20px) !important;
+}
+
+.btn-half {
+    width: calc(50% - 3px) !important;
+    background: var(--blue-1);
+    color: #fff !important;
+    border: none;
+}
+
+.btn-half:hover {
+    background: var(--blue-2);
+}
+
+.btn-half:active {
+    background: var(--blue-3);
+}
+
+.dialog {
+    background: var(--title-bar-bg-color);
+    position: fixed;
+    width: var(--dialog-w);
+    padding: 10px;
+    top: 0px;
+    left: calc(50% - var(--dialog-w) / 2);
+    text-align: center;
+    border: var(--bar-border);
+    display: none;
+    color: var(--font-color);
+    /* border-radius: 10px; */
+    border-bottom-left-radius: 10px;
+    border-bottom-right-radius: 10px;
+    box-shadow: var(--box-shadow);
+}
+
+.dialog input {
+    width: calc(100% - 10px);
+    margin-bottom: 15px;
+}
+
+.dialog button {
+    height: 32px;
+}
+
+.dialog label {
+    width: 20px !important;
+}
+
+.dialog p {
+    text-align: left;
+    margin-bottom: 12px;
+    padding-left: 5px;
+}
+
+table, tbody {
+    width: 100%;
+    padding: 0;
+    border-spacing: 0px;
+}
+
+table {
+    border-bottom: var(--line-border);
+}
+
+tr {
+    margin: 0;
+}
+
+tr:hover {
+    background: var(--tr-hover-bg-color) !important;
+}
+
+td {
+    /* border-bottom: var(--line-border); */
+    border-top: 0px;
+    border-left: 0px;
+    border-right: 0px;
+    margin: 0px;
+    text-align: right;
+    padding: 5px 10px;
+}
+
+.td-icon {
+    padding-right: 0px;
+    text-align: center;
+    width: 14px;
+}
+
+.td-name {
+    max-width: 200px !important;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+}
+
+.td-head {
+    text-align: left;
+    padding-left: 5px;
+}
+
+.td-download {
+    width: 14px;
+    /* background: #432; */
+}
+
+/* 奇数行 */
+
+table tr:nth-child(odd) {
+    background: var(--tr-odd-bg-color);
+}
+
+/* 行 */
+
+.r {
+    width: 100%;
+}
+
+p {
+    padding: 12px;
+}

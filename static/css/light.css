@@ -1,0 +1,29 @@
+:root {
+    --blue-1: #3071E3;
+    --blue-2: #2997ff;
+    --blue-3: #0068d1;
+    --title-bar-h: 36px;
+    --side-bar-w: 30%;
+    --side-bar-padding: 0px;
+    --foot-bar-h: 0px;
+    --side-bar-bg-color: #fff;
+    --side-bar-font-color: #111;
+    --main-color: #eee;
+    --title-bar-bg-color: var(--main-color);
+    --foot-bar-bg-color: #eee;
+    --btn-h: 26px;
+    --title-bar-padding: 78px;
+    --body-bg-color: #fdfdfd;
+    --line-border: 1px solid #eee;
+    --bar-border: 1px solid #ccc;
+    --font-color: #555;
+    --font-color-light: #ddd;
+    --font-color-dark: #111;
+    --btn-bg-color: #fff;
+    --btn-color: #111;
+    --btn-border: 1px solid #ccc;
+    --btn-hover-bg-color: #f1f1f1;
+    --btn-active-bg-color: #ddd;
+    --tr-hover-bg-color: #eee;
+    --tr-odd-bg-color: #f5f5f5;
+}

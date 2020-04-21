@@ -1,20 +1,40 @@
 const { app, BrowserWindow, ipcMain, Menu, MenuItem, nativeTheme, dialog, screen } = require('electron')
-const fs = require('fs');
 
 // global.data //全局数据
+global.shareData = {
+    userSSHInfo: {}, //一定要把数据放在结构体里面！！！
+    isDark: nativeTheme.shouldUseDarkColors
+} //用于共享
 
 function createMenu() {
     var template = [
         {
-            label: "Demo",
+            label: "Estp",
             submenu: [
-                { label: "退出", accelerator: "CmdOrCtrl+Q", click: function () { app.quit() } },
-                { type: 'separator' },
                 {
                     label: "关于", click: function () {
                         app.showAboutPanel()
                     }
                 },
+                { type: 'separator' },
+                { label: "退出", accelerator: "CmdOrCtrl+Q", click: function () { app.quit() } },
+            ]
+        },
+        {
+            label: "编辑",
+            submenu: [
+                { label: "Copy", accelerator: "CmdOrCtrl+C", selector: "copy:" },
+                { label: "Paste", accelerator: "CmdOrCtrl+V", selector: "paste:" },
+                { label: 'Redo', accelerator: 'Shift+CmdOrCtrl+Z', selector: 'redo:' },
+                { label: 'Undo', accelerator: 'CmdOrCtrl+Z', selector: 'undo:' },
+                { label: "Select All", accelerator: "CmdOrCtrl+A", selector: "selectAll:" },
+            ]
+        },
+        {
+            label: "显示",
+            submenu: [
+                { label: "Light Theme", click: function () { setTheme(false) }},
+                { label: "Dark Theme", click: function () { setTheme(true) }},
             ]
         }
     ];
@@ -40,21 +60,22 @@ function createWindow() {
 function createIndexWindow() {
     // 创建浏览器窗口
     const win = new BrowserWindow({
-        title: "demo",
-        titleBarStyle: "hiddenInset",
+        title: "Eftp",
+        titleBarStyle: "hiddenInset", //不显示标题栏,仅显示按钮
         // transparent:true, //透明度
         // opacity:0.99,
         width: 1024,
-        minWidth: 512,
+        minWidth: 612,
         height: 768,
         minHeight: 384,
         webPreferences: {
-            nodeIntegration: true
+            nodeIntegration: true //enable node js
         }
     })
 
     // 并且为你的应用加载index.html
-    win.loadFile('index.html')
+    // win.loadURL(`file://${__dirname}/index.html`)
+    win.loadFile('login.html')
 
     // 打开开发者工具
     if (process.argv.includes('-t')) {
@@ -91,23 +112,22 @@ app.on('will-finish-launching', () => {
 
 });
 
-// 主进程 消息队列
-ipcMain.on('test', (event, id) => {
-    console.log('call back from win:', id)
-    showOpenFileWin((ok) => {
-        if (ok) {
-            resetGlobalData(id)
-            event.reply('openImg-cb', 'ok')
-        } else {
-            event.reply('openImg-cb', 'failed')
-        }
-    })
+// 主进程 消息队列 —— 一般用于渲染进程无法操作，通知主进程操作
+ipcMain.on('go_ssh', (event, userSSHInfo) => {
+    // console.log('go_ssh:', userSSHInfo)
+    global.userSSHInfo = userSSHInfo
+    BrowserWindow.getFocusedWindow().loadFile('index.html')
 })
 
 //切换暗-亮模式触发
 nativeTheme.on('updated', () => {
-    isDark = nativeTheme.shouldUseDarkColors
+    setTheme(nativeTheme.shouldUseDarkColors)
+})
+
+function setTheme(isDark) {
     BrowserWindow.getAllWindows().forEach((win) => {
+        //设置share变量
+        global.shareData.isDark = isDark
         win.webContents.send('themeChanged', isDark)
     })
-})
+}
