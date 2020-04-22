@@ -3,6 +3,7 @@
     --side-bar-font-color: #fff;
     --side-bar-border:1px solid #555;
     --main-color: #444;
+    --menu-bg-color: var(--main-color);
     --title-bar-bg-color: var(--main-color);
     --foot-bar-bg-color: #eee;
     --body-bg-color: #111;
