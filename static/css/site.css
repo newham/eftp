@@ -276,7 +276,7 @@ p {
     background: var(--body-bg-color);
     text-align: center;
     display: none;
-    border-radius: 5px;
+    border-radius: 10px;
     color: var(--font-color-light);
     padding: 10px 17px;
     /* box-shadow: var(--box-shadow); */
@@ -294,7 +294,11 @@ p {
     margin: 0;
 }
 
-.drag_box img{
-    margin-top: 20px;
+.drag_box img {
+    margin-top: calc(50% - 100px);
     /* width:50%; */
+}
+
+.full-w {
+    width: 100%;
 }

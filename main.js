@@ -68,7 +68,7 @@ function createIndexWindow() {
         width: 1024,
         minWidth: 612,
         height: 768,
-        minHeight: 384,
+        minHeight: 600,
         webPreferences: {
             nodeIntegration: true //enable node js
         }

@@ -9,11 +9,22 @@ var userSSHInfo = remote.getGlobal('shareData').userSSHInfo
 
 var fileList = []
 
+const loading_html = '<img src="static/img/loading.gif">'
+
 let getHome = () => {
     if (userSSHInfo.username == "root") {
         return "/root/"
     }
     return "/home/" + userSSHInfo.username + "/"
+}
+
+function showProcess(id) {
+    document.getElementById('infos').innerHTML += '<p id="{0}">{1}</p>'.format(id, loading_html)
+}
+
+function doneProcess(id) {
+    document.getElementById(id).innerHTML = 'success'
+    document.getElementById(id).classList.add('txt-success')
 }
 
 function addInfo(msg, file = '') {
@@ -177,9 +188,14 @@ function upload_file(files) {
         fileItems.push({ local: f, remote: currentDir + getFileName(f) })
     });
     addInfo('upload', '-' + files.join("\n-"))
+    id = sha1(files.join(','))
+    showProcess(id)
+    // setTimingProcess()
+    // setProcess(20)
     ssh.putFiles(fileItems).then(function () {
         console.log("The File thing is done")
-        addInfo('success')
+        doneProcess(id)
+        // addInfo('success')
         ls('')
     }, function (error) {
         console.log("Something's wrong")
@@ -205,7 +221,9 @@ function upload_folder() {
         toFolder = currentDir + getFolderName(folder)
         if (ok) {
             console.log(folder, 'to', toFolder)
+            id = sha1(folder)
             addInfo('upload', folder)
+            showProcess(id)
             // return
             ssh.putDirectory(folder, toFolder, {
                 recursive: true,
@@ -224,8 +242,10 @@ function upload_folder() {
                 }
             }).then(function (status) {
                 console.log('the directory transfer was', status ? 'successful' : 'unsuccessful')
-                addInfo('success')
+                // addInfo('success')
+                doneProcess(id)
                 ls("")//刷新列表
+                finishProcess()
             })
         }
     })
@@ -234,9 +254,12 @@ function upload_folder() {
 function download_file(file) {
     showOpenFolderWin((ok, folder) => {
         addInfo('download', file)
+        id = sha1(file)
+        showProcess(id)
         ssh.getFile(folder + file, currentDir + file).then(function (Contents) {
             console.log("The File", file, "successfully downloaded")
-            addInfo('success')
+            // addInfo('success')
+            doneProcess(id)
         }, function (error) {
             console.log("Something's wrong")
             console.log(error)

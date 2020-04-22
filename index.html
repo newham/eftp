@@ -107,7 +107,7 @@
         .foot-bar {
             height: var(--foot-bar-h);
             overflow-y: scroll;
-            width: 100%;
+            width: calc(100% - var(--side-bar-w) - var(--side-bar-padding) * 2);
             background: var(--foot-bar-bg-color);
         }
 
@@ -139,6 +139,17 @@
             bottom: 0px;
         }
 
+        .proccess-box {
+            height: 10px;
+            width: 100%;
+            background: #fff;
+        }
+
+        .proccess {
+            height: 100%;
+            width: 0px;
+            background: green;
+        }
     </style>
 </head>
 
@@ -183,13 +194,19 @@
         <button onclick="show_dialog(false)" class="btn-half">取消</button>
     </div>
     <div class="drag_box" id="drag_box">
-        <label onclick="showDargBox(false)"><h1>X</h1></label>
+        <label onclick="showDargBox(false)">
+            <h1>X</h1>
+        </label>
         <h1>请把文件拖放于此</h1>
         <img src="static/img/upload-1.png">
+    </div>
+    <div class="menu">
+        <div style="text-align: center;"><img></div>
     </div>
     <!-- js -->
     <script src="static/js/demo.js"></script>
     <script src="static/js/common.js"></script>
+    <script src="static/js/sha1.js"></script>
     <script src="static/js/dialog.js"></script>
     <script src="static/js/buf.js"></script>
     <script src="static/js/index.js"></script>
