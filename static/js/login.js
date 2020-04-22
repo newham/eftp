@@ -112,6 +112,7 @@ function addUserSSHInfo() {
         characterSet: 'utf8',
         port: port,
         label: label,
+        favourites: []
     }
 
     console.log('add userSSHInfo', userSSHInfo.id, userSSHInfo.label)
@@ -210,5 +211,5 @@ function setSSHDialogVal(userSSHInfo) {
 }
 
 setTheme() //设置主题
-loadConf()
 // delConf()
+loadConf()

@@ -67,7 +67,7 @@ function createIndexWindow() {
         // transparent:true, //透明度
         // opacity:0.99,
         width: 1024,
-        minWidth: 612,
+        minWidth: 650,
         height: 768,
         minHeight: 600,
         webPreferences: {

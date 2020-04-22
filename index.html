@@ -150,6 +150,56 @@
             width: 0px;
             background: green;
         }
+
+        .menu {
+            position: fixed;
+            top: calc(var(--title-bar-h) + 8px);
+            left: 100px;
+            width: 200px;
+            height: 400px;
+            background: var(--body-bg-color);
+            border-radius: 10px;
+            border: var(--bar-border);
+            display: none;
+            box-shadow: var(--box-shadow);
+        }
+
+        #favourites {
+            margin-top: 9px;
+            border-top: var(--line-border);
+            width: 100%;
+        }
+
+        #favourites button {
+            padding-bottom: 2px;
+            width: 100%;
+            border-bottom: var(--line-border);
+            border-radius: 0px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .triangle-up {
+            position: fixed;
+            top: calc(var(--title-bar-h) + 0px);
+            left: 195px;
+            width: 0;
+            height: 0;
+            border-width: 0 10px 10px;
+            border-style: solid;
+            border-color: transparent transparent var(--body-bg-color);
+        }
+
+        .triangle-up-box {
+            position: fixed;
+            top: calc(var(--title-bar-h) - 2px);
+            left: 195px;
+            width: 0;
+            height: 0;
+            border-width: 0 10px 10px;
+            border-style: solid;
+            border-color: transparent transparent var(--bar-border-color);
+        }
     </style>
 </head>
 
@@ -161,6 +211,7 @@
                 <button onclick="to_login()"><img class="btn-icon" src="static/img/host_add.png"></button>
                 <button onclick="ls('$HOME')"><img class="btn-icon" src="static/img/home.png"></button>
                 <button onclick="ls('')"><img class="btn-icon" src="static/img/refresh.png"></button>
+                <button onclick="showfavouritesMenu()"><img class="btn-icon" src="static/img/star.png"></button>
             </div>
             <div id="path" class="path" ondblclick="maxWindow()"></div>
         </div>
@@ -200,8 +251,12 @@
         <h1>请把文件拖放于此</h1>
         <img src="static/img/upload-1.png">
     </div>
-    <div class="menu">
-        <div style="text-align: center;"><img></div>
+    <div class="menu" id="favouritesMenu">
+        <label class="triangle-up-box">
+            <label class="triangle-up"></label>
+        </label>
+        <div id="favourites">
+        </div>
     </div>
     <!-- js -->
     <script src="static/js/demo.js"></script>
@@ -209,6 +264,7 @@
     <script src="static/js/sha1.js"></script>
     <script src="static/js/dialog.js"></script>
     <script src="static/js/buf.js"></script>
+    <script src="static/js/conf.js"></script>
     <script src="static/js/index.js"></script>
     <script src="static/js/menu.js"></script>
     <script src="static/js/drag.js"></script>

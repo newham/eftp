@@ -73,8 +73,33 @@ folder_menu.append(new MenuItem({
         del_file(folder.name, folder.isDir)
     }
 }))
+folder_menu.append(new MenuItem({ type: 'separator' }))
+folder_menu.append(new MenuItem({
+    label: '收藏', click() {
+        folder = fileList[folder_id]
+        console.log('favourite', folder.name)
+        favourite_folder(folder.name)
+    }
+}))
 
 function showFolderMenu(id) {
     folder_id = id
     folder_menu.popup({ window: remote.getCurrentWindow() })
+}
+
+/* ******favourite menu******* */
+const favourite_menu = new Menu()
+
+var favourite_id = -1
+
+favourite_menu.append(new MenuItem({
+    label: '删除', click() {
+        console.log('delete favourite id',favourite_id)
+        del_favourite(favourite_id)
+    }
+}))
+
+function showFavouriteMenu(id) {
+    favourite_id = id
+    favourite_menu.popup({ window: remote.getCurrentWindow() })
 }

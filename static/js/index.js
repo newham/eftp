@@ -30,7 +30,7 @@ function addLock(isLock) {
 
 function showProcess(id) {
     addLock(true)
-    document.getElementById('infos').innerHTML += '<p id="{0}">{1}</p>'.format(id, loading_html)
+    appenHTMLByID('infos', '<p id="{0}">{1}</p>'.format(id, loading_html))
 }
 
 function doneProcess(id, msg = 'success', files = '') {
@@ -419,9 +419,75 @@ function setTitle() {
 }
 
 function clean_infos() {
-    if(!getLock()){
+    if (!getLock()) {
         document.getElementById('infos').innerHTML = ''
     }
+}
+
+function saveUserSSHInfo(userSSHInfo) {
+    readConf((ok, conf) => {
+        if (ok) {
+            //update favourites
+            conf[userSSHInfo.id] = userSSHInfo
+            //write to local
+            writeConf(conf, (err) => {
+                if (err) {
+                    console.log(err)
+                }
+            })
+        }
+    })
+}
+
+function favourite_folder(folder) {
+    favourites = userSSHInfo.favourites
+    new_favourite = { currentDir: currentDir, folder: folder }
+    favourites.push(new_favourite)
+    userSSHInfo.favourites = favourites
+    // console.log(userSSHInfo)
+    saveUserSSHInfo(userSSHInfo)
+}
+
+/** collection* */
+var isfavouritesMenuShow = false
+
+function setfavouritesMenu() {
+    // console.log(userSSHInfo.favourites)
+    setHTMLByID('favourites', '')
+    userSSHInfo.favourites.forEach((fav, i) => {
+        appenHTMLByID('favourites', '<button onclick="goFavourite({0})" oncontextmenu="showFavouriteMenu({0})">{1}{2}</button>'.format(i, fav.currentDir, fav.folder))
+    })
+}
+
+function goFavourite(id) {
+    fav = userSSHInfo.favourites[id]
+    currentDir = fav.currentDir
+    ls(fav.folder)
+    showfavouritesMenu()
+}
+
+function del_favourite(id) {
+    favourites = userSSHInfo.favourites
+    favourites.splice(id, 1)
+    userSSHInfo.favourites = favourites
+    //save
+    saveUserSSHInfo(userSSHInfo)
+    //refresh
+    setFavouritesMenuShow(true)
+}
+
+function showfavouritesMenu() {
+    //set menu
+    setfavouritesMenu()
+    //show menu
+    favouritesMenu = document.getElementById('favouritesMenu')
+    favouritesMenu.style.display = isfavouritesMenuShow ? 'none' : 'block'
+    isfavouritesMenuShow = !isfavouritesMenuShow
+}
+
+function setFavouritesMenuShow(isShow){
+    isfavouritesMenuShow = !isShow
+    showfavouritesMenu()
 }
 
 //设置窗口标题

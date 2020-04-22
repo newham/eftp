@@ -33,3 +33,11 @@ function maxWindow() {
     }
     max = !max;
 }
+
+function appenHTMLByID(id, html) {
+    document.getElementById(id).innerHTML += html
+}
+
+function setHTMLByID(id, html) {
+    document.getElementById(id).innerHTML = html
+}

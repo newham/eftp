@@ -7,7 +7,8 @@
     --foot-bar-bg-color: #eee;
     --body-bg-color: #111;
     --line-border: 1px solid #222;
-    --bar-border: 1px solid #111;
+    --bar-border-color:#111;
+    --bar-border: 1px solid var(--bar-border-color);
     --font-color: #eee;
     --font-color-light: #eee;
     --font-color-dark: #aaa;

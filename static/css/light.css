@@ -7,13 +7,14 @@
     --foot-bar-bg-color: var(--main-color);
     --body-bg-color: #fdfdfd;
     --line-border: 1px solid var(--main-color);
-    --bar-border: 1px solid #ccc;
+    --bar-border-color:#ccc;
+    --bar-border: 1px solid var(--bar-border-color);
     --font-color: #555;
     --font-color-light: #ddd;
     --font-color-dark: #111;
     --btn-bg-color: #fff;
     --btn-color: #111;
-    --btn-border: 1px solid #ccc;
+    --btn-border: 1px solid (var(--bar-border-color));
     --btn-hover-bg-color: #f1f1f1;
     --btn-active-bg-color: #ddd;
     --tr-hover-bg-color: #eee;

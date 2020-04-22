@@ -27,6 +27,10 @@ function writeConf(confJson, f) {
     })
 }
 
-function delConf(){
-    fs.unlinkSync(confFile);
+function delConf() {
+    try {
+        fs.unlinkSync(confFile);
+    } catch (e) {
+        console.log(e)
+    }
 }
