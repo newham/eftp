@@ -22,9 +22,16 @@ function showProcess(id) {
     document.getElementById('infos').innerHTML += '<p id="{0}">{1}</p>'.format(id, loading_html)
 }
 
-function doneProcess(id) {
-    document.getElementById(id).innerHTML = 'success'
-    document.getElementById(id).classList.add('txt-success')
+function doneProcess(id, msg = 'success', files = '') {
+    txt_class = 'txt-success'
+    if (msg == 'error') {
+        txt_class = 'txt-danger'
+    }
+    if (files != "") {
+        msg += ' : ' + files
+    }
+    document.getElementById(id).innerHTML = msg
+    document.getElementById(id).classList.add(txt_class)
 }
 
 function addInfo(msg, file = '') {
@@ -69,18 +76,19 @@ function ls(dir) {
     showPath(currentDir)
     //get parent path
     parentPath = getParentPath(currentDir)
-
-    if (currentDir != "/") {
-        //add up
-        up_file = init_fileInfo()
-        up_file.name = "../"
-        up_file.isDir = true
-        setFileInfo(up_file)
-    }
     // console.log(currentDir)
     // addInfo('ls', currentDir)
     ssh.exec('ls', ['-lh', currentDir], {
         onStdout(chunk) {
+            //add ../ to list
+            if (currentDir != "/") {
+                //add up
+                up_file = init_fileInfo()
+                up_file.name = "../"
+                up_file.isDir = true
+                setFileInfo(up_file)
+            }
+            //parse ls
             read_line(chunk, userSSHInfo.characterSet, (line, i) => {
                 parse_ls_line(line, i)
             })
@@ -198,8 +206,10 @@ function upload_file(files) {
         // addInfo('success')
         ls('')
     }, function (error) {
-        console.log("Something's wrong")
-        console.log(error)
+        console.log("Something's wrong", error)
+        doneProcess(id, 'error', error)
+    }).catch((res) => {
+        doneProcess(id, 'error', res)
     })
 }
 
@@ -246,6 +256,8 @@ function upload_folder() {
                 doneProcess(id)
                 ls("")//刷新列表
                 finishProcess()
+            }).catch((res) => {
+                doneProcess(id, 'error', res)
             })
         }
     })
@@ -263,6 +275,8 @@ function download_file(file) {
         }, function (error) {
             console.log("Something's wrong")
             console.log(error)
+        }).catch((res) => {
+            doneProcess(id, 'error', res)
         })
     })
 
@@ -354,7 +368,7 @@ function mkdir() {
         ls("")//只刷新目录
     }, function (error) {
         console.log(error)
-        addInfo('error', dir_name)
+        addInfo('error', error)
     })
     show_dialog(false)
 }
@@ -384,7 +398,7 @@ function connectSSH() {
         ls("")
     }, function (error) {
         console.log("connect failed!", error)
-        addInfo("connect failed!" + userSSHInfo.host, r)
+        addInfo("error", error)
     })
 }
 

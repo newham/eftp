@@ -155,14 +155,14 @@
 
 <body id="drag_area">
     <!-- <h1>Demo</h1> -->
-    <div id="title-bar" ondblclick="maxWindow()">
+    <div id="title-bar">
         <div style="display: block;float: left;">
             <div style="float: left;">
                 <button onclick="to_login()"><img class="btn-icon" src="static/img/host_add.png"></button>
                 <button onclick="ls('$HOME')"><img class="btn-icon" src="static/img/home.png"></button>
                 <button onclick="ls('')"><img class="btn-icon" src="static/img/refresh.png"></button>
             </div>
-            <div id="path" class="path"></div>
+            <div id="path" class="path" ondblclick="maxWindow()"></div>
         </div>
         <div style="display: block;float: right;padding-right: 85px;">
             <button onclick="show_dialog(true)"><img class="btn-icon" src="static/img/folder_add.png"></button>
