@@ -1,8 +1,20 @@
 :root {
+    --blue-1: #3071E3;
+    --blue-2: #2997ff;
+    --blue-3: #0068d1;
+    --blue-4: #2302CF;
+    --title-bar-h: 36px;
+    --side-bar-w: 30%;
+    --side-bar-padding: 0px;
+    --foot-bar-h: 0px;
     --dialog-w: 60%;
     --btn-radius: 5px;
     --input-radius: 2px;
-    --box-shadow:0 9px 30px -6px rgba(0, 0, 0, .2), 0 18px 20px -10px rgba(0, 0, 0, .04), 0 18px 20px -10px rgba(0, 0, 0, .04), 0 10px 20px -10px rgba(0, 0, 0, .04);
+    --btn-h: 26px;
+    --btn-font-size: 15px;
+    --title-bar-padding: 78px;
+    --drag-box-h: 400px;
+    --box-shadow: 0 9px 30px -6px rgba(0, 0, 0, .2), 0 18px 20px -10px rgba(0, 0, 0, .04), 0 18px 20px -10px rgba(0, 0, 0, .04), 0 10px 20px -10px rgba(0, 0, 0, .04);
 }
 
 button {
@@ -46,11 +58,19 @@ p {
 }
 
 input {
+    font-size: var(--btn-font-size);
     height: 30px;
     background: #fff;
+    color: var(--blue-4);
     border: none;
     border-radius: var(--input-radius);
     padding-left: 5px;
+}
+
+input::-webkit-input-placeholder {
+    /* WebKit browsers */
+    color: var(--font-color-light);
+    font-size: 16px;
 }
 
 .c-2 {
@@ -117,18 +137,21 @@ input {
     width: calc(50% - 20px) !important;
 }
 
-.btn-half {
+.btn-half, .btn-half-danger {
     width: calc(50% - 3px) !important;
-    background: var(--blue-1);
-    color: #fff !important;
     border: none;
 }
 
-.btn-half:hover {
+.btn-half-danger {
+    background: var(--blue-1);
+    color: #fff !important;
+}
+
+.btn-half-danger:hover {
     background: var(--blue-2);
 }
 
-.btn-half:active {
+.btn-half-danger:active {
     background: var(--blue-3);
 }
 
@@ -235,6 +258,37 @@ p {
     padding: 12px;
 }
 
-.txt-danger{
-    color: rgb(214, 15, 15);
+.txt-danger {
+    color: rgb(219, 27, 27);
+}
+
+.txt-success {
+    color: rgb(32, 182, 32);
+}
+
+.drag_box {
+    position: fixed;
+    top: calc(50% - var(--drag-box-h) / 2);
+    width: 70%;
+    left: 15%;
+    height: var(--drag-box-h);
+    border: 3px dashed var(--title-bar-bg-color);
+    background: var(--body-bg-color);
+    /* text-align: center; */
+    display: none;
+    border-radius: 5px;
+    color: var(--font-color-light);
+    padding: 10px 17px;
+    /* box-shadow: var(--box-shadow); */
+    /* 透明度 */
+    opacity: 1.0;
+}
+
+.drag_box label {
+    float: right;
+    cursor: pointer;
+}
+
+.drag_box h1 {
+    margin: 0;
 }

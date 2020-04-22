@@ -52,7 +52,7 @@
 
         .container {
             /* margin: 0px; */
-            margin-top: var(--title-bar-h);
+            margin-top: calc(var(--title-bar-h) + 1px);
             height: calc(100% - var(--foot-bar-h) - var(--title-bar-h));
         }
 
@@ -92,7 +92,7 @@
         .sidebar button {
             width: 100%;
             border: none;
-            /* border-top: var(--line-border); */
+            border-top: var(--line-border);
             border-radius: 0px;
         }
 
@@ -128,7 +128,7 @@
 
         #infos p {
             padding: 5px 10px;
-            border-bottom: var(--line-border);
+            border-bottom: var(--side-bar-border);
             overflow-x: hidden;
         }
 
@@ -138,14 +138,14 @@
             right: 0;
             bottom: 0px;
         }
+
     </style>
 </head>
 
-<body>
+<body id="drag_area">
     <!-- <h1>Demo</h1> -->
     <div id="title-bar" ondblclick="maxWindow()">
         <div style="display: block;float: left;">
-
             <div style="float: left;">
                 <button onclick="to_login()"><img class="btn-icon" src="static/img/host_add.png"></button>
                 <button onclick="ls('$HOME')"><img class="btn-icon" src="static/img/home.png"></button>
@@ -175,20 +175,25 @@
         </div>
     </div>
     <div class="foot-bar">
-
     </div>
     <div class="dialog" id="new_folder_dialog">
-        <p>Folder Name:</p>
-        <input type="text" id="dir_name">
-        <button onclick="mkdir()" class="btn-half">OK</button>
-        <button onclick="show_dialog(false)" class="btn-half">Cancel</button>
+        <p>文件名:</p>
+        <input type="text" id="dir_name" onkeydown="keydown_mkdir()">
+        <button onclick="mkdir()" class="btn-half-danger">确定</button>
+        <button onclick="show_dialog(false)" class="btn-half">取消</button>
     </div>
+    <div class="drag_box" id="drag_box">
+        <label onclick="showDargBox(false)"><h1>Close</h1></label>
+        <h1>请把文件拖放于此</h1>
+    </div>
+    <!-- js -->
     <script src="static/js/demo.js"></script>
     <script src="static/js/common.js"></script>
     <script src="static/js/dialog.js"></script>
     <script src="static/js/buf.js"></script>
     <script src="static/js/index.js"></script>
     <script src="static/js/menu.js"></script>
+    <script src="static/js/drag.js"></script>
 </body>
 
 </html>

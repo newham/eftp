@@ -140,3 +140,8 @@ function setTheme(isDark) {
         win.webContents.send('themeChanged', isDark)
     })
 }
+
+//监听拖放事件
+ipcMain.on('ondragstart', (event, filePath) => {
+    console.log('drag',filePath)
+})

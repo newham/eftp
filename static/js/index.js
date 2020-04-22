@@ -16,12 +16,17 @@ let getHome = () => {
     return "/home/" + userSSHInfo.username + "/"
 }
 
-function addInfo(msg, file) {
+function addInfo(msg, file = '') {
     p_html = '<p>'
-    if (msg == 'error') {
+    if (msg.indexOf('error') != -1) {
         p_html = '<p class="txt-danger">'
+    } else if (msg.indexOf('success') != -1) {
+        p_html = '<p class="txt-success">'
     }
-    document.getElementById('infos').innerHTML += p_html + msg + ' : ' + file + '</p>\n'
+    if (file != "") {
+        file = ' : ' + file
+    }
+    document.getElementById('infos').innerHTML += p_html + msg + file + '</p>\n'
     //滑动到底部
     sidebar = document.getElementById('sidebar')
     sidebar.scrollTop = sidebar.scrollHeight;
@@ -34,7 +39,8 @@ let showPath = (path) => {
     document.querySelector('#path').innerHTML = path
 }
 
-let ls = (dir) => {
+function ls(dir) {
+    //dir = "" 刷新
     //clean
     document.querySelector('#file_list').innerHTML = ""
     fileList = []
@@ -61,6 +67,7 @@ let ls = (dir) => {
         setFileInfo(up_file)
     }
     // console.log(currentDir)
+    // addInfo('ls', currentDir)
     ssh.exec('ls', ['-lh', currentDir], {
         onStdout(chunk) {
             read_line(chunk, userSSHInfo.characterSet, (line, i) => {
@@ -69,6 +76,8 @@ let ls = (dir) => {
         }, onStderr(chunk) {
             console.log('stderrChunk', chunk.toString(userSSHInfo.characterSet))
         }
+    }).then(() => {
+        // addInfo('success')
     }).catch((res) => {
         console.log("exception", res)
         addInfo('error', res)
@@ -131,7 +140,11 @@ let set_fileInfo = (attrs = [], id) => {
 
 function getFileHTML(fileInfo) {
     if (fileInfo.isDir) {
-        return '<tr><td class="td-icon"><img class="icon" src="static/img/folder_mac.png"></td><td class="td-head" colspan="3"><a onclick="ls(\'{0}\')" href="#"><div>{0}</div></a></td></div>'.format(fileInfo.name)
+        tr_html = '<tr oncontextmenu="showFolderMenu({0})">'.format(fileInfo.id)
+        if (fileInfo.name == "../") {
+            tr_html = '<tr>'
+        }
+        return '{0}<td class="td-icon"><img class="icon" src="static/img/folder_mac.png"></td><td class="td-head" colspan="3"><a onclick="ls(\'{1}\')" href="#"><div>{1}</div></a></td></div>'.format(tr_html, fileInfo.name)
     } else {
         return '<tr oncontextmenu="showFileMenu({0})"><td class="td-icon"><img class="icon" src="static/img/file.png"></td><td class="td-head"><div>{1}</div></td><td>{2}B</td><td class="td-download"><a href="#" onclick="download_file(\'{1}\')"><img class="icon" src="static/img/download.png"></a></div>'.format(fileInfo.id, fileInfo.name, fileInfo.size)
     }
@@ -157,33 +170,44 @@ function getParentPath(file) {
     return file.substr(0, i + 1) //路径
 }
 
+function upload_file(files) {
+    fileItems = []
+    files.forEach(f => {
+        console.log(currentDir + getFileName(f))
+        fileItems.push({ local: f, remote: currentDir + getFileName(f) })
+    });
+    addInfo('upload', '-' + files.join("\n-"))
+    ssh.putFiles(fileItems).then(function () {
+        console.log("The File thing is done")
+        addInfo('success')
+        ls('')
+    }, function (error) {
+        console.log("Something's wrong")
+        console.log(error)
+    })
+}
+
 function upload() {
     showOpenFilesWin((ok, files) => {
         if (ok) {
-            fileItems = []
-            files.forEach(f => {
-                console.log(currentDir + getFileName(f))
-                fileItems.push({ local: f, remote: currentDir + getFileName(f) })
-            });
-            addInfo('正在上传', files.join(","))
-            ssh.putFiles(fileItems).then(function () {
-                console.log("The File thing is done")
-                addInfo('上传完成', files.join(","))
-                ls('')
-            }, function (error) {
-                console.log("Something's wrong")
-                console.log(error)
-            })
+            upload_file(files)
         }
     })
 }
+
+function getFolderName(path) {
+    paths = path.split('/')
+    return paths[paths.length - 2] + '/'
+}
+
 function upload_folder() {
     showOpenFolderWin((ok, folder) => {
+        toFolder = currentDir + getFolderName(folder)
         if (ok) {
-            console.log(folder, currentDir)
-            addInfo('正在上传文件夹', folder)
+            console.log(folder, 'to', toFolder)
+            addInfo('upload', folder)
             // return
-            ssh.putDirectory(folder, currentDir, {
+            ssh.putDirectory(folder, toFolder, {
                 recursive: true,
                 concurrency: 10,
                 validate: function (itemPath) {
@@ -200,27 +224,54 @@ function upload_folder() {
                 }
             }).then(function (status) {
                 console.log('the directory transfer was', status ? 'successful' : 'unsuccessful')
-                addInfo('上传文件夹成功', folder)
-                ls("")
+                addInfo('success')
+                ls("")//刷新列表
             })
         }
     })
 }
 
-
-
 function download_file(file) {
     showOpenFolderWin((ok, folder) => {
-        addInfo('正在下载', file)
+        addInfo('download', file)
         ssh.getFile(folder + file, currentDir + file).then(function (Contents) {
             console.log("The File", file, "successfully downloaded")
-            addInfo('下载完成', file)
+            addInfo('success')
         }, function (error) {
             console.log("Something's wrong")
             console.log(error)
         })
     })
 
+}
+
+function del_file(file, isDir) {
+    f_tag = isDir ? "文件夹" : "文件"
+    if (!confirm('确定删除-{0}-[{1}] ?'.format(f_tag, file))) {
+        return
+    }
+    var tag = '-f'
+    if (isDir) {
+        tag = '-dr'
+    }
+    addInfo('rm', file)
+    ssh.exec('rm', [tag, currentDir + file], {
+        onStdout(chunk) {
+            read_line(chunk, userSSHInfo.characterSet, (line, i) => {
+                addInfo('status', line)
+            })
+        }, onStderr(chunk) {
+            chunk_str = chunk.toString(userSSHInfo.characterSet)
+            console.log('stderrChunk', chunk_str)
+            addInfo('error', chunk_str)
+        }
+    }).then(() => {
+        addInfo('success', '')
+        ls("")
+    }).catch((res) => {
+        console.log("exception", res)
+        addInfo('error', res)
+    })
 }
 
 function getFileName(file) {
@@ -234,25 +285,52 @@ function getFileName(file) {
 function show_dialog(isShow) {
     if (isShow) {
         document.getElementById('new_folder_dialog').style.display = 'block'
+        document.getElementById('dir_name').focus()
     } else {
         document.getElementById('new_folder_dialog').style.display = 'none'
+        document.getElementById('dir_name').value = ''
     }
 
 }
 
+function keydown_mkdir() {
+    if (event.keyCode == 13) {
+        mkdir()
+    } else if (event.keyCode == 27) {
+        show_dialog(false)
+    }
+}
+
+function checkRename(filename, isDir) {
+    isRename = false
+    fileList.forEach((file) => {
+        if (file.name == filename && file.isDir == isDir) {
+            isRename = true
+        }
+    })
+    return isRename
+}
+
 function mkdir() {
     dir_name = document.getElementById('dir_name').value
-    if (dir_name == "") {
+    if (!dir_name || dir_name == "") {
         show_dialog(false)
         return
     }
-    ssh.mkdir(dir_name).then(function () {
+    //检查重名
+    if (checkRename(dir_name, true)) {
+        dir_name += '(1)'
+    }
+    addInfo('mkdir', dir_name)
+    //mkdir by ssh
+    ssh.mkdir(currentDir + dir_name).then(function () {
         console.log("mkdir success", dir_name)
-        addInfo('mkdir success', dir_name)
-        ls(dir_name)
+        addInfo('success')
+        // ls(dir_name) //进入该文件夹
+        ls("")//只刷新目录
     }, function (error) {
         console.log(error)
-        addInfo('mkdir error', dir_name)
+        addInfo('error', dir_name)
     })
     show_dialog(false)
 }
@@ -269,7 +347,7 @@ function to_login() {
 }
 
 function connectSSH() {
-    addInfo('start to connect , use key', userSSHInfo.ssh)
+    addInfo('connect', '{0}@{1}:{2}'.format(userSSHInfo.username, userSSHInfo.host, userSSHInfo.port))
     ssh.connect({
         host: userSSHInfo.host,
         username: userSSHInfo.username,
@@ -278,21 +356,19 @@ function connectSSH() {
         port: userSSHInfo.port,
     }).then(() => {
         console.log("connect success!")
-        addInfo("connect success!", userSSHInfo.host)
-        addInfo("user is", userSSHInfo.username)
+        addInfo("success")
         ls("")
     }, function (error) {
         console.log("connect failed!", error)
         addInfo("connect failed!" + userSSHInfo.host, r)
     })
-
 }
 
 function setTitle() {
     document.getElementById('head-title').innerHTML = userSSHInfo.label
 }
 
-function clean_infos(){
+function clean_infos() {
     document.getElementById('infos').innerHTML = ''
 }
 

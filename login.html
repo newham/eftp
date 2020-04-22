@@ -21,7 +21,7 @@
 
 <body>
     <div class="dialog" id="new_ssh_dialog">
-        <p id="dialog_title">New Host</p>
+        <p id="dialog_title"></p>
         <input type="text" id="host" placeholder="*host" class="input-half" value="">
         <label> @ </label>
         <input type="number" id="port" placeholder="*port" class="input-half" value="22">
@@ -32,8 +32,8 @@
         <input type="text" id="privateKey" placeholder="*privateKey" onclick="selectPK()" class="input-half">
         <input type="hidden" id="id" value="-1">
         <div class="r">
-            <button onclick="addUserSSHInfo()" class="btn-half"> Save </button>
-            <button onclick="show_dialog(false)" class="btn-half"> Cancel </button>
+            <button onclick="addUserSSHInfo()" class="btn-half-danger"> 保存 </button>
+            <button onclick="show_dialog(false)" class="btn-half"> 取消 </button>
         </div>
     </div>
     <div id='userSSH_list' class="r">

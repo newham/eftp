@@ -3,10 +3,11 @@ const node_ssh = require('node-ssh')
 
 var userSSH_list = []
 
-function show_dialog(isShow, title = 'New Host') {
+function show_dialog(isShow, title = '新建Host') {
     document.getElementById('dialog_title').innerHTML = title
     if (isShow) {
         document.getElementById('new_ssh_dialog').style.display = 'block'
+        document.getElementById('host').focus()
     } else {
         //清空dialog
         setSSHDialogVal(null)
@@ -185,7 +186,7 @@ function delSSHInfo(id) {
 function editSSHInfo(userSSHInfo) {
     setSSHDialogVal(userSSHInfo)
     //set title
-    show_dialog(true, 'Edit Host')
+    show_dialog(true, '编辑Host')
 }
 
 function setSSHDialogVal(userSSHInfo) {

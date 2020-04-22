@@ -1,18 +1,10 @@
 :root {
-    --blue-1: #3071E3;
-    --blue-2: #2997ff;
-    --blue-3: #0068d1;
-    --title-bar-h: 36px;
-    --side-bar-w: 30%;
-    --side-bar-padding: 0px;
-    --foot-bar-h: 0px;
-    --side-bar-bg-color: #333;
+    --side-bar-bg-color: #666;
     --side-bar-font-color: #fff;
+    --side-bar-border:1px solid #555;
     --main-color: #444;
     --title-bar-bg-color: var(--main-color);
     --foot-bar-bg-color: #eee;
-    --btn-h: 26px;
-    --title-bar-padding: 78px;
     --body-bg-color: #111;
     --line-border: 1px solid #222;
     --bar-border: 1px solid #111;
