@@ -441,6 +441,18 @@ function saveUserSSHInfo(userSSHInfo) {
 
 function favourite_folder(folder) {
     favourites = userSSHInfo.favourites
+    //检查重复
+    isHave = false
+    favourites.forEach((fav) => {
+        if (fav.currentDir == currentDir && folder == fav.folder) {
+            isHave = true
+            return
+        }
+    })
+    if (isHave) {
+        console.log('already has')
+        return
+    }
     new_favourite = { currentDir: currentDir, folder: folder }
     favourites.push(new_favourite)
     userSSHInfo.favourites = favourites
@@ -485,7 +497,7 @@ function showfavouritesMenu() {
     isfavouritesMenuShow = !isfavouritesMenuShow
 }
 
-function setFavouritesMenuShow(isShow){
+function setFavouritesMenuShow(isShow) {
     isfavouritesMenuShow = !isShow
     showfavouritesMenu()
 }
