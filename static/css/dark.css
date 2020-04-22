@@ -20,4 +20,6 @@
     --btn-active-bg-color: #444;
     --tr-hover-bg-color: #888;
     --tr-odd-bg-color: #292929;
+    --brag-box-bg-color:var(--main-color);
+    --brag-box-border-color:#fff;
 }

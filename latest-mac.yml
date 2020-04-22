@@ -1,0 +1,12 @@
+version: 0.2.1
+files:
+  - url: eftp-0.2.1-mac.zip
+    sha512: KxL22huhWv/khGfcDYkWBcWMYBn2/XVGRQ+nIkzaE87bQDgz7/Vb6ah5yf9DfFv+FpRCiEvyBYqM9vvh6EZBsw==
+    size: 63632966
+    blockMapSize: 67686
+  - url: eftp-0.2.1.dmg
+    sha512: LyJCHsuijFFTSvWEmBMecQrTTSDuTU8Sn60+UIURXibBBFPXp1Q/aH9kYl16MCTWR8dHG/zt0SLDQtjFyugbMQ==
+    size: 65684909
+path: eftp-0.2.1-mac.zip
+sha512: KxL22huhWv/khGfcDYkWBcWMYBn2/XVGRQ+nIkzaE87bQDgz7/Vb6ah5yf9DfFv+FpRCiEvyBYqM9vvh6EZBsw==
+releaseDate: '2020-04-22T16:33:52.506Z'

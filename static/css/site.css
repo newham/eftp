@@ -265,14 +265,14 @@ p {
 .drag_box {
     position: fixed;
     top: calc(50% - var(--drag-box-h) / 2);
-    width: calc(100% - var(--side-bar-w) - var(--side-bar-padding) * 2 - 60px);
+    width: calc(100% - var(--side-bar-w) - 57px);
     left: 10px;
     height: var(--drag-box-h);
-    border: 3px dashed var(--title-bar-bg-color);
-    background: var(--body-bg-color);
+    border: 2px dashed var(--brag-box-border-color);
+    background: var(--brag-box-bg-color);
     text-align: center;
     display: none;
-    border-radius: 10px;
+    border-radius: 5px;
     color: var(--font-color-light);
     padding: 10px 17px;
     /* box-shadow: var(--box-shadow); */
