@@ -274,7 +274,7 @@ p {
     height: var(--drag-box-h);
     border: 3px dashed var(--title-bar-bg-color);
     background: var(--body-bg-color);
-    /* text-align: center; */
+    text-align: center;
     display: none;
     border-radius: 5px;
     color: var(--font-color-light);
@@ -282,6 +282,7 @@ p {
     /* box-shadow: var(--box-shadow); */
     /* 透明度 */
     opacity: 1.0;
+    user-select: none;
 }
 
 .drag_box label {
@@ -291,4 +292,9 @@ p {
 
 .drag_box h1 {
     margin: 0;
+}
+
+.drag_box img{
+    margin-top: 20px;
+    /* width:50%; */
 }

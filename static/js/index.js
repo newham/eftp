@@ -319,7 +319,8 @@ function mkdir() {
     }
     //检查重名
     if (checkRename(dir_name, true)) {
-        dir_name += '(1)'
+        alert('文件名重复')
+        return
     }
     addInfo('mkdir', dir_name)
     //mkdir by ssh

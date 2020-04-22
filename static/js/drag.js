@@ -20,10 +20,16 @@ document.getElementById('drag_box').addEventListener("drop", (e) => {
     }
 })
 
-//很重要！屏蔽默认操作才能有事件触发
+//很重要！屏蔽默认操作才能有事件触发（拖到外面的drag_box上时显示drag_area区域）
 document.getElementById('drag_area').addEventListener("dragover", (e) => {
     e.preventDefault();
     showDargBox(true)
+})
+
+//离开区域(放到外面的drag_box上)
+document.getElementById('drag_area').addEventListener("drop", (e) => {
+    e.preventDefault();
+    showDargBox(false)
 })
 
 function showDargBox(isShow) {
