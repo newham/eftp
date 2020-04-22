@@ -13,7 +13,7 @@
     --btn-h: 26px;
     --btn-font-size: 15px;
     --title-bar-padding: 78px;
-    --drag-box-h: 400px;
+    --drag-box-h: 60%;
     --box-shadow: 0 9px 30px -6px rgba(0, 0, 0, .2), 0 18px 20px -10px rgba(0, 0, 0, .04), 0 18px 20px -10px rgba(0, 0, 0, .04), 0 10px 20px -10px rgba(0, 0, 0, .04);
 }
 
@@ -269,8 +269,8 @@ p {
 .drag_box {
     position: fixed;
     top: calc(50% - var(--drag-box-h) / 2);
-    width: 70%;
-    left: 15%;
+    width: calc(100% - var(--side-bar-w) - var(--side-bar-padding) * 2 - 60px);
+    left: 10px;
     height: var(--drag-box-h);
     border: 3px dashed var(--title-bar-bg-color);
     background: var(--body-bg-color);
