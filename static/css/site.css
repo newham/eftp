@@ -4,7 +4,7 @@
     --blue-3: #0068d1;
     --blue-4: #2302CF;
     --title-bar-h: 36px;
-    --side-bar-w: 30%;
+    --side-bar-w: 300px;
     --side-bar-padding: 0px;
     --foot-bar-h: 0px;
     --dialog-w: 60%;
@@ -217,19 +217,15 @@ td {
     margin: 0px;
     text-align: right;
     padding: 5px 10px;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
 }
 
 .td-icon {
     padding-right: 0px;
     text-align: center;
     width: 14px;
-}
-
-.td-name {
-    max-width: 200px !important;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-    overflow: hidden;
 }
 
 .td-head {

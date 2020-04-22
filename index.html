@@ -68,7 +68,11 @@
         }
 
         .path {
-            margin-left: 10px;
+            position: fixed;
+            top:0px;
+            left: 230px;
+            width: calc(100% - 230px - 120px);
+            /* margin-left: 10px; */
             padding-top: 1px;
             /* height: var(--btn-h); */
             /* background: #fff; */
@@ -81,9 +85,9 @@
             font-size: 14px;
 
             /* background: red; */
-            width: 290px;
+            /* width: 290px; */
             display: block;
-            float: left;
+            /* float: left; */
             text-overflow: ellipsis;
             white-space: nowrap;
             overflow: hidden;
@@ -159,9 +163,14 @@
             height: 400px;
             background: var(--menu-bg-color);
             border-radius: 10px;
-            border: var(--bar-border);
+            /* border: var(--bar-border); */
             display: none;
             box-shadow: var(--box-shadow);
+        }
+
+        .menu button:hover{
+            background: var(--blue-1);
+            color: #fff;
         }
 
         #favourites {
