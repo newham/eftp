@@ -18,7 +18,18 @@ let getHome = () => {
     return "/home/" + userSSHInfo.username + "/"
 }
 
+function getLock() {
+    return remote.getGlobal('shareData').processLocks[remote.getCurrentWindow().id - 1]
+}
+
+function addLock(isLock) {
+    locks = remote.getGlobal('shareData').processLocks
+    locks[remote.getCurrentWindow().id - 1] = isLock
+    remote.getGlobal('shareData').processLocks = locks
+}
+
 function showProcess(id) {
+    addLock(true)
     document.getElementById('infos').innerHTML += '<p id="{0}">{1}</p>'.format(id, loading_html)
 }
 
@@ -32,6 +43,7 @@ function doneProcess(id, msg = 'success', files = '') {
     }
     document.getElementById(id).innerHTML = msg
     document.getElementById(id).classList.add(txt_class)
+    addLock(false)
 }
 
 function addInfo(msg, file = '') {
@@ -407,7 +419,9 @@ function setTitle() {
 }
 
 function clean_infos() {
-    document.getElementById('infos').innerHTML = ''
+    if(!getLock()){
+        document.getElementById('infos').innerHTML = ''
+    }
 }
 
 //设置窗口标题

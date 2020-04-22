@@ -3,7 +3,8 @@ const { app, BrowserWindow, ipcMain, Menu, MenuItem, nativeTheme, dialog, screen
 // global.data //全局数据
 global.shareData = {
     userSSHInfo: {}, //一定要把数据放在结构体里面！！！
-    isDark: nativeTheme.shouldUseDarkColors
+    isDark: nativeTheme.shouldUseDarkColors,
+    processLocks: []
 } //用于共享
 
 function createMenu() {
@@ -74,6 +75,27 @@ function createIndexWindow() {
         }
     })
 
+    win.on('close', (event) => {
+        //get lock
+        locked = global.shareData.processLocks[win.id - 1]
+        // console.log('close win', win.id, locked)
+        if (locked) {
+            event.preventDefault()
+            dialog.showMessageBox(win, {
+                buttons: ["OK", "Cancel"],
+                message: "正在[下载/上传]文件,确定退出?",
+                cancelId: 1,
+            }).then((result) => {
+                if (result.response == 0) { //ok
+                    win.destroy()
+                }
+            })
+        }
+    })
+
+    //set globleData
+    global.shareData.processLocks.push(false)
+
     // 并且为你的应用加载index.html
     // win.loadURL(`file://${__dirname}/index.html`)
     win.loadFile('login.html')
@@ -105,10 +127,11 @@ app.on('activate', () => {
     // 通常在应用程序中重新创建一个窗口。
     if (BrowserWindow.getAllWindows().length === 0) {
         createWindow()
-    } else {
-        //使最后创建的窗口激活
-        BrowserWindow.getAllWindows()[BrowserWindow.getAllWindows().length - 1].focus()
     }
+    // else {
+    //     //使最后创建的窗口激活
+    //     BrowserWindow.getAllWindows()[BrowserWindow.getAllWindows().length - 1].focus()
+    // }
 })
 
 // Attempt to bind file opening #2
@@ -143,5 +166,5 @@ function setTheme(isDark) {
 
 //监听拖放事件
 ipcMain.on('ondragstart', (event, filePath) => {
-    console.log('drag',filePath)
+    console.log('drag', filePath)
 })
