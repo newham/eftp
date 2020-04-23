@@ -1,9 +1,9 @@
 :root {
-    --main-color: #444;
+    --main-color: #555;
     --side-bar-bg-color: var(--main-color);
     --side-bar-font-color: #fff;
     --side-bar-border: 1px solid #333;
-    --title-bar-bg-color: var(--main-color);
+    --title-bar-bg-color: #444;
     --foot-bar-bg-color: var(--main-color);
     --body-bg-color: var(--main-color);
     --line-border: 1px solid #333;
@@ -18,8 +18,8 @@
     --btn-hover-bg-color: #777;
     --btn-active-bg-color: #444;
     --tr-hover-bg-color: #888;
-    --tr-odd-bg-color: #292929;
-    --tr-even-bg-color: #292929;
+    --tr-odd-bg-color: #444;
+    --tr-even-bg-color: var(--tr-odd-bg-color);
     --brag-box-bg-color: var(--main-color);
     --brag-box-border-color: #fff;
     --menu-border-color: #333;

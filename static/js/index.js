@@ -242,40 +242,44 @@ function getFolderName(path) {
 
 function upload_folder() {
     showOpenFolderWin((ok, folder) => {
-        toFolder = currentDir + getFolderName(folder)
-        if (ok) {
-            // console.log(folder, 'to', toFolder)
-            id = addInfo('upload', folder)
-            // return
-            ssh.putDirectory(folder, toFolder, {
-                recursive: true,
-                concurrency: 10,
-                validate: function (itemPath) {
-                    const baseName = path.basename(itemPath)
-                    return baseName.substr(0, 1) !== '.' && // do not allow dot files
-                        baseName !== 'node_modules' // do not allow node_modules
-                },
-                tick: function (localPath, remotePath, error) {
-                    if (error) {
-                        // console.log(localPath, error)
-                    } else {
-                        // console.log('ok')
-                    }
-                }
-            }).then(function (status) {
-                // addInfo('success')
-                doneProcess(id)
-                ls("")//刷新列表
-                finishProcess()
-            }).catch((res) => {
-                doneProcess(id, 'failed', res)
-            })
+        if (!ok) {
+            return
         }
+        toFolder = currentDir + getFolderName(folder)
+        // console.log(folder, 'to', toFolder)
+        id = addInfo('upload', folder)
+        // return
+        ssh.putDirectory(folder, toFolder, {
+            recursive: true,
+            concurrency: 10,
+            validate: function (itemPath) {
+                const baseName = path.basename(itemPath)
+                return baseName.substr(0, 1) !== '.' && // do not allow dot files
+                    baseName !== 'node_modules' // do not allow node_modules
+            },
+            tick: function (localPath, remotePath, error) {
+                if (error) {
+                    // console.log(localPath, error)
+                } else {
+                    // console.log('ok')
+                }
+            }
+        }).then(function (status) {
+            // addInfo('success')
+            doneProcess(id)
+            ls("")//刷新列表
+            finishProcess()
+        }).catch((res) => {
+            doneProcess(id, 'failed', res)
+        })
     })
 }
 
 function download_file(file) {
     showOpenFolderWin((ok, folder) => {
+        if (!ok) {
+            return
+        }
         id = addInfo('download', file)
         ssh.getFile(folder + file, currentDir + file).then(function (Contents) {
             // console.log("The File", file, "successfully downloaded")

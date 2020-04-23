@@ -123,12 +123,13 @@ function addUserSSHInfo() {
 
 function selectPK() {
     showOpenFileWin((ok, pkfile) => {
-        if (ok) {
-            console.log("select pk:", pkfile)
-            document.getElementById('privateKey').value = pkfile
-            //clean pwd
-            document.getElementById('password').value = ''
+        if (!ok) {
+            return
         }
+        console.log("select pk:", pkfile)
+        document.getElementById('privateKey').value = pkfile
+        //clean pwd
+        document.getElementById('password').value = ''
     })
 }
 

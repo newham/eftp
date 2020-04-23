@@ -163,7 +163,8 @@ input::-webkit-input-placeholder {
     top: 0px;
     left: calc(50% - var(--dialog-w) / 2);
     text-align: center;
-    border: var(--bar-border);
+    border: 1px solid var(--menu-border-color);
+    border-top: none;
     display: none;
     color: var(--font-color);
     /* border-radius: 10px; */
@@ -239,7 +240,9 @@ td {
 }
 
 /* 奇数行 odd*/
+
 /* 偶数数行 even*/
+
 table tr:nth-child(even) {
     background: var(--tr-even-bg-color);
 }
@@ -299,7 +302,7 @@ p {
     width: 100%;
 }
 
-.img-loading{
+.img-loading {
     /* width: 100%; */
     height: 10px;
 }
