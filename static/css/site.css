@@ -306,3 +306,9 @@ p {
     /* width: 100%; */
     height: 10px;
 }
+
+/* tools */
+
+.txt-center {
+    text-align: center !important;
+}

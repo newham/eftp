@@ -164,9 +164,10 @@
         .menu {
             position: fixed;
             top: calc(var(--title-bar-h) + 8px);
-            left: 100px;
+            left: 104px;
             width: 200px;
-            height: 400px;
+            max-height: 400px;
+            min-height: 40px;
             background: var(--menu-bg-color);
             border-radius: 10px;
             /* border: var(--bar-border); */
@@ -182,7 +183,7 @@
         }
 
         #favourites {
-            margin: 8px 0px;
+            margin: 6px 0px;
             /* border-top: 1px solid var(--menu-border-color); */
             width: 100%;
         }
@@ -190,16 +191,23 @@
         #favourites button {
             padding-bottom: 2px;
             width: 100%;
-            border-bottom: 1px solid var(--menu-border-color);
+            /* border-bottom: 1px solid var(--menu-border-color); */
             border-radius: 0px;
             overflow: hidden;
             text-overflow: ellipsis;
             text-align: left;
         }
 
+        #favourites hr {
+            border: none;
+            border-bottom: 1px solid var(--menu-border-color);
+            margin: 0;
+            padding: 0;
+        }
+
         .triangle-up {
             position: fixed;
-            top: calc(var(--title-bar-h) + 0px);
+            top: calc(var(--title-bar-h) - 0px);
             left: 195px;
             width: 0;
             height: 0;
@@ -239,7 +247,7 @@
             <button onclick="upload()"><img class="btn-icon" src="static/img/file_upload.png"></button>
         </div>
     </div>
-    <div class="container">
+    <div class="container" onclick="showfavouritesMenu(false)">
         <div class="main">
             <table>
                 <tbody id="file_list">

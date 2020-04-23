@@ -235,9 +235,13 @@ function upload() {
     })
 }
 
-function getFolderName(path) {
+function getFolderName(path, withTail = true) {
     paths = path.split('/')
-    return paths[paths.length - 2] + '/'
+    tail = '/'
+    if (!withTail) {
+        tail = ''
+    }
+    return paths[paths.length - 2] + tail
 }
 
 function upload_folder() {
@@ -430,35 +434,39 @@ function saveUserSSHInfo(userSSHInfo) {
     })
 }
 
-function favourite_folder(folder) {
+function favourite_folder(folder, current = currentDir) {
     favourites = userSSHInfo.favourites
     //检查重复
     isHave = false
     favourites.forEach((fav) => {
-        if (fav.currentDir == currentDir && folder == fav.folder) {
+        if (fav.currentDir == current && folder == fav.folder) {
             isHave = true
             return
         }
     })
     if (isHave) {
         // console.log('already has')
+        alert('已被收藏!')
+        showfavouritesMenu(false)
         return
     }
-    new_favourite = { currentDir: currentDir, folder: folder }
+    new_favourite = { currentDir: current, folder: folder }
     favourites.push(new_favourite)
     userSSHInfo.favourites = favourites
     // console.log(userSSHInfo)
     saveUserSSHInfo(userSSHInfo)
+    //hide it
+    showfavouritesMenu(false)
 }
 
 /** collection* */
-var isfavouritesMenuShow = false
+var isfavouritesMenuShow = true
 
 function setfavouritesMenu() {
     // console.log(userSSHInfo.favourites)
-    setHTMLByID('favourites', '')
+    setHTMLByID('favourites', '<button onclick="favourite_folder(\'{0}\',\'{1}\')">♥ this</button>'.format(getFolderName(currentDir, false), getParentPath(currentDir)))
     userSSHInfo.favourites.forEach((fav, i) => {
-        appenHTMLByID('favourites', '<button onclick="goFavourite({0})" oncontextmenu="showFavouriteMenu({0})">{1}{2}</button>'.format(i, fav.currentDir, fav.folder))
+        appenHTMLByID('favourites', '\n<hr><button onclick="goFavourite({0})" oncontextmenu="showFavouriteMenu({0})">{1}{2}</button>'.format(i, fav.currentDir, fav.folder))
     })
 }
 
@@ -476,21 +484,16 @@ function del_favourite(id) {
     //save
     saveUserSSHInfo(userSSHInfo)
     //refresh
-    setFavouritesMenuShow(true)
+    showfavouritesMenu(true)
 }
 
-function showfavouritesMenu() {
+function showfavouritesMenu(isShow = isfavouritesMenuShow) {
     //set menu
     setfavouritesMenu()
     //show menu
     favouritesMenu = document.getElementById('favouritesMenu')
-    favouritesMenu.style.display = isfavouritesMenuShow ? 'none' : 'block'
-    isfavouritesMenuShow = !isfavouritesMenuShow
-}
-
-function setFavouritesMenuShow(isShow) {
+    favouritesMenu.style.display = isShow ? 'block' : 'none'
     isfavouritesMenuShow = !isShow
-    showfavouritesMenu()
 }
 
 //设置窗口标题

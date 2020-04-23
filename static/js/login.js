@@ -74,6 +74,8 @@ function saveUserSSHInfo(userSSHInfo) {
     })
 }
 
+var tmp_favourites = []
+
 function addUserSSHInfo() {
     host = document.getElementById('host').value
     username = document.getElementById('username').value
@@ -112,7 +114,7 @@ function addUserSSHInfo() {
         characterSet: 'utf8',
         port: port,
         label: label,
-        favourites: []
+        favourites: tmp_favourites,
     }
 
     console.log('add userSSHInfo', userSSHInfo.id, userSSHInfo.label)
@@ -187,6 +189,8 @@ function delSSHInfo(id) {
 
 function editSSHInfo(userSSHInfo) {
     setSSHDialogVal(userSSHInfo)
+    //set tmp_favourites 
+    tmp_favourites = userSSHInfo.favourites
     //set title
     show_dialog(true, '编辑Host')
 }
