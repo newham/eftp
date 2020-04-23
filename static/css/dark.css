@@ -24,4 +24,5 @@
     --brag-box-border-color: #fff;
     --menu-border-color: #333;
     --menu-bg-color: var(--btn-bg-color);
+    --login-bg-color: var(--title-bar-bg-color);
 }

@@ -21,7 +21,8 @@
     --tr-hover-bg-color: #ddd;
     --tr-odd-bg-color: #f5f5f5;
     --tr-even-bg-color: #f5f5f5;
-    --brag-box-bg-color:#fff;
-    --brag-box-border-color:#ddd;
-    --menu-border-color:#cecece;
+    --brag-box-bg-color: #fff;
+    --brag-box-border-color: #ddd;
+    --menu-border-color: #cecece;
+    --login-bg-color: var(--title-bar-bg-color);
 }
