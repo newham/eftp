@@ -9,7 +9,7 @@ var userSSHInfo = remote.getGlobal('shareData').userSSHInfo
 
 var fileList = []
 
-const loading_html = '<img src="static/img/loading.gif">'
+const loading_html = '<img class="img-loading" src="static/img/loading.gif">'
 
 let getHome = () => {
     if (userSSHInfo.username == "root") {
@@ -22,44 +22,47 @@ function getLock() {
     return remote.getGlobal('shareData').processLocks[remote.getCurrentWindow().id - 1]
 }
 
-function addLock(isLock) {
+function addLock(isLock = false) {
     locks = remote.getGlobal('shareData').processLocks
-    locks[remote.getCurrentWindow().id - 1] = isLock
+    i = remote.getCurrentWindow().id - 1
+    if (isLock) {
+        locks[i] += 1
+    } else {
+        locks[i] += -1
+    }
     remote.getGlobal('shareData').processLocks = locks
 }
 
-function showProcess(id) {
-    addLock(true)
-    appenHTMLByID('infos', '<p id="{0}">{1}</p>'.format(id, loading_html))
-}
-
-function doneProcess(id, msg = 'success', files = '') {
+function doneProcess(id, tg = 'success', msg = '') {
     txt_class = 'txt-success'
-    if (msg == 'error') {
+    if (tg == 'failed') {
         txt_class = 'txt-danger'
     }
-    if (files != "") {
-        msg += ' : ' + files
+    if (msg != "") {
+        msg = ' : ' + msg
     }
-    document.getElementById(id).innerHTML = msg
+    document.getElementById(id).innerHTML = tg + msg
     document.getElementById(id).classList.add(txt_class)
     addLock(false)
 }
 
-function addInfo(msg, file = '') {
-    p_html = '<p>'
-    if (msg.indexOf('error') != -1) {
-        p_html = '<p class="txt-danger">'
-    } else if (msg.indexOf('success') != -1) {
-        p_html = '<p class="txt-success">'
+function addInfo(msg, file = '', isArray = false) {
+    //get file
+    if (isArray) {
+        file = file.join(',')
     }
     if (file != "") {
         file = ' : ' + file
     }
-    document.getElementById('infos').innerHTML += p_html + msg + file + '</p>\n'
+    //sha1 a id
+    id = new Date().getTime()
+    document.getElementById('infos').innerHTML += '<div class="line-div"><p>{0}</p><p id="{1}">{2}</p></div>'.format(msg + file, id, loading_html)
     //滑动到底部
     sidebar = document.getElementById('sidebar')
     sidebar.scrollTop = sidebar.scrollHeight;
+    //加锁，退出提示，禁止清空
+    addLock(true)
+    return id
 }
 
 var currentDir = getHome()
@@ -89,7 +92,7 @@ function ls(dir) {
     //get parent path
     parentPath = getParentPath(currentDir)
     // console.log(currentDir)
-    // addInfo('ls', currentDir)
+    id = addInfo('ls', currentDir)
     ssh.exec('ls', ['-lh', currentDir], {
         onStdout(chunk) {
             //add ../ to list
@@ -105,13 +108,14 @@ function ls(dir) {
                 parse_ls_line(line, i)
             })
         }, onStderr(chunk) {
-            console.log('stderrChunk', chunk.toString(userSSHInfo.characterSet))
+            // console.log('stderrChunk', chunk.toString(userSSHInfo.characterSet))
         }
     }).then(() => {
         // addInfo('success')
+        doneProcess(id)
     }).catch((res) => {
-        console.log("exception", res)
-        addInfo('error', res)
+        // console.log("exception", res)
+        doneProcess(id, 'failed', res)
     })
 }
 
@@ -204,24 +208,22 @@ function getParentPath(file) {
 function upload_file(files) {
     fileItems = []
     files.forEach(f => {
-        console.log(currentDir + getFileName(f))
+        // console.log(currentDir + getFileName(f))
         fileItems.push({ local: f, remote: currentDir + getFileName(f) })
     });
-    addInfo('upload', '-' + files.join("\n-"))
-    id = sha1(files.join(','))
-    showProcess(id)
+    id = addInfo('upload', files, true)
     // setTimingProcess()
     // setProcess(20)
     ssh.putFiles(fileItems).then(function () {
-        console.log("The File thing is done")
+        // console.log("The File thing is done")
         doneProcess(id)
         // addInfo('success')
         ls('')
     }, function (error) {
-        console.log("Something's wrong", error)
-        doneProcess(id, 'error', error)
+        // console.log("Something's wrong", error)
+        doneProcess(id, 'failed', error)
     }).catch((res) => {
-        doneProcess(id, 'error', res)
+        doneProcess(id, 'failed', res)
     })
 }
 
@@ -242,10 +244,8 @@ function upload_folder() {
     showOpenFolderWin((ok, folder) => {
         toFolder = currentDir + getFolderName(folder)
         if (ok) {
-            console.log(folder, 'to', toFolder)
-            id = sha1(folder)
-            addInfo('upload', folder)
-            showProcess(id)
+            // console.log(folder, 'to', toFolder)
+            id = addInfo('upload', folder)
             // return
             ssh.putDirectory(folder, toFolder, {
                 recursive: true,
@@ -257,19 +257,18 @@ function upload_folder() {
                 },
                 tick: function (localPath, remotePath, error) {
                     if (error) {
-                        console.log(localPath, error)
+                        // console.log(localPath, error)
                     } else {
-                        console.log('ok')
+                        // console.log('ok')
                     }
                 }
             }).then(function (status) {
-                console.log('the directory transfer was', status ? 'successful' : 'unsuccessful')
                 // addInfo('success')
                 doneProcess(id)
                 ls("")//刷新列表
                 finishProcess()
             }).catch((res) => {
-                doneProcess(id, 'error', res)
+                doneProcess(id, 'failed', res)
             })
         }
     })
@@ -277,18 +276,16 @@ function upload_folder() {
 
 function download_file(file) {
     showOpenFolderWin((ok, folder) => {
-        addInfo('download', file)
-        id = sha1(file)
-        showProcess(id)
+        id = addInfo('download', file)
         ssh.getFile(folder + file, currentDir + file).then(function (Contents) {
-            console.log("The File", file, "successfully downloaded")
+            // console.log("The File", file, "successfully downloaded")
             // addInfo('success')
             doneProcess(id)
         }, function (error) {
-            console.log("Something's wrong")
+            // console.log("Something's wrong")
             console.log(error)
         }).catch((res) => {
-            doneProcess(id, 'error', res)
+            doneProcess(id, 'failed', res)
         })
     })
 
@@ -303,23 +300,13 @@ function del_file(file, isDir) {
     if (isDir) {
         tag = '-dr'
     }
-    addInfo('rm', file)
-    ssh.exec('rm', [tag, currentDir + file], {
-        onStdout(chunk) {
-            read_line(chunk, userSSHInfo.characterSet, (line, i) => {
-                addInfo('status', line)
-            })
-        }, onStderr(chunk) {
-            chunk_str = chunk.toString(userSSHInfo.characterSet)
-            console.log('stderrChunk', chunk_str)
-            addInfo('error', chunk_str)
-        }
-    }).then(() => {
-        addInfo('success', '')
+    id = addInfo('rm', file)
+    ssh.exec('rm', [tag, currentDir + file]).then(() => {
+        doneProcess(id)
         ls("")
     }).catch((res) => {
-        console.log("exception", res)
-        addInfo('error', res)
+        // console.log("exception", res)
+        doneProcess(id, 'failed', res)
     })
 }
 
@@ -371,16 +358,16 @@ function mkdir() {
         alert('文件名重复')
         return
     }
-    addInfo('mkdir', dir_name)
+    id = addInfo('mkdir', dir_name)
     //mkdir by ssh
     ssh.mkdir(currentDir + dir_name).then(function () {
-        console.log("mkdir success", dir_name)
-        addInfo('success')
+        // console.log("mkdir success", dir_name)
+        doneProcess(id)
         // ls(dir_name) //进入该文件夹
         ls("")//只刷新目录
     }, function (error) {
-        console.log(error)
-        addInfo('error', error)
+        // console.log(error)
+        doneProcess(id, 'failed', error)
     })
     show_dialog(false)
 }
@@ -397,7 +384,7 @@ function to_login() {
 }
 
 function connectSSH() {
-    addInfo('connect', '{0}@{1}:{2}'.format(userSSHInfo.username, userSSHInfo.host, userSSHInfo.port))
+    id = addInfo('connect', '{0}@{1}:{2}'.format(userSSHInfo.username, userSSHInfo.host, userSSHInfo.port))
     ssh.connect({
         host: userSSHInfo.host,
         username: userSSHInfo.username,
@@ -405,12 +392,12 @@ function connectSSH() {
         privateKey: userSSHInfo.privateKey,
         port: userSSHInfo.port,
     }).then(() => {
-        console.log("connect success!")
-        addInfo("success")
+        // console.log("connect success!")
+        doneProcess(id)
         ls("")
     }, function (error) {
-        console.log("connect failed!", error)
-        addInfo("error", error)
+        // console.log("connect failed!", error)
+        doneProcess(id, 'failed', error)
     })
 }
 
@@ -419,7 +406,7 @@ function setTitle() {
 }
 
 function clean_infos() {
-    if (!getLock()) {
+    if (getLock() == 0) {
         document.getElementById('infos').innerHTML = ''
     }
 }
@@ -450,7 +437,7 @@ function favourite_folder(folder) {
         }
     })
     if (isHave) {
-        console.log('already has')
+        // console.log('already has')
         return
     }
     new_favourite = { currentDir: currentDir, folder: folder }

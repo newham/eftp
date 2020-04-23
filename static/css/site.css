@@ -238,10 +238,10 @@ td {
     /* background: #432; */
 }
 
-/* 奇数行 */
-
-table tr:nth-child(odd) {
-    background: var(--tr-odd-bg-color);
+/* 奇数行 odd*/
+/* 偶数数行 even*/
+table tr:nth-child(even) {
+    background: var(--tr-even-bg-color);
 }
 
 /* 行 */
@@ -297,4 +297,9 @@ p {
 
 .full-w {
     width: 100%;
+}
+
+.img-loading{
+    /* width: 100%; */
+    height: 10px;
 }

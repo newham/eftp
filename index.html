@@ -69,7 +69,7 @@
 
         .path {
             position: fixed;
-            top:0px;
+            top: 0px;
             left: 230px;
             width: calc(100% - 230px - 120px);
             /* margin-left: 10px; */
@@ -131,9 +131,15 @@
         }
 
         #infos p {
-            padding: 5px 10px;
+            padding: 5px 10px 0px 10px;
+            /* border-bottom: var(--side-bar-border); */
+            /* overflow-x: hidden; */
+        }
+
+        .line-div {
+            padding-bottom: 5px;
             border-bottom: var(--side-bar-border);
-            overflow-x: hidden;
+            /* overflow-x: hidden; */
         }
 
         .fix-btn {
@@ -164,26 +170,27 @@
             background: var(--menu-bg-color);
             border-radius: 10px;
             /* border: var(--bar-border); */
+            border: 1px solid var(--menu-border-color);
             display: none;
             box-shadow: var(--box-shadow);
             overflow-y: scroll;
         }
 
-        .menu button:hover{
+        .menu button:hover {
             background: var(--blue-1);
             color: #fff;
         }
 
         #favourites {
             margin: 8px 0px;
-            border-top: var(--line-border);
+            /* border-top: 1px solid var(--menu-border-color); */
             width: 100%;
         }
 
         #favourites button {
             padding-bottom: 2px;
             width: 100%;
-            border-bottom: var(--line-border);
+            border-bottom: 1px solid var(--menu-border-color);
             border-radius: 0px;
             overflow: hidden;
             text-overflow: ellipsis;
@@ -209,7 +216,7 @@
             height: 0;
             border-width: 0 10px 10px;
             border-style: solid;
-            border-color: transparent transparent var(--bar-border-color);
+            border-color: transparent transparent var(--menu-border-color);
         }
     </style>
 </head>

@@ -94,7 +94,7 @@ function createIndexWindow() {
     })
 
     //set globleData
-    global.shareData.processLocks.push(false)
+    global.shareData.processLocks.push(0)
 
     // 并且为你的应用加载index.html
     // win.loadURL(`file://${__dirname}/index.html`)

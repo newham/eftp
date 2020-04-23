@@ -1,25 +1,27 @@
 :root {
-    --side-bar-bg-color: #666;
-    --side-bar-font-color: #fff;
-    --side-bar-border:1px solid #555;
     --main-color: #444;
-    --menu-bg-color: var(--main-color);
+    --side-bar-bg-color: var(--main-color);
+    --side-bar-font-color: #fff;
+    --side-bar-border: 1px solid #333;
     --title-bar-bg-color: var(--main-color);
-    --foot-bar-bg-color: #eee;
-    --body-bg-color: #111;
-    --line-border: 1px solid #222;
-    --bar-border-color:#111;
+    --foot-bar-bg-color: var(--main-color);
+    --body-bg-color: var(--main-color);
+    --line-border: 1px solid #333;
+    --bar-border-color: #333;
     --bar-border: 1px solid var(--bar-border-color);
     --font-color: #eee;
     --font-color-light: #eee;
     --font-color-dark: #aaa;
     --btn-bg-color: #666;
     --btn-color: #fff;
-    --btn-border: 1px solid #444;
+    --btn-border: 0px solid #444;
     --btn-hover-bg-color: #777;
     --btn-active-bg-color: #444;
     --tr-hover-bg-color: #888;
     --tr-odd-bg-color: #292929;
-    --brag-box-bg-color:var(--main-color);
-    --brag-box-border-color:#fff;
+    --tr-even-bg-color: #292929;
+    --brag-box-bg-color: var(--main-color);
+    --brag-box-border-color: #fff;
+    --menu-border-color: #333;
+    --menu-bg-color: var(--btn-bg-color);
 }

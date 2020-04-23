@@ -41,6 +41,9 @@ var file_id = -1
 
 file_menu.append(new MenuItem({
     label: '下载', click() {
+        if (file_id < 0 || !fileList[file_id]) {//可能由于没有权限，无法获得文件名
+            return
+        }
         file_name = fileList[file_id].name
         console.log('download file', file_name)
         download_file(file_name)
@@ -68,6 +71,9 @@ var folder_id = -1
 
 folder_menu.append(new MenuItem({
     label: '删除', click() {
+        if (folder_id < 0) {
+            return
+        }
         folder = fileList[folder_id]
         console.log('delete', folder.name)
         del_file(folder.name, folder.isDir)
@@ -94,7 +100,10 @@ var favourite_id = -1
 
 favourite_menu.append(new MenuItem({
     label: '删除', click() {
-        console.log('delete favourite id',favourite_id)
+        if (favourite_id < 0) {
+            return
+        }
+        console.log('delete favourite id', favourite_id)
         del_favourite(favourite_id)
     }
 }))

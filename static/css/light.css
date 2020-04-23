@@ -1,25 +1,27 @@
 :root {
-    --side-bar-bg-color: #fff;
+    --main-color: #fff;
+    --side-bar-bg-color: var(--main-color);
     --side-bar-font-color: #2302CF;
     --side-bar-border: 1px solid #eee;
-    --main-color: #efefef;
-    --menu-bg-color: #fff;
-    --title-bar-bg-color: var(--main-color);
+    --menu-bg-color: var(--main-color);
+    --title-bar-bg-color: #f1f1f1;
     --foot-bar-bg-color: var(--main-color);
-    --body-bg-color: #eee;
+    --body-bg-color: var(--main-color);
     --line-border: 1px solid var(--main-color);
-    --bar-border-color: var(--main-color);
+    --bar-border-color: #eee;
     --bar-border: 1px solid var(--bar-border-color);
     --font-color: #555;
     --font-color-light: #ddd;
     --font-color-dark: #111;
-    --btn-bg-color: #fff;
+    --btn-bg-color: var(--main-color);
     --btn-color: #111;
-    --btn-border: 1px solid (var(--bar-border-color));
+    --btn-border: 0px solid var(--bar-border-color);
     --btn-hover-bg-color: #f6f6f6;
     --btn-active-bg-color: #ddd;
     --tr-hover-bg-color: #ddd;
     --tr-odd-bg-color: #f5f5f5;
+    --tr-even-bg-color: #f5f5f5;
     --brag-box-bg-color:#fff;
     --brag-box-border-color:#ddd;
+    --menu-border-color:#cecece;
 }
