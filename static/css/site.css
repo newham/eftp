@@ -265,6 +265,11 @@ p {
     color: rgb(32, 182, 32);
 }
 
+.txt-info {
+    color: var(--blue-2);
+}
+
+
 .drag_box {
     position: fixed;
     top: calc(50% - var(--drag-box-h) / 2);

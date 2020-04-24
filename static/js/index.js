@@ -45,17 +45,24 @@ function addLock(isLock = false) {
     remote.getGlobal('shareData').processLocks = locks
 }
 
-function doneProcess(id, tg = 'success', msg = '') {
+function doProcess(id, tg = 'success', msg = '') {
+    //clean
+    document.getElementById(id).classList.remove('txt-success', 'txt-danger', 'txt-info')
+    //set class
     txt_class = 'txt-success'
     if (tg == 'failed') {
         txt_class = 'txt-danger'
+    } else if (tg == 'info') {
+        txt_class = 'txt-info'
     }
     if (msg != "") {
         msg = ' : ' + msg
     }
     document.getElementById(id).innerHTML = tg + msg
     document.getElementById(id).classList.add(txt_class)
-    addLock(false)
+    if (tg == 'success' || tg == 'failed') {
+        addLock(false)
+    }
     //count
     // console.log(infos_count)
     if (++infos_count > max_infos_num) {
@@ -96,11 +103,8 @@ function ls(dir, isShow = isShowHidden) {
         return
     }
     //dir = "" 刷新
-    //clean
     document.querySelector('#file_list').innerHTML = ""
     fileList = []
-    // start
-    // console.log(ls_history.length)
     //
     if (dir) {
         if (dir == "..") {
@@ -110,12 +114,10 @@ function ls(dir, isShow = isShowHidden) {
         } else if (dir == '-1') {
             if (backIndex < ls_history.length - 1) {
                 backIndex += 2
-                console.log('backindex', backIndex)
             }
             back = ls_history[ls_history.length - backIndex]
-            console.log('backIndex', backIndex)
             if (back && back.currentDir != currentDir) {
-                console.log('ls back', back.currentDir)
+                // console.log('ls back', back.currentDir)
                 currentDir = back.currentDir
             }
         } else {
@@ -127,7 +129,7 @@ function ls(dir, isShow = isShowHidden) {
     }
 
     ls_history.push({ currentDir: currentDir }) //add history
-    console.log('add history', currentDir, ls_history.length)
+    // console.log('add history', currentDir, ls_history.length)
 
     //setlock
     ls_lock = true
@@ -161,11 +163,11 @@ function ls(dir, isShow = isShowHidden) {
         }
     }).then(() => {
         // addInfo('success')
-        doneProcess(id)
+        doProcess(id)
         ls_lock = false
     }).catch((res) => {
         // console.log("exception", res)
-        doneProcess(id, 'failed', res)
+        doProcess(id, 'failed', res)
         ls_lock = false
     })
 }
@@ -272,14 +274,14 @@ function upload_file(files) {
     // setProcess(20)
     ssh.putFiles(fileItems).then(function () {
         // console.log("The File thing is done")
-        doneProcess(id)
+        doProcess(id)
         // addInfo('success')
         ls('')
     }, function (error) {
         // console.log("Something's wrong", error)
-        doneProcess(id, 'failed', error)
+        doProcess(id, 'failed', error)
     }).catch((res) => {
-        doneProcess(id, 'failed', res)
+        doProcess(id, 'failed', res)
     })
 }
 
@@ -326,11 +328,11 @@ function upload_folder() {
             }
         }).then(function (status) {
             // addInfo('success')
-            doneProcess(id)
+            doProcess(id)
             ls("")//刷新列表
             finishProcess()
         }).catch((res) => {
-            doneProcess(id, 'failed', res)
+            doProcess(id, 'failed', res)
         })
     })
 }
@@ -344,12 +346,12 @@ function download_file(file) {
         ssh.getFile(folder + file, currentDir + file).then(function (Contents) {
             // console.log("The File", file, "successfully downloaded")
             // addInfo('success')
-            doneProcess(id)
+            doProcess(id)
         }, function (error) {
             // console.log("Something's wrong")
             console.log(error)
         }).catch((res) => {
-            doneProcess(id, 'failed', res)
+            doProcess(id, 'failed', res)
         })
     })
 
@@ -366,12 +368,28 @@ function del_file(file, isDir) {
     }
     id = addInfo('rm', file)
     ssh.exec('rm', [tag, currentDir + file]).then(() => {
-        doneProcess(id)
+        doProcess(id)
         ls("")
     }).catch((res) => {
         // console.log("exception", res)
-        doneProcess(id, 'failed', res)
+        doProcess(id, 'failed', res)
     })
+}
+
+function getFileParentName(file) {
+    if (file == "") {
+        return ""
+    }
+    var obj = file.lastIndexOf(".");
+    return file.slice(0, obj);//文件名
+}
+
+function getFileType(file) {
+    if (file == "") {
+        return ""
+    }
+    var obj = file.lastIndexOf(".");
+    return file.slice(obj + 1);//文件名
 }
 
 function getFileName(file) {
@@ -426,12 +444,12 @@ function mkdir() {
     //mkdir by ssh
     ssh.mkdir(currentDir + dir_name).then(function () {
         // console.log("mkdir success", dir_name)
-        doneProcess(id)
+        doProcess(id)
         // ls(dir_name) //进入该文件夹
         ls("")//只刷新目录
     }, function (error) {
         // console.log(error)
-        doneProcess(id, 'failed', error)
+        doProcess(id, 'failed', error)
     })
     show_dialog(false)
 }
@@ -457,11 +475,11 @@ function connectSSH() {
         port: userSSHInfo.port,
     }).then(() => {
         // console.log("connect success!")
-        doneProcess(id)
+        doProcess(id)
         ls("")
     }, function (error) {
         // console.log("connect failed!", error)
-        doneProcess(id, 'failed', error)
+        doProcess(id, 'failed', error)
     })
 }
 
@@ -556,6 +574,68 @@ function showfavouritesMenu(isShow = isfavouritesMenuShow) {
 function showHiddenFile() {
     isShowHidden = !isShowHidden
     ls('', isShowHidden)
+}
+
+function zip_folder(folder) {
+    foler_path = currentDir + folder
+    id = addInfo('zip', foler_path)
+    ssh.exec('zip', ['-r', foler_path + '.zip', foler_path], {
+        onStdout(chunk) {
+            read_line(chunk, userSSHInfo.characterSet, (line, i) => {
+                doProcess(id, 'info', line)
+            })
+        }, onStderr(chunk) {
+            // console.log('stderrChunk', chunk.toString(userSSHInfo.characterSet))
+        }
+    }).then(() => {
+        // addInfo('success')
+        doProcess(id)
+        ls('')
+    }).catch((res) => {
+        // console.log("exception", res)
+        doProcess(id, 'failed', res)
+    })
+}
+
+// 将压缩文件test.zip在指定目录/tmp下解压缩，如果已有相同的文件存在，要求unzip命令覆盖原先的文件。
+
+// unzip -o test.zip -d tmp/
+function unzip_file(file) {
+    if (getFileType(file) != 'zip') {
+        return
+    }
+    foler_path = currentDir + file
+    id = addInfo('unzip', foler_path)
+    // console.log('unzip', foler_path, currentDir + getFileParentName(file),',',getFileType(file))
+    ssh.exec('unzip', ['-o', foler_path, '-d', currentDir + getFileParentName(file)], {
+        onStdout(chunk) {
+            read_line(chunk, userSSHInfo.characterSet, (line, i) => {
+                doProcess(id, 'info', line)
+            })
+        }, onStderr(chunk) {
+            // console.log('stderrChunk', chunk.toString(userSSHInfo.characterSet))
+        }
+    }).then(() => {
+        // addInfo('success')
+        doProcess(id)
+        ls('')
+    }).catch((res) => {
+        // console.log("exception", res)
+        doProcess(id, 'failed', res)
+    })
+}
+
+function ctrl_c() {
+    console.log('ctrl+c')
+    ssh.exec('ctrl+c', [], {
+        onStdout(chunk) {
+            console.log('stdoutChunk', chunk.toString(userSSHInfo.characterSet))
+        }, onStderr(chunk) {
+            console.log('stderrChunk', chunk.toString(userSSHInfo.characterSet))
+        }
+    }).catch((res) => {
+        console.log("exception", res)
+    })
 }
 
 //设置窗口标题

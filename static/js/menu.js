@@ -57,6 +57,14 @@ file_menu.append(new MenuItem({
         del_file(file.name, file.isDir)
     }
 }))
+file_menu.append(new MenuItem({ type: 'separator' }))
+file_menu.append(new MenuItem({
+    label: '解压', click() {
+        file = fileList[file_id]
+        console.log('unzip', file.name)
+        unzip_file(file.name)
+    }
+}))
 
 function showFileMenu(id) {
     file_id = id
@@ -85,6 +93,14 @@ folder_menu.append(new MenuItem({
         folder = fileList[folder_id]
         console.log('favourite', folder.name)
         favourite_folder(folder.name)
+    }
+}))
+folder_menu.append(new MenuItem({ type: 'separator' }))
+folder_menu.append(new MenuItem({
+    label: '压缩', click() {
+        folder = fileList[folder_id]
+        console.log('zip', folder.name)
+        zip_folder(folder.name)
     }
 }))
 
