@@ -312,3 +312,13 @@ p {
 .txt-center {
     text-align: center !important;
 }
+
+.txt-ellipsis {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.font-light {
+    color: var(--font-color-light) !important;
+}

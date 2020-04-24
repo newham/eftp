@@ -11,6 +11,18 @@ var fileList = []
 
 const loading_html = '<img class="img-loading" src="static/img/loading.gif">'
 
+var isShowHidden = false
+
+const max_infos_num = 100
+
+var infos_count = 0
+
+var ls_history = []
+
+const ls_history_max = 100
+
+var ls_lock = false
+
 let getHome = () => {
     if (userSSHInfo.username == "root") {
         return "/root/"
@@ -44,6 +56,11 @@ function doneProcess(id, tg = 'success', msg = '') {
     document.getElementById(id).innerHTML = tg + msg
     document.getElementById(id).classList.add(txt_class)
     addLock(false)
+    //count
+    // console.log(infos_count)
+    if (++infos_count > max_infos_num) {
+        clean_infos()
+    }
 }
 
 function addInfo(msg, file = '', isArray = false) {
@@ -72,34 +89,66 @@ let showPath = (path) => {
     document.querySelector('#path').innerHTML = path
 }
 
-function ls(dir) {
+var backIndex = 0
+
+function ls(dir, isShow = isShowHidden) {
+    if (ls_lock) {
+        return
+    }
     //dir = "" 刷新
     //clean
     document.querySelector('#file_list').innerHTML = ""
     fileList = []
     // start
+    // console.log(ls_history.length)
+    //
     if (dir) {
-        if (dir == "../") {
+        if (dir == "..") {
             currentDir = getParentPath(currentDir)
         } else if (dir == '$HOME') {
             currentDir = getHome()
+        } else if (dir == '-1') {
+            if (backIndex < ls_history.length - 1) {
+                backIndex += 2
+                console.log('backindex', backIndex)
+            }
+            back = ls_history[ls_history.length - backIndex]
+            console.log('backIndex', backIndex)
+            if (back && back.currentDir != currentDir) {
+                console.log('ls back', back.currentDir)
+                currentDir = back.currentDir
+            }
         } else {
+            if (dir != '') {
+                backIndex = 0
+            }
             currentDir = currentDir + dir + "/"
         }
     }
+
+    ls_history.push({ currentDir: currentDir }) //add history
+    console.log('add history', currentDir, ls_history.length)
+
+    //setlock
+    ls_lock = true
     //set path
     showPath(currentDir)
     //get parent path
     parentPath = getParentPath(currentDir)
-    // console.log(currentDir)
+    // console.log('ls', currentDir)
     id = addInfo('ls', currentDir)
-    ssh.exec('ls', ['-lh', currentDir], {
+    //arg
+    arg = '-lh'
+    if (isShow) {
+        arg = '-lha'
+    }
+    ssh.exec('ls', [arg, currentDir], {
         onStdout(chunk) {
             //add ../ to list
-            if (currentDir != "/") {
+            if (currentDir != "/" && !isShow) {
                 //add up
                 up_file = init_fileInfo()
-                up_file.name = "../"
+                up_file.name = ".."
                 up_file.isDir = true
                 setFileInfo(up_file)
             }
@@ -113,9 +162,11 @@ function ls(dir) {
     }).then(() => {
         // addInfo('success')
         doneProcess(id)
+        ls_lock = false
     }).catch((res) => {
         // console.log("exception", res)
         doneProcess(id, 'failed', res)
+        ls_lock = false
     })
 }
 
@@ -174,14 +225,19 @@ let set_fileInfo = (attrs = [], id) => {
 }
 
 function getFileHTML(fileInfo) {
+    //set font color
+    font_class = ""
+    if (fileInfo.name.startsWith('.')) {
+        font_class = 'font-light'
+    }
     if (fileInfo.isDir) {
         tr_html = '<tr oncontextmenu="showFolderMenu({0})">'.format(fileInfo.id)
-        if (fileInfo.name == "../") {
+        if (fileInfo.name == "..") {
             tr_html = '<tr>'
         }
-        return '{0}<td class="td-icon"><img class="icon" src="static/img/folder_mac.png"></td><td class="td-head" colspan="3"><a onclick="ls(\'{1}\')" href="#"><div>{1}</div></a></td></div>'.format(tr_html, fileInfo.name)
+        return '{0}<td class="td-icon"><img class="icon" src="static/img/folder_mac.png"></td><td class="td-head" colspan="3"><a onclick="ls(\'{2}\')" href="#"><div class="{1}">{2}</div></a></td></div>'.format(tr_html, font_class, fileInfo.name)
     } else {
-        return '<tr oncontextmenu="showFileMenu({0})"><td class="td-icon"><img class="icon" src="static/img/file.png"></td><td class="td-head"><div>{1}</div></td><td>{2}B</td><td class="td-download"><a href="#" onclick="download_file(\'{1}\')"><img class="icon" src="static/img/download.png"></a></div>'.format(fileInfo.id, fileInfo.name, fileInfo.size)
+        return '<tr oncontextmenu="showFileMenu({0})"><td class="td-icon"><img class="icon" src="static/img/file.png"></td><td class="td-head"><div class="{1}">{2}</div></td><td>{3}B</td><td class="td-download"><a href="#" onclick="download_file(\'{2}\')"><img class="icon" src="static/img/download.png"></a></div>'.format(fileInfo.id, font_class, fileInfo.name, fileInfo.size)
     }
 }
 
@@ -306,7 +362,7 @@ function del_file(file, isDir) {
     }
     var tag = '-f'
     if (isDir) {
-        tag = '-dr'
+        tag = '-drf'
     }
     id = addInfo('rm', file)
     ssh.exec('rm', [tag, currentDir + file]).then(() => {
@@ -416,6 +472,7 @@ function setTitle() {
 function clean_infos() {
     if (getLock() == 0) {
         document.getElementById('infos').innerHTML = ''
+        infos_count = 0
     }
 }
 
@@ -494,6 +551,11 @@ function showfavouritesMenu(isShow = isfavouritesMenuShow) {
     favouritesMenu = document.getElementById('favouritesMenu')
     favouritesMenu.style.display = isShow ? 'block' : 'none'
     isfavouritesMenuShow = !isShow
+}
+
+function showHiddenFile() {
+    isShowHidden = !isShowHidden
+    ls('', isShowHidden)
 }
 
 //设置窗口标题
