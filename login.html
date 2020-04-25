@@ -13,9 +13,23 @@
     <style>
         body {
             -webkit-app-region: drag;
-            padding-top: 24px;
+            padding-top: 25px;
             background: var(--login-bg-color);
         }
+
+        h1 {
+            margin: 5px 12px;
+            color: var(--font-color);
+        }
+
+        .input-quarter {
+            width: calc(25% - 10px) !important;
+        }
+
+        td {
+            background: #fff;
+        }
+
     </style>
 </head>
 
@@ -27,18 +41,25 @@
         <input type="number" id="port" placeholder="*port" class="input-half" value="22">
         <input type="text" id="label" placeholder="label">
         <input type="text" id="username" placeholder="*username" value="">
-        <input type="text" id="password" placeholder="*password" class="input-half" value="">
+        <input type="password" id="password" placeholder="*password" class="input-half" value="">
         <label>or</label>
-        <input type="text" id="privateKey" placeholder="*privateKey" onclick="selectPK()" class="input-half">
+        <input type="password" id="privateKey" placeholder="*privateKey" onclick="selectPK()" class="input-half">
         <input type="hidden" id="id" value="-1">
+        <input type="hidden" id="color" value="0">
+        <div class="btn-group" id="color-group">
+            <button class="active bg-color-0" onclick="setColor(0)">蓝</button><button class="bg-color-1"
+                onclick="setColor(1)">红</button><button onclick="setColor(2)" class="bg-color-2">黄</button><button
+                onclick="setColor(3)" class="bg-color-3">绿</button><button onclick="setColor(4)"
+                class="bg-color-4">紫</button>
+        </div>
         <div class="r">
             <button onclick="addUserSSHInfo()" class="btn-half-danger"> 保存 </button>
             <button onclick="show_dialog(false)" class="btn-half"> 取消 </button>
         </div>
     </div>
+    <h1>HOSTS</h1>
     <div id='userSSH_list' class="r">
     </div>
-
     <script src="static/js/common.js"></script>
     <script src="static/js/dialog.js"></script>
     <!-- <script src="static/js/ssh.js"></script> -->

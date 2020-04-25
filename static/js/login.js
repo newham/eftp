@@ -84,7 +84,10 @@ function addUserSSHInfo() {
     privateKey = document.getElementById('privateKey').value
     port = document.getElementById('port').value
     id = document.getElementById('id').value
+    color = document.getElementById('color').value
     ssh = false
+
+    console.log('color,', color)
 
     if (host == "" || username == "" || (password == "" && privateKey == "")) {
         // show_dialog(false)
@@ -115,6 +118,7 @@ function addUserSSHInfo() {
         port: port,
         label: label,
         favourites: tmp_favourites,
+        color: color,
     }
 
     console.log('add userSSHInfo', userSSHInfo.id, userSSHInfo.label)
@@ -150,10 +154,10 @@ function loadConf() {
         //else 没有配置文件，只显示添加按钮
         // console.log(conf)
         userSSH_list.forEach(userSSHInfo => {
-            list_html.innerHTML += '<div class="c-2-5"><a class="box"  oncontextmenu="showHostMenu({0})" onclick="goSSH({1})">{2}<br><label>{3}@{4}</label></a></div>'.format(userSSHInfo.id, userSSHInfo.id, userSSHInfo.label, userSSHInfo.username, userSSHInfo.host)
+            list_html.innerHTML += '<div class="c-2-5 "><a class="box bg-color-{5}"  oncontextmenu="showHostMenu({0})" onclick="goSSH({1})">{2}<br><label>{3}@{4}</label></a></div>'.format(userSSHInfo.id, userSSHInfo.id, userSSHInfo.label, userSSHInfo.username, userSSHInfo.host, userSSHInfo.color)
         });
         // add button
-        list_html.innerHTML += '<div class="c-2-5"><a class="box"  onclick="show_dialog(true)">+<br><label>Host</label></a></div>'
+        list_html.innerHTML += '<div class="c-2-5"><a class="box"  onclick="show_dialog(true)">＋<br><label>Host</label></a></div>'
     })
 
 }
@@ -196,7 +200,9 @@ function editSSHInfo(userSSHInfo) {
 }
 
 function setSSHDialogVal(userSSHInfo) {
+    color = Math.floor((Math.random() * 5))
     if (userSSHInfo) {
+        color = userSSHInfo.color
         document.getElementById('host').value = userSSHInfo.host
         document.getElementById('username').value = userSSHInfo.username
         document.getElementById('label').value = userSSHInfo.label
@@ -204,6 +210,7 @@ function setSSHDialogVal(userSSHInfo) {
         document.getElementById('privateKey').value = userSSHInfo.privateKey
         document.getElementById('port').value = userSSHInfo.port
         document.getElementById('id').value = userSSHInfo.id
+        document.getElementById('color').value = color
     } else {
         document.getElementById('host').value = ""
         document.getElementById('username').value = ""
@@ -212,6 +219,20 @@ function setSSHDialogVal(userSSHInfo) {
         document.getElementById('privateKey').value = ""
         document.getElementById('port').value = 22
         document.getElementById('id').value = -1
+        document.getElementById('color').value = color
+    }
+    setColor(color)
+}
+
+function setColor(color = 0) {
+    color_group = document.getElementById('color-group').children;
+    for (i = 0; i < color_group.length; i++) {
+        if (i == color) {
+            color_group[i].classList.add('active')
+            document.getElementById('color').value = color
+        } else {
+            color_group[i].classList.remove('active')
+        }
     }
 }
 

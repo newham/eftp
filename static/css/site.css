@@ -8,7 +8,7 @@
     --side-bar-padding: 0px;
     --foot-bar-h: 0px;
     --dialog-w: 60%;
-    --btn-radius: 5px;
+    --btn-radius: 2px;
     --input-radius: 2px;
     --btn-h: 26px;
     --btn-font-size: 15px;
@@ -102,12 +102,12 @@ input::-webkit-input-placeholder {
 }
 
 .box {
-    border-radius: 5px;
+    border-radius: var(--btn-radius);
     /* border: 1px solid #ddd; */
     text-align: center;
     background: var(--blue-1);
     color: #fff !important;
-    padding: 30px 10px;
+    padding: 40px 10px;
     text-overflow: ellipsis;
     white-space: nowrap;
     overflow: hidden;
@@ -269,7 +269,6 @@ p {
     color: var(--blue-2);
 }
 
-
 .drag_box {
     position: fixed;
     top: calc(50% - var(--drag-box-h) / 2);
@@ -326,4 +325,92 @@ p {
 
 .font-light {
     color: var(--font-color-light) !important;
+}
+
+/* color  */
+
+.btn-group {
+    margin-bottom: 13px;
+    text-align: left;
+}
+
+.btn-group button {
+    margin: 0px 5px;
+    border-radius: 16px;
+    color: #fff;
+    border: 2px solid #fff;
+}
+
+.active {
+    border: 2px solid #000 !important;
+}
+
+/* bg-0 */
+
+.bg-color-0 {
+    background: var(--blue-1) !important;
+}
+
+.bg-color-0:hover {
+    background: var(--blue-2);
+}
+
+.bg-color-0:active {
+    background: var(--blue-3);
+}
+
+/* bg-1 */
+
+.bg-color-1 {
+    background: OrangeRed !important;
+}
+
+.bg-color-1:hover {
+    background: Tomato;
+}
+
+.bg-color-1:active {
+    background: Red;
+}
+
+/* bg-2 */
+
+.bg-color-2 {
+    background: #FFD700 !important;
+}
+
+.bg-color-2:hover {
+    background: #EEC900;
+}
+
+.bg-color-2:active {
+    background: #CDAD00;
+}
+
+/* bg-3 */
+
+.bg-color-3 {
+    background: #339933 !important;
+}
+
+.bg-color-3:hover {
+    background: #339933ce;
+}
+
+.bg-color-3:active {
+    background: #006633;
+}
+
+/* bg-4 */
+
+.bg-color-4 {
+    background: #8A2BE2 !important;
+}
+
+.bg-color-4:hover {
+    background: #9370DB;
+}
+
+.bg-color-4:active {
+    background: #A020F0;
 }

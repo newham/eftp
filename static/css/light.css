@@ -11,8 +11,8 @@
     --bar-border-color: #eee;
     --bar-border: 1px solid var(--bar-border-color);
     --font-color: #555;
-    --font-color-light: #ccc;
-    --font-color-dark: #111;
+    --font-color-light: #ddd;
+    --font-color-dark: #333;
     --btn-bg-color: var(--main-color);
     --btn-color: #111;
     --btn-border: 0px solid var(--bar-border-color);
