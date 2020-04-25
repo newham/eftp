@@ -65,7 +65,7 @@ function doProcess(id, tg = 'success', msg = '') {
     }
     //count
     // console.log(infos_count)
-    if (++infos_count > max_infos_num) {
+    if (infos_count > max_infos_num) {
         clean_infos()
     }
 }
@@ -86,6 +86,8 @@ function addInfo(msg, file = '', isArray = false) {
     sidebar.scrollTop = sidebar.scrollHeight;
     //加锁，退出提示，禁止清空
     addLock(true)
+    //infos_count++
+    infos_count++
     return id
 }
 
