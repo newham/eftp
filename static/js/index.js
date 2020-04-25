@@ -376,6 +376,10 @@ function del_file(file, isDir) {
     })
 }
 
+function getFileFullName(file, tail) {
+    return file.replace(tail, '')
+}
+
 function getFileParentName(file) {
     if (file == "") {
         return ""
@@ -429,8 +433,7 @@ function checkRename(filename, isDir) {
     return isRename
 }
 
-function mkdir() {
-    dir_name = document.getElementById('dir_name').value
+function mkdir(dir_name = document.getElementById('dir_name').value) {
     if (!dir_name || dir_name == "") {
         show_dialog(false)
         return
@@ -601,13 +604,30 @@ function zip_folder(folder) {
 
 // unzip -o test.zip -d tmp/
 function unzip_file(file) {
-    if (getFileType(file) != 'zip') {
-        return
+    cmd = ''
+    arg_1 = ''
+    arg_2 = ''
+    folder_name = ''
+    if (file.endsWith('.zip')) {
+        cmd = 'unzip'
+        arg_1 = '-o'
+        arg_2 = '-d'
+        folder_name = getFileFullName(file, '.zip')
+    } else if (file.endsWith('.tar.gz')) {
+        cmd = 'tar'
+        arg_1 = '-zxvf'
+        arg_2 = '-C'
+        folder_name = ''
+    } else if (file.endsWith('.tar.xz')) {
+        cmd = 'tar'
+        arg_1 = '-xvf'
+        arg_2 = '-C'
+        folder_name = ''
     }
     foler_path = currentDir + file
-    id = addInfo('unzip', foler_path)
+    id = addInfo(cmd, foler_path)
     // console.log('unzip', foler_path, currentDir + getFileParentName(file),',',getFileType(file))
-    ssh.exec('unzip', ['-o', foler_path, '-d', currentDir + getFileParentName(file)], {
+    ssh.exec(cmd, [arg_1, foler_path, arg_2, currentDir + folder_name], {
         onStdout(chunk) {
             read_line(chunk, userSSHInfo.characterSet, (line, i) => {
                 doProcess(id, 'info', line)
