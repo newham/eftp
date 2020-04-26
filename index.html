@@ -61,7 +61,7 @@
             width: calc(var(--side-bar-w) - 1px);
             height: 100%;
             background-color: var(--side-bar-bg-color);
-            color: var(--side-bar-font-color);
+            /* color: var(--side-bar-font-color); */
             /* text-align: center; */
             padding: 0px var(--side-bar-padding);
             overflow-y: scroll;
@@ -103,9 +103,10 @@
         .main {
             float: left;
             width: calc(100% - var(--side-bar-w) - var(--side-bar-padding) * 2);
-            height: 100%;
+            height: calc(100% - 50px);
             overflow-y: scroll;
             border-right: var(--bar-border);
+            padding-bottom: 50px;
         }
 
         .foot-bar {
@@ -134,6 +135,11 @@
             padding: 5px 10px 0px 10px;
             /* border-bottom: var(--side-bar-border); */
             /* overflow-x: hidden; */
+        }
+
+        #infos p label{
+            color: var(--side-bar-font-color);
+            margin-right: 10px;
         }
 
         .line-div {
@@ -261,7 +267,7 @@
         </div>
     </div>
     <div class="container" onclick="showfavouritesMenu(false)" id="container">
-        <div class="main">
+        <div class="main" oncontextmenu="showDirMenu()">
             <table>
                 <tbody id="file_list">
 

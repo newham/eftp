@@ -75,12 +75,12 @@ function addInfo(msg, file = '', isArray = false) {
     if (isArray) {
         file = file.join(',')
     }
-    if (file != "") {
-        file = ' : ' + file
-    }
+    // if (file != "") {
+    //     file = ' : ' + file
+    // }
     //sha1 a id
     id = new Date().getTime()
-    document.getElementById('infos').innerHTML += '<div class="line-div"><p>{0}</p><p id="{1}">{2}</p></div>'.format(msg + file, id, loading_html)
+    document.getElementById('infos').innerHTML += '<div class="line-div"><p><label>{0}</label>{1}</p><p id="{2}">{3}</p></div>'.format(msg, file, id, loading_html)
     //滑动到底部
     sidebar = document.getElementById('sidebar')
     sidebar.scrollTop = sidebar.scrollHeight;
@@ -658,6 +658,30 @@ function ctrl_c() {
     }).catch((res) => {
         console.log("exception", res)
     })
+}
+
+function exec(cmd = '', args = [], msg, f_ok, f_error) {
+
+}
+
+var copy_from = ""
+
+function copy(from = copy_from, to = "") {
+    if (from && from != "") {
+        id = addInfo('copy from', from)
+        copy_from = currentDir + from
+        doProcess(id)
+    }
+    if (to && to != "" && copy_from != "") {
+        id = addInfo('copy to', to)
+        ssh.exec('cp', ['-r', copy_from, to]).then(() => {
+            doProcess(id)
+            copy_from = ""
+            ls()
+        }).catch((res) => {
+            doProcess(id, 'failed', res)
+        })
+    }
 }
 
 //设置窗口标题

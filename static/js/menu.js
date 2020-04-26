@@ -51,6 +51,14 @@ file_menu.append(new MenuItem({
 }))
 file_menu.append(new MenuItem({ type: 'separator' }))
 file_menu.append(new MenuItem({
+    label: '复制', click() {
+        file = fileList[file_id]
+        console.log('copy from', file.name)
+        copy(file.name)
+    }
+}))
+file_menu.append(new MenuItem({ type: 'separator' }))
+file_menu.append(new MenuItem({
     label: '删除', click() {
         file = fileList[file_id]
         console.log('delete', file.name)
@@ -77,6 +85,14 @@ const folder_menu = new Menu()
 
 var folder_id = -1
 
+folder_menu.append(new MenuItem({
+    label: '复制', click() {
+        folder = fileList[folder_id]
+        console.log('copy from', folder.name)
+        copy(folder.name)
+    }
+}))
+folder_menu.append(new MenuItem({ type: 'separator' }))
 folder_menu.append(new MenuItem({
     label: '删除', click() {
         if (folder_id < 0) {
@@ -127,4 +143,18 @@ favourite_menu.append(new MenuItem({
 function showFavouriteMenu(id) {
     favourite_id = id
     favourite_menu.popup({ window: remote.getCurrentWindow() })
+}
+
+/* ******current dir menu******* */
+const dir_menu = new Menu()
+
+dir_menu.append(new MenuItem({
+    label: '粘贴', click() {
+        console.log('copy to', currentDir)
+        copy(null, currentDir)
+    }
+}))
+
+function showDirMenu() {
+    dir_menu.popup({ window: remote.getCurrentWindow() })
 }
