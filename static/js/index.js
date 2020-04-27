@@ -323,7 +323,7 @@ function getFileHTML(fileInfo) {
         }
         return '{0}<td class="td-icon"><img class="icon" src="static/img/folder_mac.png"></td><td class="td-head" colspan="3"><a onclick="ls(\'{2}\')" href="#"><div class="{1}">{2}</div></a></td></div>'.format(tr_html, font_class, fileInfo.name)
     } else {
-        return '<tr oncontextmenu="showFileMenu({0})"><td class="td-icon"><img class="icon" src="static/img/file.png"></td><td class="td-head"><div class="{1}">{2}</div></td><td>{3}B</td><td class="td-download"><a href="#" onclick="download_file(\'{2}\')"><img class="icon" src="static/img/download.png"></a></div>'.format(fileInfo.id, font_class, fileInfo.name, fileInfo.size)
+        return '<tr oncontextmenu="showFileMenu({0})"><td class="td-icon"><img class="icon" src="static/img/file.png"></td><td class="td-head"><div class="{1}">{2}</div></td><td>{3}B</td><td class="td-download"><a href="#" onclick="download_file(\'{2}\')">↓</a></div>'.format(fileInfo.id, font_class, fileInfo.name, fileInfo.size)
     }
 }
 

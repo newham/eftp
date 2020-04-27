@@ -293,7 +293,7 @@
         <div style="display: block;float: left;">
             <div style="float: left;">
                 <button onclick="ls('-1')">←</button>
-                <button onclick="ls('..')">↑</button>
+                <button onclick="ls('..')">../</button>
                 <button onclick="ls('$HOME')">~</button>
                 <button onclick="ls('')">↺</button>
                 <button onclick="showfavouritesMenu()">☆</button>
@@ -302,9 +302,9 @@
             <div id="path" class="path" ondblclick="maxWindow()"></div>
         </div>
         <div style="display: block;float: right;padding-right: 85px;">
-            <button onclick="show_dialog(true)"><img class="btn-icon" src="static/img/folder_add.png"></button>
-            <button onclick="upload_folder()"><img class="btn-icon" src="static/img/folder_upload.png"></button>
-            <button onclick="upload()"><img class="btn-icon" src="static/img/file_upload.png"></button>
+            <button onclick="show_dialog(true)">＋</button>
+            <button onclick="upload_folder()">↑/</button>
+            <button onclick="upload()">↑</button>
             <!-- <button onclick="ctrl_c()">X</button> -->
         </div>
     </div>
@@ -332,7 +332,7 @@
     <div class="foot-bar">
     </div>
     <div class="dialog" id="new_folder_dialog">
-        <p>文件名:</p>
+        <p>新建文件夹</p>
         <input type="text" id="dir_name" onkeydown="keydown_mkdir()">
         <button onclick="mkdir()" class="btn-half-danger">确定</button>
         <button onclick="show_dialog(false)" class="btn-half">取消</button>
