@@ -67,7 +67,12 @@
             overflow-y: scroll;
             /* background: #333; */
             /* text-align: center; */
-            padding-top: 5px;
+            padding: 6px 0px;
+        }
+
+        .sidebar-l::-webkit-scrollbar {
+            display: none;
+            /* Chrome Safari */
         }
 
         .tab-bar div {
@@ -304,7 +309,7 @@
         </div>
     </div>
     <div class="container" onclick="showfavouritesMenu(false)" id="container">
-        <div class="sidebar-l" >
+        <div class="sidebar-l">
             <div id="tab-bar" class="tab-bar"></div>
             <div class="tab-bar">
                 <div onclick="to_login()">＋</div>
