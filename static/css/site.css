@@ -4,7 +4,8 @@
     --blue-3: #0068d1;
     --blue-4: #2302CF;
     --title-bar-h: 36px;
-    --side-bar-w: 300px;
+    --side-bar-r-w: 300px;
+    --side-bar-l-w: 38px;
     --side-bar-padding: 0px;
     --foot-bar-h: 0px;
     --dialog-w: 60%;
@@ -272,8 +273,8 @@ p {
 .drag_box {
     position: fixed;
     top: calc(50% - var(--drag-box-h) / 2);
-    width: calc(100% - var(--side-bar-w) - 57px);
-    left: 10px;
+    width: calc(100% - var(--side-bar-r-w) - var(--side-bar-l-w) - 57px);
+    left: calc(10px + var(--side-bar-l-w));
     height: var(--drag-box-h);
     border: 2px dashed var(--brag-box-border-color);
     background: var(--brag-box-bg-color);

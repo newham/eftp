@@ -165,11 +165,11 @@ function loadConf() {
 function goSSH(id) {
     userSSHInfo = userSSH_list[id]
     console.log('go ssh', userSSHInfo.label)
-    // ipcRenderer.send('go_ssh', userSSHInfo)
+    ipcRenderer.send('go_ssh', userSSHInfo)
     // share data
-    remote.getGlobal('shareData').userSSHInfo = userSSHInfo
+    // remote.getGlobal('shareData').userSSHInfo = userSSHInfo
     // to html
-    window.location.href = 'index.html'
+    // window.location.href = 'index.html'
 }
 
 function delSSHInfo(id) {

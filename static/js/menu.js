@@ -41,6 +41,7 @@ var file_id = -1
 
 file_menu.append(new MenuItem({
     label: '下载', click() {
+        fileList = getFileList()
         if (file_id < 0 || !fileList[file_id]) {//可能由于没有权限，无法获得文件名
             return
         }
@@ -52,6 +53,7 @@ file_menu.append(new MenuItem({
 file_menu.append(new MenuItem({ type: 'separator' }))
 file_menu.append(new MenuItem({
     label: '复制', click() {
+        fileList = getFileList()
         file = fileList[file_id]
         console.log('copy from', file.name)
         copy(file.name)
@@ -60,6 +62,7 @@ file_menu.append(new MenuItem({
 file_menu.append(new MenuItem({ type: 'separator' }))
 file_menu.append(new MenuItem({
     label: '删除', click() {
+        fileList = getFileList()
         file = fileList[file_id]
         console.log('delete', file.name)
         del_file(file.name, file.isDir)
@@ -68,6 +71,7 @@ file_menu.append(new MenuItem({
 file_menu.append(new MenuItem({ type: 'separator' }))
 file_menu.append(new MenuItem({
     label: '解压', click() {
+        fileList = getFileList()
         file = fileList[file_id]
         console.log('unzip', file.name)
         unzip_file(file.name)
@@ -87,6 +91,7 @@ var folder_id = -1
 
 folder_menu.append(new MenuItem({
     label: '复制', click() {
+        fileList = getFileList()
         folder = fileList[folder_id]
         console.log('copy from', folder.name)
         copy(folder.name)
@@ -98,6 +103,7 @@ folder_menu.append(new MenuItem({
         if (folder_id < 0) {
             return
         }
+        fileList = getFileList()
         folder = fileList[folder_id]
         console.log('delete', folder.name)
         del_file(folder.name, folder.isDir)
@@ -106,6 +112,7 @@ folder_menu.append(new MenuItem({
 folder_menu.append(new MenuItem({ type: 'separator' }))
 folder_menu.append(new MenuItem({
     label: '收藏', click() {
+        fileList = getFileList()
         folder = fileList[folder_id]
         console.log('favourite', folder.name)
         favourite_folder(folder.name)
@@ -114,6 +121,7 @@ folder_menu.append(new MenuItem({
 folder_menu.append(new MenuItem({ type: 'separator' }))
 folder_menu.append(new MenuItem({
     label: '压缩', click() {
+        fileList = getFileList()
         folder = fileList[folder_id]
         console.log('zip', folder.name)
         zip_folder(folder.name)
@@ -150,6 +158,7 @@ const dir_menu = new Menu()
 
 dir_menu.append(new MenuItem({
     label: '粘贴', click() {
+        var currentDir = getCurrentDir()
         console.log('copy to', currentDir)
         copy(null, currentDir)
     }
@@ -157,4 +166,21 @@ dir_menu.append(new MenuItem({
 
 function showDirMenu() {
     dir_menu.popup({ window: remote.getCurrentWindow() })
+}
+
+/* ******tab menu******* */
+const tab_menu = new Menu()
+
+var tab_id = -1
+
+tab_menu.append(new MenuItem({
+    label: '关闭', click() {
+        console.log('close', tab_id)
+        closeTab(tab_id)
+    }
+}))
+
+function showTabMenu(id) {
+    tab_id = id
+    tab_menu.popup({ window: remote.getCurrentWindow() })
 }

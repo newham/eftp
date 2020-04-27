@@ -43,7 +43,7 @@ function createMenu() {
     //设置dock
     const dockMenu = Menu.buildFromTemplate([
         {
-            label: '新窗口',
+            label: '新HOST',
             click() {
                 createWindow()
             }
@@ -56,7 +56,7 @@ function createWindow() {
     // 创建菜单
     createMenu()
     // 创建窗口
-    createIndexWindow()
+    return createIndexWindow()
 }
 
 function createIndexWindow() {
@@ -104,6 +104,8 @@ function createIndexWindow() {
     if (process.argv.includes('-t')) {
         win.webContents.openDevTools()
     }
+
+    return win.id
 }
 
 // This method will be called when Electron has finished
@@ -121,6 +123,8 @@ app.on('window-all-closed', () => {
     // mac也直接退出
     app.quit()
 })
+
+
 
 app.on('activate', () => {
     // 在macOS上，当单击dock图标并且没有其他窗口打开时，
@@ -141,9 +145,16 @@ app.on('will-finish-launching', () => {
 
 // 主进程 消息队列 —— 一般用于渲染进程无法操作，通知主进程操作
 ipcMain.on('go_ssh', (event, userSSHInfo) => {
-    // console.log('go_ssh:', userSSHInfo)
-    global.userSSHInfo = userSSHInfo
-    BrowserWindow.getFocusedWindow().loadFile('index.html')
+    current_win = BrowserWindow.getFocusedWindow()
+    if (BrowserWindow.getAllWindows().length == 1) {
+        global.shareData.userSSHInfo = userSSHInfo
+        current_win.loadFile('index.html')
+    } else {
+        current_win.close()
+        BrowserWindow.getAllWindows().forEach((win) => {
+            win.webContents.send('add_ssh', userSSHInfo)
+        })
+    }
 })
 
 ipcMain.on('new_win', (event) => {

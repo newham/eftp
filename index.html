@@ -48,17 +48,54 @@
             padding-bottom: 1px;
         }
 
-
-
         .container {
             /* margin: 0px; */
             margin-top: calc(var(--title-bar-h) + 1px);
             height: calc(100% - var(--foot-bar-h) - var(--title-bar-h));
         }
 
-        .sidebar {
+        .sidebar-l {
+            float: left;
+            width: calc(var(--side-bar-l-w) - 1px);
+            height: 100%;
+            background-color: var(--title-bar-bg-color);
+            /* background-color: #333; */
+            border-right: var(--bar-border);
+            /* color: var(--side-bar-font-color); */
+            /* text-align: center; */
+            /* padding: 0px var(--side-bar-padding); */
+            overflow-y: scroll;
+            /* background: #333; */
+            /* text-align: center; */
+            padding-top: 5px;
+        }
+
+        .tab-bar div {
             float: right;
-            width: calc(var(--side-bar-w) - 1px);
+            padding: 10px 5px;
+            border-bottom-left-radius: 5px;
+            border-top-left-radius: 5px;
+            /* border-left: 4px solid var(--side-bar-bg-color); */
+            writing-mode: vertical-lr;
+            background: var(--btn-bg-color);
+            border: 1px solid var(--bar-border-color);
+            border-right: none;
+            margin-bottom: 5px;
+            /* font-size: 20px; */
+            /* color:#fff; */
+            user-select: none;
+            cursor: pointer;
+        }
+
+        .tab-active {
+            background: var(--blue-2) !important;
+            color: #fff !important;
+            border: none !important;
+        }
+
+        .sidebar-r {
+            float: left;
+            width: calc(var(--side-bar-r-w) - 1px);
             height: 100%;
             background-color: var(--side-bar-bg-color);
             /* color: var(--side-bar-font-color); */
@@ -93,7 +130,7 @@
             overflow: hidden;
         }
 
-        .sidebar button {
+        .sidebar-r button {
             width: 100%;
             border: none;
             border-top: var(--line-border);
@@ -102,7 +139,7 @@
 
         .main {
             float: left;
-            width: calc(100% - var(--side-bar-w) - var(--side-bar-padding) * 2);
+            width: calc(100% - var(--side-bar-r-w) - var(--side-bar-l-w) - var(--side-bar-padding) * 2);
             height: calc(100% - 50px);
             overflow-y: scroll;
             border-right: var(--bar-border);
@@ -112,7 +149,7 @@
         .foot-bar {
             height: var(--foot-bar-h);
             overflow-y: scroll;
-            width: calc(100% - var(--side-bar-w) - var(--side-bar-padding) * 2);
+            width: calc(100% - var(--side-bar-r-w) - var(--side-bar-padding) * 2);
             background: var(--foot-bar-bg-color);
         }
 
@@ -137,7 +174,7 @@
             /* overflow-x: hidden; */
         }
 
-        #infos p label{
+        #infos p label {
             color: var(--side-bar-font-color);
             margin-right: 10px;
         }
@@ -149,7 +186,7 @@
         }
 
         .fix-btn {
-            width: calc(var(--side-bar-w) - 1px) !important;
+            width: calc(var(--side-bar-r-w) - 1px) !important;
             position: fixed;
             right: 0;
             bottom: 0px;
@@ -234,7 +271,7 @@
             border-color: transparent transparent var(--menu-border-color);
         }
 
-        .txt-search{
+        .txt-search {
             position: fixed;
             top: 6px;
             right: 118px;
@@ -251,7 +288,7 @@
         <div style="display: block;float: left;">
             <div style="float: left;">
                 <button onclick="ls('-1')">←</button>
-                <button onclick="to_login()">↑</button>
+                <button onclick="ls('..')">↑</button>
                 <button onclick="ls('$HOME')">~</button>
                 <button onclick="ls('')">↺</button>
                 <button onclick="showfavouritesMenu()">☆</button>
@@ -267,6 +304,12 @@
         </div>
     </div>
     <div class="container" onclick="showfavouritesMenu(false)" id="container">
+        <div class="sidebar-l" >
+            <div id="tab-bar" class="tab-bar"></div>
+            <div class="tab-bar">
+                <div onclick="to_login()">＋</div>
+            </div>
+        </div>
         <div class="main" oncontextmenu="showDirMenu()">
             <table>
                 <tbody id="file_list">
@@ -274,7 +317,7 @@
                 </tbody>
             </table>
         </div>
-        <div class="sidebar" id="sidebar">
+        <div class="sidebar-r" id="sidebar">
             <button onclick="clean_infos()" class="fix-btn">↺</button>
             <div id="infos">
 
