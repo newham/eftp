@@ -21,8 +21,8 @@ function setCurrentDir(dir) {
     ssh_list[ssh_index].currentDir = dir
 }
 
-function getUserSSHInfo() {
-    return ssh_list[ssh_index].userSSHInfo
+function getUserSSHInfo(id = ssh_index) {
+    return ssh_list[id].userSSHInfo
 }
 
 function setUserSSHInfo(userSSHInfo) {
@@ -79,6 +79,14 @@ function setBackIndex(index) {
 
 function getBackIndex() {
     return ssh_list[ssh_index].backIndex
+}
+
+function get_ls_lock() {
+    return ssh_list[ssh_index].ls_lock
+}
+
+function set_ls_lock(lock) {
+    ssh_list[ssh_index].ls_lock = lock
 }
 
 // ---------------data---------------
@@ -146,7 +154,7 @@ function addInfo(msg, file = '', isArray = false) {
     //     file = ' : ' + file
     // }
     //sha1 a id
-    id = new Date().getTime()
+    var id = new Date().getTime()
     document.getElementById('infos').innerHTML += '<div class="line-div"><p><label>{0}</label>{1}</p><p id="{2}">{3}</p></div>'.format(msg, file, id, loading_html)
     //滑动到底部
     sidebar = document.getElementById('sidebar')
@@ -163,10 +171,8 @@ let showPath = (path) => {
     document.querySelector('#path').innerHTML = path
 }
 
-var ls_lock = false
-
 function ls(dir, isShow = getIsShowHidden()) {
-    if (ls_lock) {
+    if (get_ls_lock()) {
         return
     }
     //dir = "" 刷新
@@ -203,7 +209,7 @@ function ls(dir, isShow = getIsShowHidden()) {
     // console.log('add history', currentDir, ls_history.length)
 
     //setlock
-    ls_lock = true
+    set_ls_lock(true)
     //set path
     showPath(getCurrentDir())
     //get parent path
@@ -235,11 +241,11 @@ function ls(dir, isShow = getIsShowHidden()) {
     }).then(() => {
         // addInfo('success')
         doProcess(id)
-        ls_lock = false
+        set_ls_lock(false)
     }).catch((res) => {
         // console.log("exception", res)
         doProcess(id, 'failed', res)
-        ls_lock = false
+        set_ls_lock(false)
     })
 }
 
@@ -540,17 +546,18 @@ function to_login() {
 }
 
 function connectSSH() {
-    setSSH(new node_ssh())
+    var ssh = new node_ssh()
     //
     userSSHInfo = getUserSSHInfo()
     id = addInfo('connect', '{0}@{1}:{2}'.format(userSSHInfo.username, userSSHInfo.host, userSSHInfo.port))
-    getSSH().connect({
+    ssh.connect({
         host: userSSHInfo.host,
         username: userSSHInfo.username,
         password: userSSHInfo.password,
         privateKey: userSSHInfo.privateKey,
         port: userSSHInfo.port,
     }).then(() => {
+        setSSH(ssh)
         // console.log("connect success!")
         doProcess(id)
         ls("")
@@ -768,8 +775,10 @@ function new_ssh(userSSHInfo, currentDir) {
         infos_count: 0,
         ls_history: [],
         backIndex: 0,
+        ls_lock: false,
     })
-    ssh_index++
+    //最后一个是最新
+    ssh_index = ssh_list.length - 1
     //设置窗口标题
     setTitle()
     //设置激活
@@ -805,9 +814,11 @@ function setTabs() {
 }
 
 function closeTab(id) {
+    var i = addInfo('close', getUserSSHInfo(id).label)
     getSSH(id).dispose()
     ssh_list.splice(id, 1)
     to_ssh(id - 1 > 0 ? id - 1 : 0, true)
+    doProcess(i)
 }
 
 function to_ssh(index, isNew = false) {
