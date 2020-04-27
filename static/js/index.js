@@ -89,6 +89,13 @@ function set_ls_lock(lock) {
     ssh_list[ssh_index].ls_lock = lock
 }
 
+function get_copy_from() {
+    return ssh_list[ssh_index].copy_from
+}
+
+function set_copy_from(from) {
+    ssh_list[ssh_index].copy_from = from
+}
 // ---------------data---------------
 
 
@@ -739,19 +746,17 @@ function exec(cmd = '', args = [], msg, f_ok, f_error) {
 
 }
 
-var copy_from = ""
-
-function copy(from = copy_from, to = "") {
+function copy(from = get_copy_from(), to = "") {
     if (from && from != "") {
         var id = addInfo('copy from', from)
-        copy_from = getCurrentDir() + from
+        set_copy_from(getCurrentDir() + from)
         doProcess(id)
     }
-    if (to && to != "" && copy_from != "") {
+    if (to && to != "" && get_copy_from() != "") {
         var id = addInfo('copy to', to)
-        getSSH().exec('cp', ['-r', copy_from, to]).then(() => {
+        getSSH().exec('cp', ['-r', get_copy_from(), to]).then(() => {
             doProcess(id)
-            copy_from = ""
+            set_copy_from('')
             ls()
         }).catch((res) => {
             doProcess(id, 'failed', res)
@@ -776,6 +781,7 @@ function new_ssh(userSSHInfo, currentDir) {
         ls_history: [],
         backIndex: 0,
         ls_lock: false,
+        copy_from: "",
     })
     //最后一个是最新
     ssh_index = ssh_list.length - 1
