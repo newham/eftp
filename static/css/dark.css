@@ -1,7 +1,7 @@
 :root {
     --main-color: #555;
     --side-bar-bg-color: var(--main-color);
-    --side-bar-font-color: #fff;
+    --side-bar-font-color: #2997ff;
     --side-bar-border: 1px solid #333;
     --title-bar-bg-color: #444;
     --foot-bar-bg-color: var(--main-color);
