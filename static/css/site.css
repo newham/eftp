@@ -349,7 +349,7 @@ p {
 /* bg-0 */
 
 .bg-color-0 {
-    background: var(--blue-1) !important;
+    background: var(--blue-1);
 }
 
 .bg-color-0:hover {
@@ -363,7 +363,7 @@ p {
 /* bg-1 */
 
 .bg-color-1 {
-    background: OrangeRed !important;
+    background: OrangeRed;
 }
 
 .bg-color-1:hover {
@@ -377,7 +377,7 @@ p {
 /* bg-2 */
 
 .bg-color-2 {
-    background: #FFD700 !important;
+    background: #FFD700;
 }
 
 .bg-color-2:hover {
@@ -391,7 +391,7 @@ p {
 /* bg-3 */
 
 .bg-color-3 {
-    background: #339933 !important;
+    background: #339933;
 }
 
 .bg-color-3:hover {
@@ -405,7 +405,7 @@ p {
 /* bg-4 */
 
 .bg-color-4 {
-    background: #8A2BE2 !important;
+    background: #8A2BE2;
 }
 
 .bg-color-4:hover {
