@@ -2,12 +2,12 @@
     --main-color: #fff;
     --side-bar-bg-color: var(--main-color);
     --side-bar-font-color: #2997ff;
-    --side-bar-border: 1px solid #eee;
+    --side-bar-border: 0px solid #eee;
     --menu-bg-color: var(--main-color);
-    --title-bar-bg-color: #f1f1f1;
+    --title-bar-bg-color: #eee;
     --foot-bar-bg-color: var(--main-color);
     --body-bg-color: var(--main-color);
-    --line-border: 1px solid var(--main-color);
+    --line-border: 0px solid var(--main-color);
     --bar-border-color: #ddd;
     --bar-border: 1px solid var(--bar-border-color);
     --font-color: #555;

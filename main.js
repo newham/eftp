@@ -4,8 +4,9 @@ const { app, BrowserWindow, ipcMain, Menu, MenuItem, nativeTheme, dialog, screen
 global.shareData = {
     userSSHInfo: {}, //一定要把数据放在结构体里面！！！
     isDark: nativeTheme.shouldUseDarkColors,
-    processLocks: []
 } //用于共享
+
+let processLock = 0
 
 function createMenu() {
     var template = [
@@ -76,14 +77,12 @@ function createIndexWindow() {
     })
 
     win.on('close', (event) => {
-        //get lock
-        locked = global.shareData.processLocks[win.id - 1]
         // console.log('close win', win.id, locked)
-        if (locked) {
+        if (processLock > 0) {
             event.preventDefault()
             dialog.showMessageBox(win, {
                 buttons: ["OK", "Cancel"],
-                message: "正在[下载/上传]文件,确定退出?",
+                message: "有后台任务正在进行,确定退出?",
                 cancelId: 1,
             }).then((result) => {
                 if (result.response == 0) { //ok
@@ -93,11 +92,7 @@ function createIndexWindow() {
         }
     })
 
-    //set globleData
-    global.shareData.processLocks.push(0)
-
     // 并且为你的应用加载index.html
-    // win.loadURL(`file://${__dirname}/index.html`)
     win.loadFile('login.html')
 
     // 打开开发者工具
@@ -123,8 +118,6 @@ app.on('window-all-closed', () => {
     // mac也直接退出
     app.quit()
 })
-
-
 
 app.on('activate', () => {
     // 在macOS上，当单击dock图标并且没有其他窗口打开时，
@@ -160,6 +153,15 @@ ipcMain.on('go_ssh', (event, userSSHInfo) => {
 ipcMain.on('new_win', (event) => {
     // console.log('new win')
     createWindow()
+})
+
+ipcMain.on('set_lock', (event, isAdd) => {
+    if (isAdd) {
+        processLock += 1
+    } else {
+        processLock -= 1
+    }
+    // console.log('set_lock', processLock)
 })
 
 //切换暗-亮模式触发

@@ -3,13 +3,15 @@ const node_ssh = require('node-ssh')
 const path = require("path");
 // const readline = require('readline');
 // ---------------data---------------
-var ssh_list = []
+let ssh_list = []
 
 const ls_history_max = 100
 
 const max_infos_num = 100
 
-var ssh_index = -1
+let ssh_index = -1
+
+let bs_list = []
 
 const loading_html = '<img class="img-loading" src="static/img/loading.gif">'
 
@@ -107,19 +109,8 @@ function getHome(username) {
     return "/home/" + username + "/"
 }
 
-function getLock() {
-    return remote.getGlobal('shareData').processLocks[remote.getCurrentWindow().id - 1]
-}
-
 function addLock(isLock = false) {
-    locks = remote.getGlobal('shareData').processLocks
-    i = remote.getCurrentWindow().id - 1
-    if (isLock) {
-        locks[i] += 1
-    } else {
-        locks[i] += -1
-    }
-    remote.getGlobal('shareData').processLocks = locks
+    ipcRenderer.send('set_lock', isLock)
 }
 
 function doProcess(id, tg = 'success', msg = '') {
@@ -161,7 +152,7 @@ function addInfo(msg, file = '', isArray = false) {
     //     file = ' : ' + file
     // }
     //sha1 a id
-    var id = new Date().getTime()
+    let id = new Date().getTime()
     document.getElementById('infos').innerHTML += '<div class="line-div"><p><label>{0}</label>{1}</p><p id="{2}">{3}</p></div>'.format(msg, file, id, loading_html)
     //滑动到底部
     sidebar = document.getElementById('sidebar')
@@ -222,7 +213,7 @@ function ls(dir, isShow = getIsShowHidden()) {
     //get parent path
     // parentPath = getParentPath(getCurrentDir())
     // console.log('ls', currentDir)
-    id = addInfo('ls', getCurrentDir())
+    let id = addInfo('ls', getCurrentDir())
     //arg
     arg = '-lh'
     if (isShow) {
@@ -293,7 +284,7 @@ let set_fileInfo = (attrs = [], id) => {
         return
     }
 
-    var fileInfo = init_fileInfo()
+    let fileInfo = init_fileInfo()
 
     fileInfo.rights = attrs[0]
     fileInfo.isDir = fileInfo.rights.startsWith('d')
@@ -338,7 +329,7 @@ function getParentPath(file) {
     if (file == "" || file == "/") {
         return file
     }
-    var i = file.lastIndexOf("/");
+    let i = file.lastIndexOf("/");
     if (i == file.length - 1) {
         file = file.slice(0, file.length - 2)
     }
@@ -348,17 +339,20 @@ function getParentPath(file) {
 }
 
 function upload_file(files) {
-    fileItems = []
+    let fileItems = []
+    let currentDir = getCurrentDir()
     files.forEach(f => {
         // console.log(currentDir + getFileName(f))
-        fileItems.push({ local: f, remote: getCurrentDir() + getFileName(f) })
+        fileItems.push({ local: f, remote: currentDir + getFileName(f) })
     });
-    id = addInfo('upload', files, true)
+    let id = addInfo('upload', files, true)
+    push_bs(id, files.join(','), '↑')
     // setTimingProcess()
     // setProcess(20)
     getSSH().putFiles(fileItems).then(function () {
         // console.log("The File thing is done")
         doProcess(id)
+        remove_bs(id)
         // addInfo('success')
         ls('')
     }, function (error) {
@@ -391,9 +385,10 @@ function upload_folder() {
         if (!ok) {
             return
         }
-        toFolder = getCurrentDir() + getFolderName(folder)
+        let toFolder = getCurrentDir() + getFolderName(folder)
         // console.log(folder, 'to', toFolder)
-        id = addInfo('upload', folder)
+        let id = addInfo('upload', folder)
+        push_bs(id, folder, '↑')
         // return
         getSSH().putDirectory(folder, toFolder, {
             recursive: true,
@@ -413,12 +408,28 @@ function upload_folder() {
         }).then(function (status) {
             // addInfo('success')
             doProcess(id)
+            remove_bs(id)
             ls("")//刷新列表
-            finishProcess()
         }).catch((res) => {
             doProcess(id, 'failed', res)
         })
     })
+}
+
+function push_bs(id, file, status) {
+    bs_list.push({ id: id, file: file, status: status })
+    addClassByID('btn_bs', 'txt-info')
+}
+
+function remove_bs(id) {
+    bs_list.forEach((item, i) => {
+        if (item.id == id) {
+            bs_list.splice(i, 1)
+        }
+    })
+    if (bs_list.length < 1) {
+        delClassByID('btn_bs', 'txt-info')
+    }
 }
 
 function download_file(file) {
@@ -426,11 +437,14 @@ function download_file(file) {
         if (!ok) {
             return
         }
-        id = addInfo('download', file)
-        getSSH().getFile(folder + file, getCurrentDir() + file).then(function (Contents) {
+        let currentDir = getCurrentDir()
+        let id = addInfo('download', file)
+        push_bs(id, file, '↓')
+        getSSH().getFile(folder + file, currentDir + file).then(function (Contents) {
             // console.log("The File", file, "successfully downloaded")
             // addInfo('success')
             doProcess(id)
+            remove_bs(id)
         }, function (error) {
             // console.log("Something's wrong")
             console.log(error)
@@ -442,15 +456,15 @@ function download_file(file) {
 }
 
 function del_file(file, isDir) {
-    f_tag = isDir ? "文件夹" : "文件"
+    let f_tag = isDir ? "文件夹" : "文件"
     if (!confirm('确定删除-{0}-[{1}] ?'.format(f_tag, file))) {
         return
     }
-    var tag = '-f'
+    let tag = '-f'
     if (isDir) {
         tag = '-drf'
     }
-    id = addInfo('rm', file)
+    let id = addInfo('rm', file)
     getSSH().exec('rm', [tag, getCurrentDir() + file]).then(() => {
         doProcess(id)
         ls("")
@@ -468,7 +482,7 @@ function getFileParentName(file) {
     if (file == "") {
         return ""
     }
-    var obj = file.lastIndexOf(".");
+    let obj = file.lastIndexOf(".");
     return file.slice(0, obj);//文件名
 }
 
@@ -476,7 +490,7 @@ function getFileType(file) {
     if (file == "") {
         return ""
     }
-    var obj = file.lastIndexOf(".");
+    let obj = file.lastIndexOf(".");
     return file.slice(obj + 1);//文件名
 }
 
@@ -484,7 +498,7 @@ function getFileName(file) {
     if (file == "") {
         return ""
     }
-    var obj = file.lastIndexOf("/");
+    let obj = file.lastIndexOf("/");
     return file.substr(obj + 1);//文件名
 }
 
@@ -527,7 +541,7 @@ function mkdir(dir_name = document.getElementById('dir_name').value) {
         alert('文件名重复')
         return
     }
-    id = addInfo('mkdir', dir_name)
+    let id = addInfo('mkdir', dir_name)
     //mkdir by ssh
     getSSH().mkdir(getCurrentDir() + dir_name).then(function () {
         // console.log("mkdir success", dir_name)
@@ -553,10 +567,10 @@ function to_login() {
 }
 
 function connectSSH() {
-    var ssh = new node_ssh()
+    let ssh = new node_ssh()
     //
-    userSSHInfo = getUserSSHInfo()
-    id = addInfo('connect', '{0}@{1}:{2}'.format(userSSHInfo.username, userSSHInfo.host, userSSHInfo.port))
+    let userSSHInfo = getUserSSHInfo()
+    let id = addInfo('connect', '{0}@{1}:{2}'.format(userSSHInfo.username, userSSHInfo.host, userSSHInfo.port))
     ssh.connect({
         host: userSSHInfo.host,
         username: userSSHInfo.username,
@@ -580,10 +594,8 @@ function setTitle() {
 }
 
 function clean_infos() {
-    if (getLock() == 0) {
-        document.getElementById('infos').innerHTML = ''
-        resetInfos_count()
-    }
+    document.getElementById('infos').innerHTML = ''
+    resetInfos_count()
 }
 
 function saveUserSSHInfo(userSSHInfo) {
@@ -627,7 +639,7 @@ function favourite_folder(folder, current = getCurrentDir()) {
 }
 
 /** collection* */
-var isfavouritesMenuShow = true
+let isfavouritesMenuShow = true
 
 function setfavouritesMenu() {
     // console.log(getUserSSHInfo().favourites)
@@ -670,8 +682,8 @@ function showHiddenFile() {
 }
 
 function zip_folder(folder) {
-    currentDir = getCurrentDir()
-    id = addInfo('zip', folder)
+    let currentDir = getCurrentDir()
+    let id = addInfo('zip', folder)
     getSSH().exec('zip', ['-r', folder + '.zip', folder], {
         cwd: currentDir,
         onStdout(chunk) {
@@ -695,9 +707,9 @@ function zip_folder(folder) {
 
 // unzip -o test.zip -d tmp/
 function unzip_file(file) {
-    var args = []
-    var cmd = ''
-    var currentDir = getCurrentDir()
+    let args = []
+    let cmd = ''
+    let currentDir = getCurrentDir()
     if (file.endsWith('.zip')) {
         cmd = 'unzip'
         args = ['-o', currentDir + file, '-d', currentDir]
@@ -710,7 +722,7 @@ function unzip_file(file) {
     } else {
         return
     }
-    id = addInfo(cmd, file)
+    let id = addInfo(cmd, file)
     getSSH().exec(cmd, args, {
         onStdout(chunk) {
             read_line(chunk, getUserSSHInfo().characterSet, (line, i) => {
@@ -748,12 +760,12 @@ function exec(cmd = '', args = [], msg, f_ok, f_error) {
 
 function copy(from = get_copy_from(), to = "") {
     if (from && from != "") {
-        var id = addInfo('copy from', from)
+        let id = addInfo('copy from', from)
         set_copy_from(getCurrentDir() + from)
         doProcess(id)
     }
     if (to && to != "" && get_copy_from() != "") {
-        var id = addInfo('copy to', to)
+        let id = addInfo('copy to', to)
         getSSH().exec('cp', ['-r', get_copy_from(), to]).then(() => {
             doProcess(id)
             set_copy_from('')
@@ -795,7 +807,7 @@ function new_ssh(userSSHInfo, currentDir) {
 }
 
 function setTabActive(id) {
-    var tabs = document.getElementById('tab-bar').children;
+    let tabs = document.getElementById('tab-bar').children;
     // console.log(tabs.length, id)
     for (i = 0; i < tabs.length; i++) {
         if (i == id) {
@@ -820,7 +832,7 @@ function setTabs() {
 }
 
 function closeTab(id) {
-    var i = addInfo('close', getUserSSHInfo(id).label)
+    let i = addInfo('close', getUserSSHInfo(id).label)
     getSSH(id).dispose()
     ssh_list.splice(id, 1)
     to_ssh(id - 1 > 0 ? id - 1 : 0, true)
@@ -836,11 +848,69 @@ function to_ssh(index, isNew = false) {
     }
     console.log("to ssh", index)
     ssh_index = index
-    var i = addInfo('to', `[${getUserSSHInfo().label}]`)
+    let i = addInfo('to', `[${getUserSSHInfo().label}]`)
     // setTabActive(index)
     setTabs()
     ls()
     doProcess(i)
+}
+
+function showSidebar() {
+    let btn = document.getElementById('siderbar-hide-btn')
+    showElement('sidebar', (isShow) => {
+        if (!isShow) {
+            document.documentElement.style.setProperty('--side-bar-r-w', '0px')
+            btn.classList.remove('show-btn')
+            btn.classList.add('hide-btn')
+        } else {
+            document.documentElement.style.setProperty('--side-bar-r-w', '300px')
+            btn.classList.remove('hide-btn')
+            btn.classList.add('show-btn')
+        }
+    })
+}
+
+function showElement(id, f = null) {
+    let item = document.getElementById(id)
+    // console.log(id, item.style.display)
+    if (item.style.display == 'none') {
+        if (f) {
+            f(true)
+        }
+        item.style.display = 'block'
+    } else {
+        if (f) {
+            f(false)
+        }
+        item.style.display = 'none'
+    }
+}
+
+function show_backstageMenu(show) {
+    showElement('backstageMenu', (isShow) => {
+        if (isShow) {
+            setBsMenu()
+            console.log('show menu')
+        }
+    })
+}
+
+function setBsMenu() {
+    document.getElementById('bs_list').innerHTML = ''
+    // bs_list
+    bs_list.forEach((item, i) => {
+        if (i == 0) {
+            appenHTMLByID('bs_list', `\n<button >${item.status} ${item.file}</button>`)
+        } else {
+            appenHTMLByID('bs_list', `\n<hr><button >${item.status} ${item.file}</button>`)
+        }
+
+    })
+}
+
+function hideMenu() {
+    document.getElementById('backstageMenu').style.display = 'none'
+    document.getElementById('favouritesMenu').style.display = 'none'
 }
 
 //设置主题

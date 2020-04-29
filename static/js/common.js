@@ -65,3 +65,11 @@ function appenHTMLByID(id, html) {
 function setHTMLByID(id, html) {
     document.getElementById(id).innerHTML = html
 }
+
+function addClassByID(id, c) {
+    document.getElementById(id).classList.add(c)
+}
+
+function delClassByID(id, c) {
+    document.getElementById(id).classList.remove(c)
+}

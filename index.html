@@ -95,7 +95,7 @@
         .tab-active {
             background: var(--blue-2) !important;
             color: #fff !important;
-            border: none !important;
+            /* border: none !important; */
         }
 
         .sidebar-r {
@@ -113,7 +113,7 @@
             position: fixed;
             top: 0px;
             left: 305px;
-            width: calc(100% - 230px - 195px);
+            width: calc(100% - 230px - 220px);
             /* margin-left: 10px; */
             padding-top: 1px;
             /* height: var(--btn-h); */
@@ -144,7 +144,7 @@
 
         .main {
             float: left;
-            width: calc(100% - var(--side-bar-r-w) - var(--side-bar-l-w) - var(--side-bar-padding) * 2);
+            width: calc(100% - var(--side-bar-r-w) - var(--side-bar-l-w) - var(--side-bar-padding) * 2 - 1px);
             height: calc(100% - 50px);
             overflow-y: scroll;
             border-right: var(--bar-border);
@@ -212,7 +212,6 @@
         .menu {
             position: fixed;
             top: calc(var(--title-bar-h) + 8px);
-            left: 142px;
             width: 200px;
             max-height: 400px;
             min-height: 40px;
@@ -230,13 +229,33 @@
             color: #fff;
         }
 
-        #favourites {
+        .menu .triangle-up {
+            position: fixed;
+            top: calc(var(--title-bar-h) - 0px);
+            width: 0;
+            height: 0;
+            border-width: 0 10px 10px;
+            border-style: solid;
+            border-color: transparent transparent var(--menu-bg-color);
+        }
+
+        .menu .triangle-up-box {
+            position: fixed;
+            top: calc(var(--title-bar-h) - 2px);
+            width: 0;
+            height: 0;
+            border-width: 0 10px 10px;
+            border-style: solid;
+            border-color: transparent transparent var(--menu-border-color);
+        }
+
+        .menu-body {
             margin: 6px 0px;
             /* border-top: 1px solid var(--menu-border-color); */
             width: 100%;
         }
 
-        #favourites button {
+        .menu-body button {
             padding-bottom: 2px;
             width: 100%;
             /* border-bottom: 1px solid var(--menu-border-color); */
@@ -247,33 +266,29 @@
             text-align: left;
         }
 
-        #favourites hr {
+        .menu-body hr {
             border: none;
             border-bottom: 1px solid var(--menu-border-color);
             margin: 0;
             padding: 0;
         }
 
-        .triangle-up {
-            position: fixed;
-            top: calc(var(--title-bar-h) - 0px);
+        #favouritesMenu .triangle-up,
+        #favouritesMenu .triangle-up-box {
             left: 232px;
-            width: 0;
-            height: 0;
-            border-width: 0 10px 10px;
-            border-style: solid;
-            border-color: transparent transparent var(--menu-bg-color);
         }
 
-        .triangle-up-box {
-            position: fixed;
-            top: calc(var(--title-bar-h) - 2px);
-            left: 232px;
-            width: 0;
-            height: 0;
-            border-width: 0 10px 10px;
-            border-style: solid;
-            border-color: transparent transparent var(--menu-border-color);
+        #favouritesMenu {
+            left: 142px;
+        }
+
+        #backstageMenu {
+            right: 60px;
+        }
+
+        #backstageMenu .triangle-up,
+        #backstageMenu .triangle-up-box {
+            right: 86px !important;
         }
 
         .txt-search {
@@ -283,6 +298,28 @@
             height: 24px;
             width: 100px;
             font-size: 12px;
+        }
+
+        .siderbar-r-btn {
+            height: 60px;
+            width: 10px;
+            line-height: 60px;
+            position: fixed;
+            top: calc(50% - 30px);
+            border: var(--bar-border);
+            background: var(--title-bar-bg-color);
+        }
+
+        .siderbar-r-btn.show-btn {
+            right: calc(var(--side-bar-r-w) - 11px);
+            border-bottom-right-radius: 5px;
+            border-top-right-radius: 5px;
+        }
+
+        .siderbar-r-btn.hide-btn {
+            right: 0px;
+            border-bottom-left-radius: 5px;
+            border-top-left-radius: 5px;
         }
     </style>
 </head>
@@ -303,12 +340,13 @@
         </div>
         <div style="display: block;float: right;padding-right: 85px;">
             <button onclick="show_dialog(true)">＋</button>
+            <button onclick="show_backstageMenu()" id="btn_bs">⇅</button>
             <button onclick="upload_folder()">↑/</button>
             <button onclick="upload()">↑</button>
             <!-- <button onclick="ctrl_c()">X</button> -->
         </div>
     </div>
-    <div class="container" onclick="showfavouritesMenu(false)" id="container">
+    <div class="container" id="container" onclick="hideMenu()" >
         <div class="sidebar-l">
             <div id="tab-bar" class="tab-bar"></div>
             <div class="tab-bar">
@@ -322,7 +360,8 @@
                 </tbody>
             </table>
         </div>
-        <div class="sidebar-r" id="sidebar">
+        <div class="siderbar-r-btn show-btn" onclick="showSidebar()" id="siderbar-hide-btn"> </div>
+        <div class="sidebar-r" id="sidebar" style="display: block;">
             <button onclick="clean_infos()" class="fix-btn">↺</button>
             <div id="infos">
 
@@ -344,11 +383,18 @@
         <h1>请把文件拖放于此</h1>
         <img src="static/img/upload-1.png">
     </div>
-    <div class="menu" id="favouritesMenu">
+    <div class="menu" id="favouritesMenu" style="display: none;">
         <label class="triangle-up-box">
             <label class="triangle-up"></label>
         </label>
-        <div id="favourites">
+        <div id="favourites" class="menu-body">
+        </div>
+    </div>
+    <div class="menu" id="backstageMenu" style="display: none;">
+        <label class="triangle-up-box">
+            <label class="triangle-up"></label>
+        </label>
+        <div id="bs_list" class="menu-body">
         </div>
     </div>
     <!-- js -->
