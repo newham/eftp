@@ -170,7 +170,7 @@ let showPath = (path) => {
 }
 
 function ls(dir, isShow = getIsShowHidden()) {
-    if (get_ls_lock()) {
+    if (get_ls_lock() || is_closed) {
         return
     }
     //dir = "" 刷新
@@ -241,9 +241,17 @@ function ls(dir, isShow = getIsShowHidden()) {
         doProcess(id)
         set_ls_lock(false)
     }).catch((res) => {
+        if (res) {
+            res = res.toString()
+        }
         // console.log("exception", res)
         doProcess(id, 'failed', res)
         set_ls_lock(false)
+        // set connect_closed
+        if (res.indexOf('No response from server') != -1 || res.indexOf('ERR_ASSERTION') != -1) {
+            is_closed = true
+            console.log('is_closed', is_closed)
+        }
     })
 }
 
@@ -582,9 +590,10 @@ function connectSSH() {
         // console.log("connect success!")
         doProcess(id)
         ls("")
-    }, function (error) {
+    }).catch((excp) => {
         // console.log("connect failed!", error)
-        doProcess(id, 'failed', error)
+        doProcess(id, 'failed', excp)
+        is_closed = true
     })
 }
 
@@ -897,20 +906,37 @@ function show_backstageMenu(show) {
 
 function setBsMenu() {
     document.getElementById('bs_list').innerHTML = ''
-    // bs_list
-    bs_list.forEach((item, i) => {
-        if (i == 0) {
-            appenHTMLByID('bs_list', `\n<button >${item.status} ${item.file}</button>`)
-        } else {
-            appenHTMLByID('bs_list', `\n<hr><button >${item.status} ${item.file}</button>`)
-        }
+    if (bs_list.length > 0) {
+        // bs_list
+        bs_list.forEach((item, i) => {
+            if (i == 0) {
+                appenHTMLByID('bs_list', `\n<button >${item.status} ${item.file}</button>`)
+            } else {
+                appenHTMLByID('bs_list', `\n<hr><button >${item.status} ${item.file}</button>`)
+            }
 
-    })
+        })
+    } else {
+        appenHTMLByID('bs_list', `\n<button >空</button>`)
+    }
+
 }
 
 function hideMenu() {
     document.getElementById('backstageMenu').style.display = 'none'
     document.getElementById('favouritesMenu').style.display = 'none'
+    isfavouritesMenuShow = true
+}
+
+let is_closed = false
+
+function refresh() {
+    if (is_closed) {
+        connectSSH()
+        is_closed = false
+    } else {
+        ls()
+    }
 }
 
 //设置主题
