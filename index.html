@@ -50,8 +50,8 @@
 
         .container {
             /* margin: 0px; */
-            margin-top: calc(var(--title-bar-h) + 1px);
-            height: calc(100% - var(--foot-bar-h) - var(--title-bar-h));
+            /* margin-top: calc(var(--title-bar-h) + 1px); */
+            height: calc(100% - var(--foot-bar-h) - var(--title-bar-h) - var(--tab-bar-h));
         }
 
         .sidebar-l {
@@ -93,8 +93,11 @@
         }
 
         .tab-active {
-            background: var(--blue-2) !important;
-            color: #fff !important;
+            background: var(--btn-bg-color) !important;
+            color: var(--font-color);
+            /* color: var(--blue-2) !important; */
+            /* background: var(--blue-2) !important; 
+            color: #fff !important; */
             /* border: none !important; */
         }
 
@@ -144,7 +147,7 @@
 
         .main {
             float: left;
-            width: calc(100% - var(--side-bar-r-w) - var(--side-bar-l-w) - var(--side-bar-padding) * 2 - 1px);
+            width: calc(100% - var(--side-bar-r-w) - var(--side-bar-l-w) - var(--side-bar-padding) * 2 - 2px);
             height: calc(100% - 50px);
             overflow-y: scroll;
             border-right: var(--bar-border);
@@ -346,12 +349,20 @@
             <!-- <button onclick="ctrl_c()">X</button> -->
         </div>
     </div>
-    <div class="container" id="container" onclick="hideMenu()" >
+    <div class="tab-h-bar">
+        <div id="tab-bar"></div>
+        <div onclick="to_login()" class="tab-add">＋</div>
+        <!-- <div id="tab-bar" class="tab-bar-list"></div> -->
+        <!-- <div class="tab-bar">
+            <div onclick="to_login()">＋</div>
+        </div> -->
+    </div>
+    <div class="container" id="container" onclick="hideMenu()">
         <div class="sidebar-l">
-            <div id="tab-bar" class="tab-bar"></div>
+            <!-- <div id="tab-bar" class="tab-bar"></div>
             <div class="tab-bar">
                 <div onclick="to_login()">＋</div>
-            </div>
+            </div> -->
         </div>
         <div class="main" oncontextmenu="showDirMenu()">
             <table>

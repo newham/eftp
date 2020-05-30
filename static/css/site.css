@@ -4,8 +4,10 @@
     --blue-3: #0068d1;
     --blue-4: #2302CF;
     --title-bar-h: 36px;
+    --tab-bar-h: 38px;
     --side-bar-r-w: 300px;
-    --side-bar-l-w: 38px;
+    /* --side-bar-l-w: 38px; */
+    --side-bar-l-w: 0px;
     --side-bar-padding: 0px;
     --foot-bar-h: 0px;
     --dialog-w: 60%;
@@ -414,4 +416,39 @@ p {
 
 .bg-color-4:active {
     background: #A020F0;
+}
+
+.tab-h-bar {
+    height: var(--tab-bar-h);
+    margin-top: var(--title-bar-h);
+    /* padding-top: 10px; */
+    /* border-bottom: 1px solid var(--bar-border-color); */
+    background: var(--title-bar-bg-color);
+}
+
+#tab-bar {
+    padding-top: 7px;
+    /* padding-left: 5px; */
+    padding-right: 5px;
+}
+
+#tab-bar div, .tab-add {
+    float: left;
+    margin-left: 5px;
+    text-align: center;
+    max-width: 100px;
+    padding: 5px 10px;
+    border-top-left-radius: 2px;
+    border-top-right-radius: 2px;
+    /* border-left: 4px solid var(--side-bar-bg-color); */
+    /* writing-mode: vertical-lr; */
+    background: var(--btn-active-bg-color);
+    /* border: 1px solid var(--bar-border-color); */
+    border-bottom: none;
+    /* height: 100%; */
+    /* margin-top: 10px; */
+    /* font-size: 20px; */
+    /* color:#fff; */
+    user-select: none;
+    cursor: pointer;
 }
