@@ -33,6 +33,7 @@ body {
     line-height: var(--title-bar-h);
     /* border-bottom: var(--bar-border); */
     padding-bottom: 1px;
+    user-select: none;
 }
 
 .container {
@@ -64,33 +65,45 @@ body {
 }
 
 .tab-bar div {
-    float: right;
-    padding: 10px 5px;
-    border-bottom-left-radius: 3px;
-    border-top-left-radius: 3px;
+    /* float: center; */
+    padding: 5px 5px;
+    border-radius: 3px;
+    /* border-bottom-left-radius: 3px; */
+    /* border-top-left-radius: 3px; */
     max-height: 100px;
     /* border-left: 4px solid var(--side-bar-bg-color); */
-    writing-mode: vertical-lr;
-    background: var(--main-color);
-    border: 1px solid var(--bar-border-color);
-    border-right: none;
+    /* writing-mode: vertical-lr; */
+    margin-left: 5px;
+    width: calc(100% - 20px);
+    /* background: var(--main-color); */
+    /* background: var(--title-bar-bg-color); */
+    /* border: 1px solid var(--bar-border-color); */
+    /* border-right: none; */
     margin-bottom: 5px;
     /* font-size: 20px; */
     /* color:#fff; */
     user-select: none;
     cursor: pointer;
     overflow: hidden;
+    /* text-align: center; */
+    font-size: 13px;
     text-overflow: ellipsis;
     white-space: nowrap;
+}
+
+.tab-bar div:hover {
+    background: var(--main-color);
 }
 
 .tab-active {
     /* background: var(--btn-bg-color) !important; */
     background: var(--blue-1) !important;
+    /* border-left: 5px solid var(--blue-2); */
+    /* color: var(--blue-2); */
     color: #fff !important;
     /* border: 1px solid #fff !important; */
     /* border-right: none !important; */
-    border: none !important;
+    /* border: none !important; */
 }
 
 .sidebar-r {
@@ -118,7 +131,7 @@ body {
     padding-top: 1px;
     /* height: var(--btn-h); */
     /* background: #fff; */
-    color: var(--font-color);
+    color: var(--blue-1);
     /* margin: 0 auto;
             height: var(--btn-h);
             line-height: calc(var(--btn-h) - 2px);
@@ -132,6 +145,7 @@ body {
     text-overflow: ellipsis;
     white-space: nowrap;
     overflow: hidden;
+    user-select: none;
 }
 
 .sidebar-r button {
@@ -218,7 +232,7 @@ body {
     max-height: 400px;
     min-height: 40px;
     background: var(--menu-bg-color);
-    border-radius: 8px;
+    border-radius: calc(var(--btn-radius) * 2);
     /* border: var(--bar-border); */
     border: 1px solid var(--menu-border-color);
     display: none;

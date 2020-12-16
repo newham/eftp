@@ -27,12 +27,12 @@
 
 ## 截图
 
-<img src="cap_1.png" style="border:1px solid #000">
+<img src="cap_imgs/cap_1.png" style="border:1px solid #000">
 
-<img src="cap_2.png" style="border:1px solid #000">
+<img src="cap_imgs/cap_2.png" style="border:1px solid #000">
 
-<img src="cap_3.png" style="border:1px solid #000">
+<img src="cap_imgs/cap_3.png" style="border:1px solid #000">
 
-<img src="cap_4.png" style="border:1px solid #000">
+<img src="cap_imgs/cap_4.png" style="border:1px solid #000">
 
-<img src="cap_5.png" style="border:1px solid #000">
+<img src="cap_imgs/cap_5.png" style="border:1px solid #000">

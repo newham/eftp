@@ -6,11 +6,12 @@
     --title-bar-h: 36px;
     --tool-bar-h: 30px;
     --side-bar-r-w: 300px;
-    --side-bar-l-w: 38px;
+    --side-bar-l-w: 150px;
     --side-bar-padding: 0px;
     --foot-bar-h: 0px;
-    --dialog-w: 60%;
+    --dialog-w: calc(100% - 160px);
     --btn-radius: 3px;
+    --box-radius: 3px;
     --input-radius: 3px;
     --btn-h: 26px;
     --btn-font-size: 15px;
@@ -29,16 +30,8 @@
     /* border-left: var(--bar-border); */
 }
 
-::-webkit-scrollbar :hover {
-    cursor: pointer;
-}
-
-::-webkit-scrollbar :focus {
-    cursor: pointer;
-}
-
 ::-webkit-scrollbar-thumb {
-    background: var(--side-bar-font-color);
+    background: var(--blue-2);
     border-radius: 4px;
 }
 
@@ -100,39 +93,47 @@ input::-webkit-input-placeholder {
 
 .c-2 {
     width: calc(20% - 20px);
-    padding: 10px;
+    padding: 0px 0px 10px 17px;
     display: grid;
     float: left;
 }
 
 .c-2-5 {
     width: calc(25% - 20px);
-    padding: 10px;
+    padding: 0px 0px 10px 16px;
     display: grid;
     float: left;
 }
 
 .c-3 {
     width: calc(33.33% - 20px);
-    padding: 10px;
+    /* padding: 5px 10px; */
+    padding: 0px 0px 10px 15px;
     display: grid;
     float: left;
 }
 
 .c-5 {
     width: calc(50% - 20px);
-    padding: 10px;
+    padding: 0px 0px 10px 10px;
+    display: grid;
+    float: left;
+}
+
+.c-10 {
+    width: calc(100% - 20px);
+    padding: 0px 0px 10px 0px;
     display: grid;
     float: left;
 }
 
 .box {
-    border-radius: var(--btn-radius);
+    border-radius: var(--box-radius);
     /* border: 1px solid #ddd; */
-    text-align: center;
+    /* text-align: center; */
     background: var(--blue-1);
     color: #fff !important;
-    padding: 40px 10px;
+    padding: 15px 10px;
     text-overflow: ellipsis;
     white-space: nowrap;
     overflow: hidden;
@@ -182,9 +183,11 @@ input::-webkit-input-placeholder {
 }
 
 .dialog {
+    /* 保证显示在顶层 */
+    z-index: 99;
     background: var(--dialog-bg-color);
     position: fixed;
-    width: var(--dialog-w);
+    width: calc(var(--dialog-w) - 20px);
     padding: 10px;
     top: 0px;
     left: calc(50% - var(--dialog-w) / 2);
@@ -461,4 +464,10 @@ p {
     padding-right: 5px;
     /* padding-bottom: 2px; */
     user-select: none;
+}
+
+.tool-bar img {
+    max-height: 60%;
+    margin: 0;
+    padding: 0;
 }

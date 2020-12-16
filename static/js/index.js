@@ -656,7 +656,7 @@ let isfavouritesMenuShow = true
 
 function setfavouritesMenu() {
     // console.log(getUserSSHInfo().favourites)
-    setHTMLByID('favourites', '<button onclick="favourite_folder(\'{0}\',\'{1}\')">♥ this</button>'.format(getFolderName(getCurrentDir(), false), getParentPath(getCurrentDir())))
+    setHTMLByID('favourites', '<button onclick="favourite_folder(\'{0}\',\'{1}\')">♥ 添加收藏</button>'.format(getFolderName(getCurrentDir(), false), getParentPath(getCurrentDir())))
     getUserSSHInfo().favourites.forEach((fav, i) => {
         appenHTMLByID('favourites', '\n<hr><button onclick="goFavourite({0})" oncontextmenu="showFavouriteMenu({0})">{1}{2}</button>'.format(i, fav.currentDir, fav.folder))
     })

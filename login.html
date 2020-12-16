@@ -12,24 +12,50 @@
 
     <style>
         body {
-            -webkit-app-region: drag;
-            padding-top: 25px;
             background: var(--login-bg-color);
+            margin: 0;
+            padding: 0;
+            height: 100%;
         }
-
+        
         h1 {
-            margin: 5px 10px;
-            color: var(--font-color);
+            /* margin: 5px 10px; */
+            color: var(--blue-1);
+            margin: 0;
+            padding: 0;
         }
-
+        
+        .header {
+            padding: 0px 10px;
+            -webkit-app-region: drag;
+        }
+        
+        .header h1 {
+            padding: 0;
+            margin: 0;
+        }
+        
         .input-quarter {
             width: calc(25% - 10px) !important;
         }
-
+        
         td {
             background: #fff;
         }
-
+        
+        .title-bar {
+            height: var(--title-bar-h);
+            -webkit-app-region: drag;
+        }
+        
+        .main {
+            position: fixed;
+            top: calc(var(--title-bar-h) + 75px);
+            left: 0;
+            height: calc(100% - var(--title-bar-h) - 75px);
+            width: 100%;
+            overflow-y: auto;
+        }
     </style>
 </head>
 
@@ -47,18 +73,24 @@
         <input type="hidden" id="id" value="-1">
         <input type="hidden" id="color" value="0">
         <div class="btn-group" id="color-group">
-            <button class="active bg-color-0" onclick="setColor(0)"></button><button class="bg-color-1"
-                onclick="setColor(1)"></button><button onclick="setColor(2)" class="bg-color-2"></button><button
-                onclick="setColor(3)" class="bg-color-3"></button><button onclick="setColor(4)"
-                class="bg-color-4"></button>
+            <button class="active bg-color-0" onclick="setColor(0)"></button><button class="bg-color-1" onclick="setColor(1)"></button><button onclick="setColor(2)" class="bg-color-2"></button><button onclick="setColor(3)" class="bg-color-3"></button>
+            <button onclick="setColor(4)" class="bg-color-4"></button>
         </div>
         <div class="r">
             <button onclick="addUserSSHInfo()" class="btn-half-danger"> 保存 </button>
             <button onclick="show_dialog(false)" class="btn-half"> 取消 </button>
         </div>
     </div>
-    <h1>HOSTS</h1>
-    <div id='userSSH_list' class="r">
+    <div class="title-bar">
+
+    </div>
+    <div class="header">
+        <img src="static/img/icon.ico" style="float: left;">
+        <h1>已有主机</h1>
+    </div>
+    <div class="main">
+        <div id='userSSH_list' class="r">
+        </div>
     </div>
     <script src="static/js/common.js"></script>
     <script src="static/js/dialog.js"></script>

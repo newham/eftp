@@ -61,16 +61,36 @@ function createWindow() {
 }
 
 function createIndexWindow() {
+    // 默认值
+    let win_w = 1024
+    let minWidth = 700
+    let height = 768
+    let minHeight = 600
+    let x = null
+    let y = null
+
+    // 如果已有窗口，则保持原位置
+    if (BrowserWindow.getAllWindows().length > 0) {
+        let size = BrowserWindow.getFocusedWindow().getSize()
+        let position = BrowserWindow.getFocusedWindow().getPosition()
+        win_w = size[0]
+        height = size[1]
+        x = position[0]
+        y = position[1]
+    }
+
     // 创建浏览器窗口
     const win = new BrowserWindow({
         title: "Eftp",
         titleBarStyle: "hiddenInset", //不显示标题栏,仅显示按钮
         // transparent:true, //透明度
         // opacity:0.99,
-        width: 1024,
-        minWidth: 700,
-        height: 768,
-        minHeight: 600,
+        x: x,
+        y: y,
+        width: win_w,
+        minWidth: minWidth,
+        height: height,
+        minHeight: minHeight,
         webPreferences: {
             nodeIntegration: true //enable node js
         }

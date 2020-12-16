@@ -29,15 +29,15 @@ function saveUserSSHInfo(userSSHInfo) {
         // edit
         if (userSSHInfo.id != -1) {
             console.log('edit', userSSHInfo.id)
-            //refresh
+                //refresh
             userSSH_list[userSSHInfo.id] = userSSHInfo
-            //write to config
+                //write to config
             writeConf(userSSH_list, (err) => {
                 if (err) {
                     console.log(err)
                 } else {
                     show_dialog(false)
-                    //重载页面
+                        //重载页面
                     loadConf()
                 }
             })
@@ -49,7 +49,7 @@ function saveUserSSHInfo(userSSHInfo) {
             if (ok) { //insert
                 userSSHInfo.id = conf.length
                 conf.push(userSSHInfo)
-                // console.log(conf)
+                    // console.log(conf)
             } else { //first
                 userSSHInfo.id = 0
                 conf = [userSSHInfo]
@@ -61,14 +61,14 @@ function saveUserSSHInfo(userSSHInfo) {
                 } else {
                     //隐藏dialog
                     show_dialog(false)
-                    //重载页面
+                        //重载页面
                     loadConf()
                 }
             })
 
         })
 
-    }, function (error) {
+    }, function(error) {
         console.log(error)
         alert("连接失败")
     })
@@ -122,7 +122,7 @@ function addUserSSHInfo() {
     }
 
     console.log('add userSSHInfo', userSSHInfo.id, userSSHInfo.label)
-    //save to local
+        //save to local
     saveUserSSHInfo(userSSHInfo)
 
 }
@@ -134,14 +134,16 @@ function selectPK() {
         }
         console.log("select pk:", pkfile)
         document.getElementById('privateKey').value = pkfile
-        //clean pwd
+            //clean pwd
         document.getElementById('password').value = ''
     })
 }
 
-{/* <div class="c-5">
-<a class="box" href="index.html">ubuntu@shilizi.cn</a>
-</div> */}
+{
+    /* <div class="c-5">
+    <a class="box" href="index.html">ubuntu@shilizi.cn</a>
+    </div> */
+}
 
 function loadConf() {
     list_html = document.getElementById('userSSH_list')
@@ -151,13 +153,14 @@ function loadConf() {
             //save to memory
             userSSH_list = conf
         }
-        //else 没有配置文件，只显示添加按钮
+        // add button
+        list_html.innerHTML += '<div class="c-3"><a class="box"  onclick="show_dialog(true)">＋<br><label>New Host</label></a></div>'
+
         // console.log(conf)
         userSSH_list.forEach(userSSHInfo => {
-            list_html.innerHTML += '<div class="c-2-5 "><a class="box bg-color-{5}"  oncontextmenu="showHostMenu({0})" onclick="goSSH({1})">{2}<br><label>{3}@{4}</label></a></div>'.format(userSSHInfo.id, userSSHInfo.id, userSSHInfo.label, userSSHInfo.username, userSSHInfo.host, userSSHInfo.color)
+            list_html.innerHTML += '<div class="c-3"><a class="box bg-color-{5}"  oncontextmenu="showHostMenu({0})" onclick="goSSH({1})">{2}<br><label>{3}@{4}</label></a></div>'.format(userSSHInfo.id, userSSHInfo.id, userSSHInfo.label, userSSHInfo.username, userSSHInfo.host, userSSHInfo.color)
         });
-        // add button
-        list_html.innerHTML += '<div class="c-2-5"><a class="box"  onclick="show_dialog(true)">＋<br><label>Host</label></a></div>'
+
     })
 
 }
@@ -166,21 +169,21 @@ function goSSH(id) {
     userSSHInfo = userSSH_list[id]
     console.log('go ssh', userSSHInfo.label)
     ipcRenderer.send('go_ssh', userSSHInfo)
-    // share data
-    // remote.getGlobal('shareData').userSSHInfo = userSSHInfo
-    // to html
-    // window.location.href = 'index.html'
+        // share data
+        // remote.getGlobal('shareData').userSSHInfo = userSSHInfo
+        // to html
+        // window.location.href = 'index.html'
 }
 
 function delSSHInfo(id) {
     //删除
     userSSH_list.splice(id, 1)
-    //更新id
+        //更新id
     userSSH_list.forEach((userSSHInfo, i) => {
-        userSSHInfo.id = i
-        userSSH_list[i] = userSSHInfo
-    })
-    //保存
+            userSSHInfo.id = i
+            userSSH_list[i] = userSSHInfo
+        })
+        //保存
     writeConf(conf, (err) => {
         if (err) {
             console.log(err)
@@ -193,9 +196,9 @@ function delSSHInfo(id) {
 
 function editSSHInfo(userSSHInfo) {
     setSSHDialogVal(userSSHInfo)
-    //set tmp_favourites 
+        //set tmp_favourites 
     tmp_favourites = userSSHInfo.favourites
-    //set title
+        //set title
     show_dialog(true, '编辑Host')
 }
 
@@ -237,5 +240,5 @@ function setColor(color = 0) {
 }
 
 setTheme() //设置主题
-// delConf()
+    // delConf()
 loadConf()
