@@ -116,7 +116,7 @@ function addLock(isLock = false) {
 function doProcess(id, tg = 'success', msg = '') {
     //clean
     document.getElementById(id).classList.remove('txt-success', 'txt-danger', 'txt-info')
-    //set class
+        //set class
     txt_class = 'txt-success'
     if (tg == 'failed') {
         txt_class = 'txt-danger'
@@ -154,12 +154,12 @@ function addInfo(msg, file = '', isArray = false) {
     //sha1 a id
     let id = new Date().getTime()
     document.getElementById('infos').innerHTML += '<div class="line-div"><p><label>{0}</label>{1}</p><p id="{2}">{3}</p></div>'.format(msg, file, id, loading_html)
-    //滑动到底部
+        //滑动到底部
     sidebar = document.getElementById('sidebar')
     sidebar.scrollTop = sidebar.scrollHeight;
     //加锁，退出提示，禁止清空
     addLock(true)
-    //infos_count++
+        //infos_count++
     plusInfos_count(1)
     return id
 }
@@ -176,7 +176,7 @@ function ls(dir, isShow = getIsShowHidden()) {
     //dir = "" 刷新
     document.querySelector('#file_list').innerHTML = ""
     resetFileList()
-    //
+        //
     backIndex = getBackIndex()
     ls_history = get_ls_history()
     currentDir = getCurrentDir()
@@ -190,7 +190,7 @@ function ls(dir, isShow = getIsShowHidden()) {
                 backIndex += 2
             }
             back = ls_history[ls_history.length - backIndex]
-            // console.log('back', back)
+                // console.log('back', back)
             if (back && back.currentDir != currentDir) {
                 // console.log('ls back', back.currentDir)
                 setCurrentDir(back.currentDir)
@@ -204,36 +204,40 @@ function ls(dir, isShow = getIsShowHidden()) {
     }
     setBackIndex(backIndex)
     put_ls_history(getCurrentDir(), dir)
-    // console.log('add history', currentDir, ls_history.length)
+        // console.log('add history', currentDir, ls_history.length)
 
     //setlock
     set_ls_lock(true)
-    //set path
+        //set path
     showPath(getCurrentDir())
-    //get parent path
-    // parentPath = getParentPath(getCurrentDir())
-    // console.log('ls', currentDir)
+        //get parent path
+        // parentPath = getParentPath(getCurrentDir())
+        // console.log('ls', currentDir)
     let id = addInfo('ls', getCurrentDir())
-    //arg
+        //arg
     arg = '-lh'
     if (isShow) {
         arg = '-lha'
     }
+    let first = false
     getSSH().exec('ls', [arg, getCurrentDir()], {
         onStdout(chunk) {
             //add ../ to list
-            if (getCurrentDir() != "/" && !isShow) {
+            //避免bug（重复添加向上）
+            if (!first && getCurrentDir() != "/" && !isShow) {
                 //add up
                 up_file = init_fileInfo()
                 up_file.name = ".."
                 up_file.isDir = true
                 setFileInfo(up_file)
+                first = true
             }
             //parse ls
             read_line(chunk, getUserSSHInfo().characterSet, (line, i) => {
                 parse_ls_line(line, i)
             })
-        }, onStderr(chunk) {
+        },
+        onStderr(chunk) {
             // console.log('stderrChunk', chunk.toString(getUserSSHInfo().characterSet))
         }
     }).then(() => {
@@ -247,7 +251,7 @@ function ls(dir, isShow = getIsShowHidden()) {
         // console.log("exception", res)
         doProcess(id, 'failed', res)
         set_ls_lock(false)
-        // set connect_closed
+            // set connect_closed
         if (res.indexOf('No response from server') != -1 || res.indexOf('ERR_ASSERTION') != -1) {
             is_closed = true
             console.log('is_closed', is_closed)
@@ -322,14 +326,14 @@ function getFileHTML(fileInfo) {
         }
         return '{0}<td class="td-icon"><img class="icon" src="static/img/folder_mac.png"></td><td class="td-head" colspan="3"><a onclick="ls(\'{2}\')" href="#"><div class="{1}">{2}</div></a></td></div>'.format(tr_html, font_class, fileInfo.name)
     } else {
-        return '<tr oncontextmenu="showFileMenu({0})"><td class="td-icon"><img class="icon" src="static/img/file.png"></td><td class="td-head"><div class="{1}">{2}</div></td><td>{3}B</td><td class="td-download"><a href="#" onclick="download_file(\'{2}\')">↓</a></div>'.format(fileInfo.id, font_class, fileInfo.name, fileInfo.size)
+        return '<tr oncontextmenu="showFileMenu({0})"><td class="td-icon"><img class="icon" src="static/img/file-2.png"></td><td class="td-head"><div class="{1}">{2}</div></td><td>{3}B</td><td class="td-download"><a href="#" onclick="download_file(\'{2}\')">↓</a></div>'.format(fileInfo.id, font_class, fileInfo.name, fileInfo.size)
     }
 }
 
 function setFileInfo(fileInfo) {
     //push to list
     ssh_list[ssh_index].fileList.push(fileInfo)
-    //set html
+        //set html
     document.querySelector('#file_list').innerHTML += getFileHTML(fileInfo)
 }
 
@@ -355,15 +359,15 @@ function upload_file(files) {
     });
     let id = addInfo('upload', files, true)
     push_bs(id, files.join(','), '↑')
-    // setTimingProcess()
-    // setProcess(20)
-    getSSH().putFiles(fileItems).then(function () {
+        // setTimingProcess()
+        // setProcess(20)
+    getSSH().putFiles(fileItems).then(function() {
         // console.log("The File thing is done")
         doProcess(id)
         remove_bs(id)
-        // addInfo('success')
+            // addInfo('success')
         ls('')
-    }, function (error) {
+    }, function(error) {
         // console.log("Something's wrong", error)
         doProcess(id, 'failed', error)
     }).catch((res) => {
@@ -394,30 +398,30 @@ function upload_folder() {
             return
         }
         let toFolder = getCurrentDir() + getFolderName(folder)
-        // console.log(folder, 'to', toFolder)
+            // console.log(folder, 'to', toFolder)
         let id = addInfo('upload', folder)
         push_bs(id, folder, '↑')
-        // return
+            // return
         getSSH().putDirectory(folder, toFolder, {
             recursive: true,
             concurrency: 10,
-            validate: function (itemPath) {
+            validate: function(itemPath) {
                 const baseName = path.basename(itemPath)
                 return baseName.substr(0, 1) !== '.' && // do not allow dot files
                     baseName !== 'node_modules' // do not allow node_modules
             },
-            tick: function (localPath, remotePath, error) {
+            tick: function(localPath, remotePath, error) {
                 if (error) {
                     // console.log(localPath, error)
                 } else {
                     // console.log('ok')
                 }
             }
-        }).then(function (status) {
+        }).then(function(status) {
             // addInfo('success')
             doProcess(id)
             remove_bs(id)
-            ls("")//刷新列表
+            ls("") //刷新列表
         }).catch((res) => {
             doProcess(id, 'failed', res)
         })
@@ -448,12 +452,12 @@ function download_file(file) {
         let currentDir = getCurrentDir()
         let id = addInfo('download', file)
         push_bs(id, file, '↓')
-        getSSH().getFile(folder + file, currentDir + file).then(function (Contents) {
+        getSSH().getFile(folder + file, currentDir + file).then(function(Contents) {
             // console.log("The File", file, "successfully downloaded")
             // addInfo('success')
             doProcess(id)
             remove_bs(id)
-        }, function (error) {
+        }, function(error) {
             // console.log("Something's wrong")
             console.log(error)
         }).catch((res) => {
@@ -491,7 +495,7 @@ function getFileParentName(file) {
         return ""
     }
     let obj = file.lastIndexOf(".");
-    return file.slice(0, obj);//文件名
+    return file.slice(0, obj); //文件名
 }
 
 function getFileType(file) {
@@ -499,7 +503,7 @@ function getFileType(file) {
         return ""
     }
     let obj = file.lastIndexOf(".");
-    return file.slice(obj + 1);//文件名
+    return file.slice(obj + 1); //文件名
 }
 
 function getFileName(file) {
@@ -507,7 +511,7 @@ function getFileName(file) {
         return ""
     }
     let obj = file.lastIndexOf("/");
-    return file.substr(obj + 1);//文件名
+    return file.substr(obj + 1); //文件名
 }
 
 function show_dialog(isShow) {
@@ -550,13 +554,13 @@ function mkdir(dir_name = document.getElementById('dir_name').value) {
         return
     }
     let id = addInfo('mkdir', dir_name)
-    //mkdir by ssh
-    getSSH().mkdir(getCurrentDir() + dir_name).then(function () {
+        //mkdir by ssh
+    getSSH().mkdir(getCurrentDir() + dir_name).then(function() {
         // console.log("mkdir success", dir_name)
         doProcess(id)
-        // ls(dir_name) //进入该文件夹
-        ls("")//只刷新目录
-    }, function (error) {
+            // ls(dir_name) //进入该文件夹
+        ls("") //只刷新目录
+    }, function(error) {
         // console.log(error)
         doProcess(id, 'failed', error)
     })
@@ -565,18 +569,18 @@ function mkdir(dir_name = document.getElementById('dir_name').value) {
 
 function to_login() {
     ipcRenderer.send('new_win')
-    // ****old*****
-    // if (!confirm("确定断开连接,并返回主页？")) {
-    //     return
-    // }
-    // getSSH().dispose()
-    // // document.body.innerHTML = ""
-    // window.location.href = 'login.html'
+        // ****old*****
+        // if (!confirm("确定断开连接,并返回主页？")) {
+        //     return
+        // }
+        // getSSH().dispose()
+        // // document.body.innerHTML = ""
+        // window.location.href = 'login.html'
 }
 
 function connectSSH() {
     let ssh = new node_ssh()
-    //
+        //
     let userSSHInfo = getUserSSHInfo()
     let id = addInfo('connect', '{0}@{1}:{2}'.format(userSSHInfo.username, userSSHInfo.host, userSSHInfo.port))
     ssh.connect({
@@ -587,7 +591,7 @@ function connectSSH() {
         port: userSSHInfo.port,
     }).then(() => {
         setSSH(ssh)
-        // console.log("connect success!")
+            // console.log("connect success!")
         doProcess(id)
         ls("")
     }).catch((excp) => {
@@ -612,7 +616,7 @@ function saveUserSSHInfo(userSSHInfo) {
         if (ok) {
             //update favourites
             conf[getUserSSHInfo().id] = userSSHInfo
-            //write to local
+                //write to local
             writeConf(conf, (err) => {
                 if (err) {
                     console.log(err)
@@ -624,7 +628,7 @@ function saveUserSSHInfo(userSSHInfo) {
 
 function favourite_folder(folder, current = getCurrentDir()) {
     favourites = getUserSSHInfo().favourites
-    //检查重复
+        //检查重复
     isHave = false
     favourites.forEach((fav) => {
         if (fav.currentDir == current && folder == fav.folder) {
@@ -641,9 +645,9 @@ function favourite_folder(folder, current = getCurrentDir()) {
     new_favourite = { currentDir: current, folder: folder }
     favourites.push(new_favourite)
     getUserSSHInfo().favourites = favourites
-    // console.log(userSSHInfo)
+        // console.log(userSSHInfo)
     saveUserSSHInfo(userSSHInfo)
-    //hide it
+        //hide it
     showfavouritesMenu(false)
 }
 
@@ -669,16 +673,16 @@ function del_favourite(id) {
     favourites = getUserSSHInfo().favourites
     favourites.splice(id, 1)
     getUserSSHInfo().favourites = favourites
-    //save
+        //save
     saveUserSSHInfo(userSSHInfo)
-    //refresh
+        //refresh
     showfavouritesMenu(true)
 }
 
 function showfavouritesMenu(isShow = isfavouritesMenuShow) {
     //set menu
     setfavouritesMenu()
-    //show menu
+        //show menu
     favouritesMenu = document.getElementById('favouritesMenu')
     favouritesMenu.style.display = isShow ? 'block' : 'none'
     isfavouritesMenuShow = !isShow
@@ -699,7 +703,8 @@ function zip_folder(folder) {
             read_line(chunk, getUserSSHInfo().characterSet, (line, i) => {
                 doProcess(id, 'info', line)
             })
-        }, onStderr(chunk) {
+        },
+        onStderr(chunk) {
             // console.log('stderrChunk', chunk.toString(getUserSSHInfo().characterSet))
         }
     }).then(() => {
@@ -737,7 +742,8 @@ function unzip_file(file) {
             read_line(chunk, getUserSSHInfo().characterSet, (line, i) => {
                 doProcess(id, 'info', line)
             })
-        }, onStderr(chunk) {
+        },
+        onStderr(chunk) {
             // console.log('stderrChunk', chunk.toString(getUserSSHInfo().characterSet))
         }
     }).then(() => {
@@ -755,7 +761,8 @@ function ctrl_c() {
     getSSH().exec('ctrl+c', [], {
         onStdout(chunk) {
             console.log('stdoutChunk', chunk.toString(getUserSSHInfo().characterSet))
-        }, onStderr(chunk) {
+        },
+        onStderr(chunk) {
             console.log('stderrChunk', chunk.toString(getUserSSHInfo().characterSet))
         }
     }).catch((res) => {
@@ -793,25 +800,25 @@ ipcRenderer.on('add_ssh', (event, userSSHInfo) => {
 function new_ssh(userSSHInfo, currentDir) {
     // console.log(userSSHInfo.label)
     ssh_list.push({
-        userSSHInfo: userSSHInfo,
-        currentDir: currentDir,
-        ssh: null,
-        fileList: [],
-        isShowHidden: false,
-        infos_count: 0,
-        ls_history: [],
-        backIndex: 0,
-        ls_lock: false,
-        copy_from: "",
-    })
-    //最后一个是最新
+            userSSHInfo: userSSHInfo,
+            currentDir: currentDir,
+            ssh: null,
+            fileList: [],
+            isShowHidden: false,
+            infos_count: 0,
+            ls_history: [],
+            backIndex: 0,
+            ls_lock: false,
+            copy_from: "",
+        })
+        //最后一个是最新
     ssh_index = ssh_list.length - 1
-    //设置窗口标题
+        //设置窗口标题
     setTitle()
-    //设置激活
-    // setTabActive(ssh_index)
+        //设置激活
+        // setTabActive(ssh_index)
     setTabs()
-    //加载list
+        //加载list
     connectSSH()
 }
 
@@ -858,7 +865,7 @@ function to_ssh(index, isNew = false) {
     console.log("to ssh", index)
     ssh_index = index
     let i = addInfo('to', `[${getUserSSHInfo().label}]`)
-    // setTabActive(index)
+        // setTabActive(index)
     setTabs()
     ls()
     doProcess(i)
@@ -881,7 +888,7 @@ function showSidebar() {
 
 function showElement(id, f = null) {
     let item = document.getElementById(id)
-    // console.log(id, item.style.display)
+        // console.log(id, item.style.display)
     if (item.style.display == 'none') {
         if (f) {
             f(true)
@@ -941,5 +948,5 @@ function refresh() {
 
 //设置主题
 setTheme()
-//on init win
+    //on init win
 new_ssh(remote.getGlobal('shareData').userSSHInfo, getHome(remote.getGlobal('shareData').userSSHInfo.username))

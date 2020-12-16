@@ -4,18 +4,42 @@
     --blue-3: #0068d1;
     --blue-4: #2302CF;
     --title-bar-h: 36px;
+    --tool-bar-h: 30px;
     --side-bar-r-w: 300px;
     --side-bar-l-w: 38px;
     --side-bar-padding: 0px;
     --foot-bar-h: 0px;
     --dialog-w: 60%;
-    --btn-radius: 5px;
-    --input-radius: 2px;
+    --btn-radius: 3px;
+    --input-radius: 3px;
     --btn-h: 26px;
     --btn-font-size: 15px;
     --title-bar-padding: 78px;
     --drag-box-h: 60%;
     --box-shadow: 0 9px 30px -6px rgba(0, 0, 0, .2), 0 18px 20px -10px rgba(0, 0, 0, .04), 0 18px 20px -10px rgba(0, 0, 0, .04), 0 10px 20px -10px rgba(0, 0, 0, .04);
+}
+
+
+/* 滚动条样式 */
+
+::-webkit-scrollbar {
+    background: var(--tr-odd-bg-color);
+    width: 8px;
+    height: 12px;
+    /* border-left: var(--bar-border); */
+}
+
+::-webkit-scrollbar :hover {
+    cursor: pointer;
+}
+
+::-webkit-scrollbar :focus {
+    cursor: pointer;
+}
+
+::-webkit-scrollbar-thumb {
+    background: var(--side-bar-font-color);
+    border-radius: 4px;
 }
 
 button {
@@ -138,7 +162,8 @@ input::-webkit-input-placeholder {
     width: calc(50% - 20px) !important;
 }
 
-.btn-half, .btn-half-danger {
+.btn-half,
+.btn-half-danger {
     width: calc(50% - 3px) !important;
     border: none;
 }
@@ -157,7 +182,7 @@ input::-webkit-input-placeholder {
 }
 
 .dialog {
-    background: var(--title-bar-bg-color);
+    background: var(--dialog-bg-color);
     position: fixed;
     width: var(--dialog-w);
     padding: 10px;
@@ -193,7 +218,8 @@ input::-webkit-input-placeholder {
     padding-left: 5px;
 }
 
-table, tbody {
+table,
+tbody {
     width: 100%;
     padding: 0;
     border-spacing: 0px;
@@ -240,13 +266,16 @@ td {
     /* background: #432; */
 }
 
+
 /* 奇数行 odd*/
+
 
 /* 偶数数行 even*/
 
 table tr:nth-child(even) {
     background: var(--tr-even-bg-color);
 }
+
 
 /* 行 */
 
@@ -312,6 +341,7 @@ p {
     height: 10px;
 }
 
+
 /* tools */
 
 .txt-center {
@@ -327,6 +357,7 @@ p {
 .font-light {
     color: var(--font-color-light) !important;
 }
+
 
 /* color  */
 
@@ -346,6 +377,7 @@ p {
     border: 2px solid #000 !important;
 }
 
+
 /* bg-0 */
 
 .bg-color-0 {
@@ -359,6 +391,7 @@ p {
 .bg-color-0:active {
     background: var(--blue-3);
 }
+
 
 /* bg-1 */
 
@@ -374,6 +407,7 @@ p {
     background: Red;
 }
 
+
 /* bg-2 */
 
 .bg-color-2 {
@@ -387,6 +421,7 @@ p {
 .bg-color-2:active {
     background: #CDAD00;
 }
+
 
 /* bg-3 */
 
@@ -402,6 +437,7 @@ p {
     background: #006633;
 }
 
+
 /* bg-4 */
 
 .bg-color-4 {
@@ -414,4 +450,15 @@ p {
 
 .bg-color-4:active {
     background: #A020F0;
+}
+
+.tool-bar {
+    height: var(--tool-bar-h);
+    background: var(--title-bar-bg-color);
+    /* line-height: var(--tool-bar-h); */
+    border-bottom: var(--bar-border);
+    padding-left: 5px;
+    padding-right: 5px;
+    /* padding-bottom: 2px; */
+    user-select: none;
 }

@@ -1,25 +1,27 @@
 const { app, BrowserWindow, ipcMain, Menu, MenuItem, nativeTheme, dialog, screen } = require('electron')
 
+// 兼容
+app.allowRendererProcessReuse = true
+
 // global.data //全局数据
 global.shareData = {
-    userSSHInfo: {}, //一定要把数据放在结构体里面！！！
-    isDark: nativeTheme.shouldUseDarkColors,
-} //用于共享
+        userSSHInfo: {}, //一定要把数据放在结构体里面！！！
+        isDark: nativeTheme.shouldUseDarkColors,
+    } //用于共享
 
 let processLock = 0
 
 function createMenu() {
-    var template = [
-        {
+    var template = [{
             label: "Estp",
-            submenu: [
-                {
-                    label: "关于", click: function () {
+            submenu: [{
+                    label: "关于",
+                    click: function() {
                         app.showAboutPanel()
                     }
                 },
                 { type: 'separator' },
-                { label: "退出", accelerator: "CmdOrCtrl+Q", click: function () { app.quit() } },
+                { label: "退出", accelerator: "CmdOrCtrl+Q", click: function() { app.quit() } },
             ]
         },
         {
@@ -35,28 +37,26 @@ function createMenu() {
         {
             label: "显示",
             submenu: [
-                { label: "Light Theme", click: function () { setTheme(false) } },
-                { label: "Dark Theme", click: function () { setTheme(true) } },
+                { label: "Light Theme", click: function() { setTheme(false) } },
+                { label: "Dark Theme", click: function() { setTheme(true) } },
             ]
         }
     ];
     Menu.setApplicationMenu(Menu.buildFromTemplate(template))
-    //设置dock
-    const dockMenu = Menu.buildFromTemplate([
-        {
-            label: '新HOST',
-            click() {
-                createWindow()
-            }
+        //设置dock
+    const dockMenu = Menu.buildFromTemplate([{
+        label: '新HOST',
+        click() {
+            createWindow()
         }
-    ])
+    }])
     app.dock.setMenu(dockMenu)
 }
 
 function createWindow() {
     // 创建菜单
     createMenu()
-    // 创建窗口
+        // 创建窗口
     return createIndexWindow()
 }
 
@@ -68,7 +68,7 @@ function createIndexWindow() {
         // transparent:true, //透明度
         // opacity:0.99,
         width: 1024,
-        minWidth: 650,
+        minWidth: 700,
         height: 768,
         minHeight: 600,
         webPreferences: {

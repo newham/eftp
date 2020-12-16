@@ -1,8 +1,9 @@
 :root {
-    --main-color: #555;
-    --side-bar-bg-color: var(--main-color);
+    --main-color: #666;
+    --side-bar-bg-color: #111;
     --side-bar-font-color: #2997ff;
-    --side-bar-border: 1px solid #333;
+    --side-bar-font-color-2: #eee;
+    --side-bar-border: 1px solid var(--side-bar-bg-color);
     --title-bar-bg-color: #444;
     --foot-bar-bg-color: var(--main-color);
     --body-bg-color: var(--main-color);
@@ -12,7 +13,7 @@
     --font-color: #eee;
     --font-color-light: #ddd;
     --font-color-dark: #333;
-    --btn-bg-color: #666;
+    --btn-bg-color: #444;
     --btn-color: #fff;
     --btn-border: 0px solid #444;
     --btn-hover-bg-color: #777;
@@ -25,4 +26,5 @@
     --menu-border-color: #333;
     --menu-bg-color: var(--btn-bg-color);
     --login-bg-color: var(--title-bar-bg-color);
+    --dialog-bg-color: #444;
 }
