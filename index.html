@@ -25,7 +25,7 @@
             <div onclick="to_login()">＋ OPEN</div>
         </div>
     </div>
-    <div class="container" id="container" onclick="hideMenu()">
+    <div class="container" id="container">
         <div id="title-bar">
             <div id="path" class="path" ondblclick="maxWindow()"></div>
         </div>
@@ -34,7 +34,9 @@
             <button onclick="ls('..')"><label>↑</label><label>向上</label></button>
             <button onclick="ls('$HOME')"><label>~</label><label>主目录</label></button>
             <button onclick="refresh()"><label>↺</label><label>刷新</label></button>
-            <button onclick="showfavouritesMenu()"><label>☆</label><label>收藏</label></button>
+            <button onclick="showfavouritesMenu()">
+                <label>☆</label><label>收藏</label>
+            </button>
             <button onclick="showHiddenFile()"><label>•</label><label>隐藏</label></button>
             <button onclick="show_dialog(true)"><label>+</label><label>新建文件夹</label></button>
             <button onclick="show_backstageMenu()" id="btn_bs"><label>⇅</label><label>后台任务</label></button>
@@ -46,7 +48,7 @@
             </div>
             <!-- <button onclick="ctrl_c()">X</button> -->
         </div>
-        <div class="main" oncontextmenu="showDirMenu()">
+        <div class="main" oncontextmenu="showDirMenu()" onclick="hideMenu()">
             <table>
                 <tbody id="file_list">
 

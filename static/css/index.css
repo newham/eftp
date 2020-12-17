@@ -273,7 +273,7 @@ body {
     max-height: 400px;
     min-height: 40px;
     background: var(--menu-bg-color);
-    border-radius: calc(var(--btn-radius) * 2);
+    border-radius: 8px;
     /* border: var(--bar-border); */
     border: 1px solid var(--menu-border-color);
     /* display: none; */
@@ -333,20 +333,21 @@ body {
 
 #favouritesMenu .triangle-up,
 #favouritesMenu .triangle-up-box {
-    left: 220px;
+    left: calc(var(--side-bar-l-w) + 46px * 5);
 }
 
 #favouritesMenu {
-    left: 230px;
-}
-
-#backstageMenu {
-    left: 320px;
+    left: calc(var(--side-bar-l-w) + 46px * 5 - 90px);
 }
 
 #backstageMenu .triangle-up,
 #backstageMenu .triangle-up-box {
-    left: 410px !important;
+    /* left: 410px !important; */
+    left: calc(var(--side-bar-l-w) + 46px * 9.5);
+}
+
+#backstageMenu {
+    left: calc(var(--side-bar-l-w) + 46px * 9.5 - 90px);
 }
 
 .txt-search {
