@@ -19,31 +19,32 @@
 
 <body id="drag_area">
     <!-- <h1>Demo</h1> -->
-    <div id="title-bar">
-        <div id="path" class="path" ondblclick="maxWindow()"></div>
-    </div>
-    <div class="tool-bar">
-        <button onclick="ls('-1')">← 返回</button>
-        <button onclick="ls('..')">../ 向上</button>
-        <button onclick="ls('$HOME')">~ 主目录</button>
-        <button onclick="refresh()">↺ 刷新</button>
-        <button onclick="showfavouritesMenu()">☆ 收藏</button>
-        <button onclick="showHiddenFile()">• 隐藏</button>
-        <!-- </div>
-        <div style="display: block;float: right;padding-right: 85px;"> -->
-        <button onclick="show_dialog(true)">＋ 新建文件夹</button>
-        <button onclick="show_backstageMenu()" id="btn_bs">⇅ 后台任务</button>
-        <button onclick="upload_folder()">↑/ 上传文件夹</button>
-        <button onclick="upload()">↑ 上传文件</button>
-        <button onclick="clean_infos()">↻ 清屏</button>
-        <!-- <button onclick="ctrl_c()">X</button> -->
+    <div class="sidebar-l">
+        <div id="tab-bar" class="tab-bar"></div>
+        <div class="tab-bar">
+            <div onclick="to_login()">＋ OPEN</div>
+        </div>
     </div>
     <div class="container" id="container" onclick="hideMenu()">
-        <div class="sidebar-l">
-            <div id="tab-bar" class="tab-bar"></div>
-            <div class="tab-bar">
-                <div onclick="to_login()">＋ OPEN</div>
+        <div id="title-bar">
+            <div id="path" class="path" ondblclick="maxWindow()"></div>
+        </div>
+        <div class="tool-bar">
+            <button onclick="ls('-1')"><label>←</label><label>返回</label></button>
+            <button onclick="ls('..')"><label>↑</label><label>向上</label></button>
+            <button onclick="ls('$HOME')"><label>~</label><label>主目录</label></button>
+            <button onclick="refresh()"><label>↺</label><label>刷新</label></button>
+            <button onclick="showfavouritesMenu()"><label>☆</label><label>收藏</label></button>
+            <button onclick="showHiddenFile()"><label>•</label><label>隐藏</label></button>
+            <button onclick="show_dialog(true)"><label>+</label><label>新建文件夹</label></button>
+            <button onclick="show_backstageMenu()" id="btn_bs"><label>⇅</label><label>后台任务</label></button>
+            <button onclick="upload_folder()"><label>⇧/</label><label>上传目录</label></button>
+            <button onclick="upload()"><label>⇧</label><label>上传文件</label></button>
+            <div style="float: right;margin-right: 5px;">
+                <button onclick="clean_infos()">↺</button>
+                <button onclick="showSidebar()" id="siderbar-hide-btn">→</button>
             </div>
+            <!-- <button onclick="ctrl_c()">X</button> -->
         </div>
         <div class="main" oncontextmenu="showDirMenu()">
             <table>
@@ -52,7 +53,7 @@
                 </tbody>
             </table>
         </div>
-        <div class="siderbar-r-btn show-btn" onclick="showSidebar()" id="siderbar-hide-btn"> </div>
+        <!-- <div class="siderbar-r-btn show-btn" onclick="showSidebar()" id="siderbar-hide-btn"> </div> -->
         <div class="sidebar-r" id="sidebar" style="display: block;">
             <div id="infos">
 
@@ -69,7 +70,7 @@
     </div>
     <div class="drag_box" id="drag_box">
         <label onclick="showDargBox(false)">
-            <h1>关闭</h1>
+            <h1>x</h1>
         </label>
         <h1>请把文件拖放于此</h1>
         <img src="static/img/upload-1.png">

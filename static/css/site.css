@@ -3,8 +3,8 @@
     --blue-2: #2997ff;
     --blue-3: #0068d1;
     --blue-4: #2302CF;
-    --title-bar-h: 36px;
-    --tool-bar-h: 30px;
+    --title-bar-h: 38px;
+    --tool-bar-h: 50px;
     --side-bar-r-w: 300px;
     --side-bar-l-w: 150px;
     --side-bar-padding: 0px;
@@ -13,7 +13,7 @@
     --btn-radius: 3px;
     --box-radius: 3px;
     --input-radius: 3px;
-    --btn-h: 26px;
+    /* --btn-h: 26px; */
     --btn-font-size: 15px;
     --title-bar-padding: 78px;
     --drag-box-h: 60%;
@@ -38,13 +38,15 @@
 button {
     text-align: center;
     min-width: 32px;
-    height: var(--btn-h);
-    line-height: var(--btn-h - 2px);
+    /* height: var(--btn-h); */
+    /* line-height: var(--btn-h - 2px); */
     border-radius: var(--btn-radius);
     background: var(--btn-bg-color);
     color: var(--btn-color);
     border: var(--btn-border);
-    padding: 0 5px;
+    font-size: 14px;
+    /* font-weight: bold; */
+    padding: 3px;
     margin: 0px;
     outline: none;
 }
@@ -55,6 +57,14 @@ button:hover {
 
 button:active {
     background: var(--btn-active-bg-color);
+}
+
+button label {
+    display: block;
+    float: left;
+    width: 100%;
+    padding: 0 !important;
+    margin: 0 !important;
 }
 
 a {
@@ -187,10 +197,12 @@ input::-webkit-input-placeholder {
     z-index: 99;
     background: var(--dialog-bg-color);
     position: fixed;
-    width: calc(var(--dialog-w) - 20px);
+    /* width: calc(var(--dialog-w) - 20px); */
+    /* left: calc(50% - var(--dialog-w) / 2); */
+    width: calc(100% - var(--side-bar-l-w) * 2 - 20px);
+    left: var(--side-bar-l-w);
     padding: 10px;
     top: 0px;
-    left: calc(50% - var(--dialog-w) / 2);
     text-align: center;
     border: 1px solid var(--menu-border-color);
     border-top: none;
@@ -226,10 +238,6 @@ tbody {
     width: 100%;
     padding: 0;
     border-spacing: 0px;
-}
-
-table {
-    border-bottom: var(--line-border);
 }
 
 tr {
@@ -453,21 +461,4 @@ p {
 
 .bg-color-4:active {
     background: #A020F0;
-}
-
-.tool-bar {
-    height: var(--tool-bar-h);
-    background: var(--title-bar-bg-color);
-    /* line-height: var(--tool-bar-h); */
-    border-bottom: var(--bar-border);
-    padding-left: 5px;
-    padding-right: 5px;
-    /* padding-bottom: 2px; */
-    user-select: none;
-}
-
-.tool-bar img {
-    max-height: 60%;
-    margin: 0;
-    padding: 0;
 }

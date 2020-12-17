@@ -11,6 +11,10 @@
     <link rel="stylesheet" type="text/css" href="static/css/site.css" />
 
     <style>
+         :root {
+            --header-h: 75px
+        }
+        
         body {
             background: var(--login-bg-color);
             margin: 0;
@@ -26,13 +30,19 @@
         }
         
         .header {
-            padding: 0px 10px;
+            padding: 0px 15px;
             -webkit-app-region: drag;
         }
         
         .header h1 {
+            font-size: calc(var(--header-h));
             padding: 0;
             margin: 0;
+        }
+        
+        .header img {
+            float: left;
+            max-height: var(--header-h);
         }
         
         .input-quarter {
@@ -46,15 +56,22 @@
         .title-bar {
             height: var(--title-bar-h);
             -webkit-app-region: drag;
+            line-height: var(--title-bar-h);
+            padding-right: 15px;
+            text-align: right;
+            font-size: 13px;
+            color: var(--font-color);
         }
         
         .main {
             position: fixed;
-            top: calc(var(--title-bar-h) + 75px);
+            top: calc(var(--title-bar-h) + 5px);
+            /* top: calc(var(--title-bar-h) + var(--header-h) + 10px); */
             left: 0;
-            height: calc(100% - var(--title-bar-h) - 75px);
+            height: calc(100% - var(--title-bar-h) - 20px);
             width: 100%;
             overflow-y: auto;
+            background: var(--login-bg-color);
         }
     </style>
 </head>
@@ -73,7 +90,10 @@
         <input type="hidden" id="id" value="-1">
         <input type="hidden" id="color" value="0">
         <div class="btn-group" id="color-group">
-            <button class="active bg-color-0" onclick="setColor(0)"></button><button class="bg-color-1" onclick="setColor(1)"></button><button onclick="setColor(2)" class="bg-color-2"></button><button onclick="setColor(3)" class="bg-color-3"></button>
+            <button class="active bg-color-0" onclick="setColor(0)"></button>
+            <button class="bg-color-1" onclick="setColor(1)"></button>
+            <button onclick="setColor(2)" class="bg-color-2"></button>
+            <button onclick="setColor(3)" class="bg-color-3"></button>
             <button onclick="setColor(4)" class="bg-color-4"></button>
         </div>
         <div class="r">
@@ -82,12 +102,13 @@
         </div>
     </div>
     <div class="title-bar">
-
+        <button>☂ 关于</button>
+        <button>? 帮助</button>
     </div>
-    <div class="header">
-        <img src="static/img/icon.ico" style="float: left;">
-        <h1>已有主机</h1>
-    </div>
+    <!-- <div class="header"> -->
+    <!-- <img src="static/img/icon.ico"> -->
+    <!-- <h1>EFTP</h1> -->
+    <!-- </div> -->
     <div class="main">
         <div id='userSSH_list' class="r">
         </div>

@@ -324,9 +324,9 @@ function getFileHTML(fileInfo) {
         if (fileInfo.name == "..") {
             tr_html = '<tr>'
         }
-        return '{0}<td class="td-icon"><img class="icon" src="static/img/folder_mac.png"></td><td class="td-head" colspan="3"><a onclick="ls(\'{2}\')" href="#"><div class="{1}">{2}</div></a></td></div>'.format(tr_html, font_class, fileInfo.name)
+        return '{0}<td class="td-icon"><img class="icon" src="static/img/folder.png"></td><td class="td-head" colspan="3"><a onclick="ls(\'{2}\')" href="#"><div class="{1}">{2}</div></a></td></div>'.format(tr_html, font_class, fileInfo.name)
     } else {
-        return '<tr oncontextmenu="showFileMenu({0})"><td class="td-icon"><img class="icon" src="static/img/file-2.png"></td><td class="td-head"><div class="{1}">{2}</div></td><td>{3}B</td><td class="td-download"><a href="#" onclick="download_file(\'{2}\')">↓</a></div>'.format(fileInfo.id, font_class, fileInfo.name, fileInfo.size)
+        return '<tr oncontextmenu="showFileMenu({0})"><td class="td-icon"><img class="icon" src="static/img/file-3.png"></td><td class="td-head"><div class="{1}">{2}</div></td><td>{3}B</td><td class="td-download"><a href="#" onclick="download_file(\'{2}\')">⇩</a></div>'.format(fileInfo.id, font_class, fileInfo.name, fileInfo.size)
     }
 }
 
@@ -876,12 +876,14 @@ function showSidebar() {
     showElement('sidebar', (isShow) => {
         if (!isShow) {
             document.documentElement.style.setProperty('--side-bar-r-w', '0px')
-            btn.classList.remove('show-btn')
-            btn.classList.add('hide-btn')
+                // btn.classList.remove('show-btn')
+                // btn.classList.add('hide-btn')
+            btn.innerHTML = '←'
         } else {
             document.documentElement.style.setProperty('--side-bar-r-w', '300px')
-            btn.classList.remove('hide-btn')
-            btn.classList.add('show-btn')
+                // btn.classList.remove('hide-btn')
+                // btn.classList.add('show-btn')
+            btn.innerHTML = '→'
         }
     })
 }

@@ -1,20 +1,22 @@
 :root {
     --main-color: #fff;
-    --side-bar-bg-color: #111;
+    --side-bar-bg-color: #fff;
     --side-bar-font-color: #2997ff;
-    --side-bar-font-color-2: #eee;
-    --side-bar-border: 1px solid var(--side-bar-bg-color);
+    --side-bar-font-color-2: #666;
+    --side-bar-border: 1px solid #eee;
+    --side-bar-l-bg-color: var(--blue-2);
+    --side-bar-l-font-color: #fff;
     --title-bar-bg-color: #eee;
     --foot-bar-bg-color: var(--main-color);
     --body-bg-color: var(--main-color);
     --line-border: 0px solid var(--main-color);
-    --bar-border-color: #ccc;
+    --bar-border-color: #eee;
     --bar-border: 1px solid var(--bar-border-color);
-    --font-color: #555;
+    --font-color: #666;
     --font-color-light: #ddd;
     --font-color-dark: #333;
-    --btn-bg-color: var(--title-bar-bg-color);
-    --btn-color: #111;
+    --btn-bg-color: #ddd;
+    --btn-color: var(--font-color);
     --btn-border: 0px solid var(--bar-border-color);
     --btn-hover-bg-color: #f8f8f8;
     --btn-active-bg-color: #eee;
@@ -25,6 +27,6 @@
     --brag-box-border-color: #ddd;
     --menu-bg-color: #fff;
     --menu-border-color: #D0D0D0;
-    --login-bg-color: var(--title-bar-bg-color);
+    --login-bg-color: #eee;
     --dialog-bg-color: #eee;
 }
