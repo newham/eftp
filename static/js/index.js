@@ -878,12 +878,12 @@ function showSidebar() {
             document.documentElement.style.setProperty('--side-bar-r-w', '0px')
                 // btn.classList.remove('show-btn')
                 // btn.classList.add('hide-btn')
-            btn.innerHTML = '←'
+            btn.style.removeProperty('color')
         } else {
             document.documentElement.style.setProperty('--side-bar-r-w', '300px')
                 // btn.classList.remove('hide-btn')
                 // btn.classList.add('show-btn')
-            btn.innerHTML = '→'
+            btn.style.setProperty('color', 'var(--blue-2)')
         }
     })
 }
