@@ -66,7 +66,11 @@ function resetInfos_count() {
 }
 
 function getInfos_count() {
-    return ssh_list[current_ssh_id].infos_count
+    let ssh = ssh_list[current_ssh_id]
+    if (ssh) {
+        return ssh.infos_count
+    }
+    return 0
 }
 
 function resetFileList() {
@@ -998,13 +1002,14 @@ function closeTab(id) {
         ssh_client.dispose()
     }
     ssh_list.splice(id, 1) //删除ssh info
+    doProcess(i) //先解close锁
     to_ssh(id - 1 > 0 ? id - 1 : 0, true) //跳转tab
-    doProcess(i)
 }
 
 function to_ssh(id, isNew = false) {
-    if (ssh_list.length == 0) {
+    if (ssh_list.length == 0) { //所有窗口都已经被关闭了
         document.location.href = 'login.html'
+        return
     }
     if (id == current_ssh_id && !isNew) {
         return

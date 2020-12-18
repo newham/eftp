@@ -147,6 +147,7 @@ input::-webkit-input-placeholder {
     text-overflow: ellipsis;
     white-space: nowrap;
     overflow: hidden;
+    /* border: 1px solid #333; */
 }
 
 .box:hover {
@@ -169,8 +170,11 @@ input::-webkit-input-placeholder {
 }
 
 .box img {
+    margin-top: -20px;
+    margin-left: -25px;
+    margin-bottom: -5px;
     float: left;
-    height: 45px;
+    height: 72px;
     margin-right: 10px;
     /* padding: 5px;
     background: #fff;
@@ -261,7 +265,8 @@ tr:hover {
     background: var(--tr-hover-bg-color) !important;
 }
 
-.no-hover {}
+
+/* .no-hover {} */
 
 .no-hover:hover {
     background: none !important;
