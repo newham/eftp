@@ -171,9 +171,9 @@ let showPath = (path) => {
     document.querySelector('#path').innerHTML = path
 }
 
-function show_ssh_alert(color, msg = 'ssh正在连接...') {
+function show_ssh_alert(color, msg = '正在连接...') {
     if (color == 'danger') {
-        msg = 'ssh连接失败! 请检查网络或配置'
+        msg = '连接失败! 请检查网络或ssh配置'
     }
     document.querySelector('#file_list').innerHTML = `<tr class="no-hover"><td class="td-alert txt-${color}">${msg}</td></tr>`
 }
@@ -726,6 +726,8 @@ function connectSSH(ssh_id = current_ssh_id) {
         if (ssh_id == current_ssh_id) { //如果还停留在当前页面，则修改提示
             show_ssh_alert('danger')
         }
+        //修改tabs
+        setTabs() //刷新
     })
 }
 
@@ -970,7 +972,11 @@ function setTabs() {
         } else {
             active_css = ''
         }
-        document.getElementById('tab-bar').innerHTML += `<div ${active_css} id="tab-${i}" oncontextmenu="showTabMenu(${i})" onclick="to_ssh(${i})">${ssh.userSSHInfo.label}</div>`
+        let tag = ''
+        if (ssh.ssh == -1) {
+            tag = '⚠️ '
+        }
+        document.getElementById('tab-bar').innerHTML += `<div ${active_css} id="tab-${i}" oncontextmenu="showTabMenu(${i})" onclick="to_ssh(${i})">${tag}${ssh.userSSHInfo.label}</div>`
     })
 
     // clean old ls
@@ -1074,6 +1080,7 @@ function hideMenu() {
 function refresh() {
     if (getSSH() == -1) {
         setSSH(current_ssh_id, null) //初始化
+        setTabs() //刷新tabs
         connectSSH() //重新连接
     } else if (getSSH()) {
         ls()
