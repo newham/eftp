@@ -718,16 +718,15 @@ function connectSSH(ssh_id = current_ssh_id) {
             // console.log("connect success!")
         doProcess(id)
         ls("")
+        setTabs() //修改tabs
     }).catch((excp) => {
         setSSH(ssh_id, -1)
             // console.log("connect failed!", error)
         doProcess(id, 'failed', excp)
-            // ls("")
         if (ssh_id == current_ssh_id) { //如果还停留在当前页面，则修改提示
             show_ssh_alert('danger')
         }
-        //修改tabs
-        setTabs() //刷新
+        setTabs() //修改tabs
     })
 }
 
@@ -975,6 +974,8 @@ function setTabs() {
         let tag = ''
         if (ssh.ssh == -1) {
             tag = '⚠️ '
+        } else if (ssh.ssh == null) {
+            tag = '⇋ '
         }
         document.getElementById('tab-bar').innerHTML += `<div ${active_css} id="tab-${i}" oncontextmenu="showTabMenu(${i})" onclick="to_ssh(${i})">${tag}${ssh.userSSHInfo.label}</div>`
     })
@@ -984,13 +985,20 @@ function setTabs() {
 }
 
 function closeTab(id) {
-    let i = addInfo('close', getUserSSHInfo(id).label)
+    //检查是否能关闭
     let ssh_client = getSSH(id)
-    if (ssh_client && ssh_client != -1) { //=null 表示连接中，=-1表示连接失败
+    if (ssh_client == null) { //=null 表示连接中，
+        alert('还不能关闭，正在连接，请稍后！')
+        return
+    }
+
+    //开始关闭
+    let i = addInfo('close', getUserSSHInfo(id).label) //显示log到日志
+    if (ssh_client && ssh_client != -1) { //=-1表示连接失败
         ssh_client.dispose()
     }
-    ssh_list.splice(id, 1)
-    to_ssh(id - 1 > 0 ? id - 1 : 0, true)
+    ssh_list.splice(id, 1) //删除ssh info
+    to_ssh(id - 1 > 0 ? id - 1 : 0, true) //跳转tab
     doProcess(i)
 }
 
