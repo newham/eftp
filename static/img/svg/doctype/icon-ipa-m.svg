@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="40px" height="40px" viewBox="0 0 40 40" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 49 (51002) - http://www.bohemiancoding.com/sketch -->
+    <title>ico_dmg_mini</title>
+    <desc>Created with Sketch.</desc>
+    <defs>
+        <rect id="path-1" x="5" y="3" width="30" height="34" rx="1"></rect>
+    </defs>
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="weiyun2018_WEB_fileicon" transform="translate(-358.000000, -580.000000)">
+            <g id="fileico/dmg_mini" transform="translate(358.000000, 580.000000)">
+                <g id="ico_dmg_mini">
+                    <rect id="bg" x="0" y="0" width="40" height="40"></rect>
+                    <g id="Rectangle-23-Copy">
+                        <use fill="#FFFFFF" fill-rule="evenodd" xlink:href="#path-1"></use>
+                        <rect stroke="#E0E0E0" stroke-width="1" x="5.5" y="3.5" width="29" height="33" rx="1"></rect>
+                    </g>
+                    <path d="M21.0194664,11.7745333 C22.3294695,10.0089237 24.1559881,10 24.1559881,10 C24.1559881,10 24.4254744,11.6610754 23.1242047,13.26096 C21.7380966,14.9692033 20.1536167,14.6887454 20.1536167,14.6887454 C20.1536167,14.6887454 19.8541874,13.3450973 21.0269521,11.7745333 L21.0194664,11.7745333 Z M23.6,14.7058824 C26.359678,14.7058824 27.6,16.6136725 27.6,16.6136725 C27.6,16.6136725 25.2015625,17.5884819 25.2015625,20.0477879 C25.2015625,22.819805 28,23.863275 28,23.863275 C28,23.863275 26.0947489,28.8006202 23.6,28.8006202 C22.4519739,28.8006202 20.9447266,28.0604134 20,28.0604134 C19.0552734,28.0604134 17.9947873,28.8235294 17.2,28.8235294 C14.9186662,28.8235294 12,24.1290937 12,20.4292528 C12,16.7752303 14.1137601,14.7058824 16.4,14.7058824 C17.8840935,14.7058824 19.2272901,15.7560985 20,15.7560985 C20.7727099,15.7560985 21.9981602,14.7058824 23.6,14.7058824 Z" id="ico_dmg_small" fill="#7C878E"></path>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="16px" height="16px" viewBox="0 0 16 16" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 50.2 (55047) - http://www.bohemiancoding.com/sketch -->
+    <title>icon-min-mac-hover</title>
+    <desc>Created with Sketch.</desc>
+    <defs></defs>
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Traffic-Lights-(Mouse-Over-1)" transform="translate(-18.000000, 2.000000)">
+            <circle id="Traffic-Light---Minimise" stroke="#DFA536" stroke-width="0.5" fill="#FFBF2F" cx="26" cy="6" r="6"></circle>
+            <rect id="Icon---Minimise" fill="#995700" x="22" y="5.5" width="8" height="1"></rect>
+        </g>
+    </g>
+</svg>

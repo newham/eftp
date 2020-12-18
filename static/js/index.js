@@ -175,7 +175,7 @@ function show_ssh_alert(color, msg = 'ssh正在连接...') {
     if (color == 'danger') {
         msg = 'ssh连接失败! 请检查网络或配置'
     }
-    document.querySelector('#file_list').innerHTML = `<tr><td class="td-head txt-${color}">${msg}</td></tr>`
+    document.querySelector('#file_list').innerHTML = `<tr class="no-hover"><td class="td-alert txt-${color}">${msg}</td></tr>`
 }
 
 function ls(dir, isShow = getIsShowHidden()) {
@@ -200,7 +200,6 @@ function ls(dir, isShow = getIsShowHidden()) {
         ssh_list[current_ssh_id].fileList.forEach((fileInfo, i) => {
             document.querySelector('#file_list').innerHTML += getFileHTML(fileInfo)
         })
-        console.log('ls', getCurrentDir(), 'from tmp')
         return
     }
     // >>>>>>>>>>list缓存-end
@@ -236,21 +235,24 @@ function ls(dir, isShow = getIsShowHidden()) {
 
     //setlock
     set_ls_lock(true)
-        //set path
-    showPath(getCurrentDir())
-        //get parent path
-        // parentPath = getParentPath(getCurrentDir())
-        // console.log('ls', currentDir)
+
+    //get parent path
+    // parentPath = getParentPath(getCurrentDir())
+    // console.log('ls', currentDir)
     let id = addInfo('ls', getCurrentDir())
         //arg
     arg = '-lh'
     if (isShow) {
         arg = '-lha'
     }
+    let once = 0
     let first = true
     let n = -1 //计数
     ssh_client.exec('ls', [arg, getCurrentDir()], {
         onStdout(chunk) {
+            //set path
+            showPath(getCurrentDir())
+
             //避免bug（重复添加向上）
             if (first) {
                 document.querySelector('#file_list').innerHTML = "" //清空列表
@@ -263,11 +265,16 @@ function ls(dir, isShow = getIsShowHidden()) {
                     first = false
                 }
             }
-            //parse ls
-            read_line(chunk, getUserSSHInfo().characterSet, (line, i) => {
-                if (n++ > max_list_num) {
-                    return false
+            if (n > max_list_num) {
+                if (once < 1) {
+                    once++
+                    document.querySelector('#file_list').innerHTML += `<tr><td colspan="5" class="txt-center">快不行了...只能显示前${n}行</td></tr>`
                 }
+                return false
+            }
+            //parse line
+            read_line(chunk, getUserSSHInfo().characterSet, (line, i) => {
+                n++
                 parse_ls_line(line, n)
             })
         },
@@ -285,6 +292,7 @@ function ls(dir, isShow = getIsShowHidden()) {
         // console.log("exception", res)
         doProcess(id, 'failed', res)
         set_ls_lock(false)
+        setCurrentDir(currentDir) //还原原路径
 
         // set connect_closed
         if (res.indexOf('No response from server') != -1 || res.indexOf('ERR_ASSERTION') != -1) {
@@ -313,6 +321,7 @@ let init_fileInfo = () => {
     return {
         rights: "",
         fileCount: 0,
+        type: "file",
         user: "",
         group: "",
         size: "-",
@@ -320,7 +329,7 @@ let init_fileInfo = () => {
         day: "",
         year: "",
         name: "",
-        isDir: false,
+        isDir: true,
         id: 0
     }
 }
@@ -342,6 +351,7 @@ let set_fileInfo = (attrs = [], id) => {
     fileInfo.day = attrs[6]
     fileInfo.year = attrs[7]
     fileInfo.name = attrs.slice(8).join(' ')
+    fileInfo.type = getFileType(fileInfo.name, fileInfo.isDir)
     fileInfo.id = id
 
     setFileInfo(fileInfo)
@@ -358,9 +368,9 @@ function getFileHTML(fileInfo) {
         if (fileInfo.name == "..") {
             tr_html = '<tr>'
         }
-        return '{0}<td class="td-num">{3}</td><td class="td-icon"><img class="icon" src="static/img/folder.png"></td><td class="td-head" colspan="3"><a onclick="ls(\'{2}\')" href="#"><div class="{1}">{2}</div></a></td></div>'.format(tr_html, font_class, fileInfo.name, fileInfo.id)
+        return '{0}<td class="td-num">{3}</td><td class="td-icon"><img class="icon" src="static/img/svg/doctype/icon-{4}-m.svg"></td><td class="td-head" colspan="3"><a onclick="ls(\'{2}\')" href="#"><div class="{1}">{2}</div></a></td></div>'.format(tr_html, font_class, fileInfo.name, fileInfo.id, fileInfo.type)
     } else {
-        return '<tr oncontextmenu="showFileMenu({0})"><td class="td-num">{4}</td><td class="td-icon"><img class="icon" src="static/img/file-3.png"></td><td class="td-head"><div class="{1}">{2}</div></td><td>{3}B</td><td class="td-download"><a href="#" onclick="download_file(\'{2}\')">⇩</a></div>'.format(fileInfo.id, font_class, fileInfo.name, fileInfo.size, fileInfo.id)
+        return '<tr oncontextmenu="showFileMenu({0})"><td class="td-num">{4}</td><td class="td-icon"><img class="icon" src="static/img/svg/doctype/icon-{5}-m.svg"></td><td class="td-head"><div class="{1}">{2}</div></td><td>{3}B</td><td class="td-download"><a href="#" onclick="download_file(\'{2}\')">⇩</a></div>'.format(fileInfo.id, font_class, fileInfo.name, fileInfo.size, fileInfo.id, fileInfo.type)
     }
 }
 
@@ -532,12 +542,92 @@ function getFileParentName(file) {
     return file.slice(0, obj); //文件名
 }
 
-function getFileType(file) {
-    if (file == "") {
-        return ""
+function getFileType(file, is_folder = false) {
+    if (is_folder) {
+        return "file" //目录
     }
     let obj = file.lastIndexOf(".");
-    return file.slice(obj + 1); //文件名
+    let file_type = "nor"
+    if (obj < 0) {
+        return file_type
+    }
+    let extension = file.slice(obj + 1); //文件后缀
+
+    // console.log('get file type', file, 'extension:', extension)
+    switch (extension) {
+        case 'doc':
+        case 'docx':
+            file_type = 'doc'
+            break
+        case 'ppt':
+        case 'pptx':
+            file_type = 'ppt'
+            break
+        case 'xls':
+        case 'xlsx':
+            file_type = 'xls'
+            break
+        case 'pdf':
+            file_type = 'pdf'
+            break
+        case 'apk':
+            file_type = 'apk'
+            break
+        case 'psd':
+            file_type = 'ps'
+            break
+        case 'txt':
+        case 'md':
+        case 'json':
+        case 'yml':
+        case 'conf':
+        case 'sh':
+        case 'sql':
+            file_type = 'txt'
+            break
+        case 'mp4':
+        case 'rmvb':
+        case 'mkv':
+        case 'avi':
+            file_type = 'video'
+            break
+        case 'flv':
+            file_type = 'flv'
+            break
+        case 'mp3':
+        case 'm4a':
+        case 'flac':
+            file_type = 'audio'
+            break
+        case 'jpg':
+        case 'jpeg':
+        case 'png':
+        case 'bmp':
+        case 'gif':
+        case 'svg':
+            file_type = 'pic'
+            break
+        case 'zip':
+        case '7z':
+        case 'gz':
+        case 'rar':
+        case 'tar':
+        case 'xz':
+            file_type = 'zip'
+            break
+        case 'c':
+        case 'cpp':
+        case 'go':
+        case 'java':
+        case 'py':
+        case 'ipynb':
+        case 'html':
+        case 'js':
+        case 'css':
+            file_type = 'code'
+            break
+    }
+    return file_type
 }
 
 function getFileName(file) {
@@ -633,6 +723,9 @@ function connectSSH(ssh_id = current_ssh_id) {
             // console.log("connect failed!", error)
         doProcess(id, 'failed', excp)
             // ls("")
+        if (ssh_id == current_ssh_id) { //如果还停留在当前页面，则修改提示
+            show_ssh_alert('danger')
+        }
     })
 }
 
@@ -887,7 +980,7 @@ function setTabs() {
 function closeTab(id) {
     let i = addInfo('close', getUserSSHInfo(id).label)
     let ssh_client = getSSH(id)
-    if (ssh_client) {
+    if (ssh_client && ssh_client != -1) { //=null 表示连接中，=-1表示连接失败
         ssh_client.dispose()
     }
     ssh_list.splice(id, 1)
@@ -979,9 +1072,10 @@ function hideMenu() {
 }
 
 function refresh() {
-    if (!getSSH()) {
-        connectSSH()
-    } else {
+    if (getSSH() == -1) {
+        setSSH(current_ssh_id, null) //初始化
+        connectSSH() //重新连接
+    } else if (getSSH()) {
         ls()
     }
 }

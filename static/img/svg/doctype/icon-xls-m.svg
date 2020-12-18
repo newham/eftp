@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="40px" height="40px" viewBox="0 0 40 40" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 49 (51002) - http://www.bohemiancoding.com/sketch -->
+    <title>ico_xlsx_mini</title>
+    <desc>Created with Sketch.</desc>
+    <defs>
+        <rect id="path-1" x="8" y="3" width="27" height="34" rx="1"></rect>
+    </defs>
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="weiyun2018_WEB_fileicon" transform="translate(-358.000000, -420.000000)">
+            <g id="fileico/xlsx_mini" transform="translate(358.000000, 420.000000)">
+                <g id="ico_xlsx_mini">
+                    <rect id="bg" x="0" y="0" width="40" height="40"></rect>
+                    <g id="Rectangle-23-Copy">
+                        <use fill="#FFFFFF" fill-rule="evenodd" xlink:href="#path-1"></use>
+                        <rect stroke="#E0E0E0" stroke-width="1" x="8.5" y="3.5" width="26" height="33" rx="1"></rect>
+                    </g>
+                    <path d="M25,12 L31,12 L31,15 L25,15 L25,12 Z M18,12 L24,12 L24,15 L18,15 L18,12 Z M25,16 L31,16 L31,19 L25,19 L25,16 Z M18,16 L24,16 L24,19 L18,19 L18,16 Z M25,20 L31,20 L31,23 L25,23 L25,20 Z M18,20 L24,20 L24,23 L18,23 L18,20 Z M25,24 L31,24 L31,27 L25,27 L25,24 Z M18,24 L24,24 L24,27 L18,27 L18,24 Z M25,28 L31,28 L31,31 L25,31 L25,28 Z M18,28 L24,28 L24,31 L18,31 L18,28 Z" id="Combined-Shape" fill="#E5E5E5"></path>
+                    <path d="M5.87596527,11.8905043 L19.8759653,10.1405043 C20.4239852,10.0720018 20.9237754,10.4607275 20.9922779,11.0087475 C20.997421,11.0498923 21,11.0913172 21,11.1327822 L21,31.8672178 C21,32.4195025 20.5522847,32.8672178 20,32.8672178 C19.958535,32.8672178 19.9171101,32.8646388 19.8759653,32.8594957 L5.87596527,31.1094957 C5.37553644,31.0469421 5,30.6215411 5,30.1172178 L5,12.8827822 C5,12.3784589 5.37553644,11.9530579 5.87596527,11.8905043 Z" id="Rectangle-29" fill="#269758"></path>
+                    <polygon id="ico_xlsx_small" fill="#FFFFFF" points="12.84 19.6945455 14.856 16.416 17.16 16.16 13.992 21.44 17.16 26.72 14.856 26.464 12.84 23.1854545 11.304 26.016 9 25.76 11.688 21.44 9 17.12 11.304 16.864"></polygon>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="24px" height="24px" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 49 (51002) - http://www.bohemiancoding.com/sketch -->
+    <title>icon-note-s</title>
+    <desc>Created with Sketch.</desc>
+    <defs></defs>
+    <g id="icon-note-s" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="ico_new_note">
+            <rect id="Rectangle-5" x="0" y="0" width="24" height="24"></rect>
+            <path d="M8.52425391,17.9981453 L21,17.9981453 L21,19.9981453 L3,19.9981453 L3.00354874,19.9910478 L2.9934981,19.9933672 L3.98966941,15.6766248 C4.03181252,15.4940047 4.12442807,15.3269033 4.25695383,15.1943776 L12.5895218,6.86180957 L16.1250557,10.3973435 L8.52425391,17.9981453 Z M17.5392693,8.98312992 L14.0037354,5.44759601 L15.3678668,4.08346462 C15.7583911,3.69294033 16.391556,3.69294033 16.7820803,4.08346462 L18.9034007,6.20478497 C19.293925,6.59530926 19.293925,7.22847424 18.9034007,7.61899853 L17.5392693,8.98312992 Z" id="Combined-Shape" fill="#00B583"></path>
+        </g>
+    </g>
+</svg>

@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="40px" height="40px" viewBox="0 0 40 40" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 49 (51002) - http://www.bohemiancoding.com/sketch -->
+    <title>ico_folder_mini</title>
+    <desc>Created with Sketch.</desc>
+    <defs>
+        <path d="M14,2 L27,2 C27.5522847,2 28,2.44771525 28,3 L28,24 C28,24.5522847 27.5522847,25 27,25 L1,25 C0.44771525,25 6.76353751e-17,24.5522847 0,24 L0,2 L0,1 C-6.76353751e-17,0.44771525 0.44771525,5.45542273e-16 1,4.4408921e-16 L11.5857864,1.11022302e-16 C11.8510029,5.33421949e-16 12.1053568,0.10535684 12.2928932,0.292893219 L14,2 Z" id="path-1"></path>
+    </defs>
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="weiyun2018_WEB_fileicon" transform="translate(-448.000000, -660.000000)">
+            <g id="fileico/folder_mini" transform="translate(448.000000, 660.000000)">
+                <g id="ic_folder_mini">
+                    <rect id="bg" x="0" y="0" width="40" height="40"></rect>
+                    <g id="Group-4" transform="translate(6.000000, 7.000000)">
+                        <mask id="mask-2" fill="white">
+                            <use xlink:href="#path-1"></use>
+                        </mask>
+                        <use id="Combined-Shape" fill="#6AABFF" xlink:href="#path-1"></use>
+                        <polygon id="Rectangle-7" fill="#4C94F0" mask="url(#mask-2)" points="0 0 28 0 28 6 0 6"></polygon>
+                    </g>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

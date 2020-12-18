@@ -30,21 +30,19 @@
             <div id="path" class="path" ondblclick="maxWindow()"></div>
         </div>
         <div class="tool-bar">
-            <button onclick="ls('-1')"><label>←</label><label>返回</label></button>
-            <button onclick="ls('..')"><label>↑</label><label>向上</label></button>
-            <button onclick="ls('$HOME')"><label>~</label><label>主目录</label></button>
-            <button onclick="refresh()"><label>↺</label><label>刷新</label></button>
-            <button onclick="showfavouritesMenu()">
-                <label>☆</label><label>收藏</label>
-            </button>
-            <button onclick="showHiddenFile()"><label>•</label><label>隐藏</label></button>
-            <button onclick="show_dialog(true)"><label>+</label><label>新建文件夹</label></button>
-            <button onclick="show_backstageMenu()" id="btn_bs"><label>⇅</label><label>后台任务</label></button>
-            <button onclick="upload_folder()"><label>⇧/</label><label>上传目录</label></button>
-            <button onclick="upload()"><label>⇧</label><label>上传文件</label></button>
+            <button onclick="ls('-1')"><label class="label-icon">←</label><label>返回</label></button>
+            <button onclick="ls('..')"><label class="label-icon">↑</label><label>向上</label></button>
+            <button onclick="ls('$HOME')"><label class="label-icon">~</label><label>主目录</label></button>
+            <button onclick="refresh()"><label class="label-icon">↺</label><label>刷新</label></button>
+            <button onclick="showfavouritesMenu()"><label class="label-icon">☆</label><label>收藏</label></button>
+            <button onclick="showHiddenFile()"><label class="label-icon">•</label><label>隐藏</label></button>
+            <button onclick="show_dialog(true)"><label class="label-icon">+</label><label>新建文件夹</label></button>
+            <button onclick="show_backstageMenu()" id="btn_bs"><label class="label-icon">⇅</label><label>后台任务</label></button>
+            <button onclick="upload_folder()"><label class="label-icon">⇧/</label><label>上传目录</label></button>
+            <button onclick="upload()"><label class="label-icon">⇧</label><label>上传文件</label></button>
             <div style="float: right;margin-right: 5px;">
-                <button onclick="clean_infos()"><label>×</label><label>清屏</label></button>
-                <button onclick="showSidebar()" id="siderbar-hide-btn" style="color: var(--blue-2);"><label>●</label><label>日志</label></button>
+                <button onclick="clean_infos()"><label class="label-icon">×</label><label>清屏</label></button>
+                <button onclick="showSidebar()" id="siderbar-hide-btn" style="color: var(--blue-2);"><label class="label-icon">≡</label><label>日志</label></button>
             </div>
             <!-- <button onclick="ctrl_c()">X</button> -->
         </div>

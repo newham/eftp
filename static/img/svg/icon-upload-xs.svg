@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="24px" height="24px" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 50.2 (55047) - http://www.bohemiancoding.com/sketch -->
+    <title>icon-upload-xs</title>
+    <desc>Created with Sketch.</desc>
+    <defs></defs>
+    <g id="icon-upload-xs" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="ic_add" transform="translate(2.000000, 2.000000)">
+            <rect id="Rectangle-6" x="0" y="0" width="20" height="20"></rect>
+            <path d="M11,6.9998062 L11,13 L9,13 L9,6.9998062 L5.97159466,6.9998062 C5.86738317,6.9998062 5.76577594,6.96724464 5.68097557,6.90667294 C5.45626927,6.74616844 5.40422343,6.4338934 5.56472793,6.20918711 L9.59313326,0.569419634 C9.62520309,0.524521874 9.66448314,0.485241825 9.7093809,0.453171996 C9.9340872,0.2926675 10.2463622,0.344713341 10.4068667,0.569419634 L14.4352721,6.20918711 C14.4958438,6.29398748 14.5284053,6.39559472 14.5284053,6.4998062 C14.5284053,6.77594858 14.3045477,6.9998062 14.0284053,6.9998062 L11,6.9998062 Z M3,11 L3,15 L17,15 L17,11 L19,11 L19,16 C19,16.5522847 18.5522847,17 18,17 L2,17 C1.44771525,17 1,16.5522847 1,16 L1,11 L3,11 Z" id="Combined-Shape" fill="#2980FF"></path>
+        </g>
+    </g>
+</svg>

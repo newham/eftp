@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="24px" height="24px" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 49 (51002) - http://www.bohemiancoding.com/sketch -->
+    <title>icon-word-s</title>
+    <desc>Created with Sketch.</desc>
+    <defs>
+        <path d="M6,2 L20,2 C20.5522847,2 21,2.44771525 21,3 L21,21 C21,21.5522847 20.5522847,22 20,22 L6,22 C5.44771525,22 5,21.5522847 5,21 L5,3 C5,2.44771525 5.44771525,2 6,2 Z" id="path-1"></path>
+    </defs>
+    <g id="icon-word-s" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="ico_new_w">
+            <rect id="bg" x="0" y="0" width="24" height="24"></rect>
+            <g id="Rectangle-23-Copy">
+                <use fill="#FFFFFF" fill-rule="evenodd" xlink:href="#path-1"></use>
+                <path stroke="#DADADA" stroke-width="1" d="M6,2.5 C5.72385763,2.5 5.5,2.72385763 5.5,3 L5.5,21 C5.5,21.2761424 5.72385763,21.5 6,21.5 L20,21.5 C20.2761424,21.5 20.5,21.2761424 20.5,21 L20.5,3 C20.5,2.72385763 20.2761424,2.5 20,2.5 L6,2.5 Z"></path>
+            </g>
+            <path d="M7,8 L18,8 L18,9 L7,9 L7,8 Z M7,10 L18,10 L18,11 L7,11 L7,10 Z M7,12 L18,12 L18,13 L7,13 L7,12 Z M7,14 L18,14 L18,15 L7,15 L7,14 Z M7,16 L18,16 L18,17 L7,17 L7,16 Z" id="Combined-Shape" fill="#E5E5E5"></path>
+            <path d="M3.45024814,6.95497519 L12.4502481,6.05497519 C12.7250201,6.02749799 12.9700414,6.22796999 12.9975186,6.50274192 C12.9991718,6.51927435 13,6.5358789 13,6.55249378 L13,19.4475062 C13,19.7236486 12.7761424,19.9475062 12.5,19.9475062 C12.4833851,19.9475062 12.4667806,19.9466781 12.4502481,19.9450248 L3.45024814,19.0450248 C3.19464724,19.0194647 3,18.8043819 3,18.5475062 L3,7.45249378 C3,7.19561806 3.19464724,6.98053528 3.45024814,6.95497519 Z" id="Rectangle-29" fill="#3A74D1"></path>
+            <rect id="Rectangle-15" fill="#FFFFFF" x="5" y="11" width="1" height="2"></rect>
+            <rect id="Rectangle-22" fill="#FFFFFF" x="6" y="13" width="1" height="2"></rect>
+            <rect id="Rectangle-23" fill="#FFFFFF" x="7" y="11" width="1" height="2"></rect>
+            <rect id="Rectangle-24" fill="#FFFFFF" x="8" y="13" width="1" height="2"></rect>
+            <rect id="Rectangle-26" fill="#FFFFFF" x="9" y="10" width="1" height="3"></rect>
+            <rect id="Rectangle-27" fill="#FFFFFF" opacity="0.5" x="5" y="13" width="1" height="1"></rect>
+            <rect id="Rectangle-27-Copy" fill="#FFFFFF" opacity="0.5" x="5" y="10" width="1" height="1"></rect>
+            <rect id="Rectangle-27-Copy-3" fill="#FFFFFF" opacity="0.800000012" x="7" y="10" width="1" height="1"></rect>
+            <rect id="Rectangle-27-Copy-2" fill="#FFFFFF" opacity="0.5" x="6" y="15" width="1" height="1"></rect>
+            <rect id="Rectangle-27-Copy-4" fill="#FFFFFF" opacity="0.900000036" x="8" y="15" width="1" height="1"></rect>
+            <rect id="Rectangle-28" fill="#FFFFFF" opacity="0.5" x="7" y="13" width="1" height="1"></rect>
+            <rect id="Rectangle-32" fill="#FFFFFF" opacity="0.5" x="9" y="13" width="1" height="1"></rect>
+        </g>
+    </g>
+</svg>

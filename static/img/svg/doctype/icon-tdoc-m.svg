@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="40px" height="40px" viewBox="0 0 40 40" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 52.2 (67145) - http://www.bohemiancoding.com/sketch -->
+    <title>ic_tencentdocs_mini</title>
+    <desc>Created with Sketch.</desc>
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="ic_tencentdocs_mini" transform="translate(6.000000, 3.000000)">
+            <path d="M1,0 L19.0713542,0 L20.0130615,0.00366210938 L28,6.99835205 L28,8.71875 L28,33 C28,33.5522847 27.5522847,34 27,34 L1,34 C0.44771525,34 6.76353751e-17,33.5522847 0,33 L0,1 C-6.76353751e-17,0.44771525 0.44771525,1.01453063e-16 1,0 Z" id="Rectangle-23-Copy" fill="#4C94F0"></path>
+            <g id="分组" transform="translate(7.000000, 18.000000)" fill="#FFFFFF" fill-rule="nonzero">
+                <rect id="Rectangle" x="0" y="0" width="14" height="3"></rect>
+                <rect id="Rectangle" x="0" y="5" width="14" height="3"></rect>
+            </g>
+            <polygon id="Rectangle" fill="#00DCFF" fill-rule="nonzero" opacity="0.699999988" points="20 4.54747351e-13 28 7 20 7"></polygon>
+        </g>
+        <rect id="bg" x="0" y="0" width="40" height="40"></rect>
+    </g>
+</svg>

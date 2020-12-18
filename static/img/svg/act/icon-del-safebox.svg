@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="24px" height="24px" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 49 (51002) - http://www.bohemiancoding.com/sketch -->
+    <title>ic_move_out_nor</title>
+    <desc>Created with Sketch.</desc>
+    <defs></defs>
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="weiyun2018_WEB_mainicon" transform="translate(-657.000000, -1104.000000)">
+            <g id="ic/move_out_nor" transform="translate(659.000000, 1106.000000)">
+                <g id="ic_move_out_nor">
+                    <rect id="Rectangle-14" x="0" y="0" width="20" height="20"></rect>
+                    <path d="M13,9 L13,6.93425855 C13,6.65811617 13.2238576,6.43425855 13.5,6.43425855 C13.5987125,6.43425855 13.6952163,6.46347756 13.7773501,6.5182334 L18.3759623,9.58397485 C18.6057266,9.73715108 18.6678136,10.0475858 18.5146373,10.2773501 C18.4780199,10.3322762 18.4308884,10.3794077 18.3759623,10.4160251 L13.7773501,13.4817666 C13.5475858,13.6349428 13.2371511,13.5728559 13.0839749,13.3430916 C13.029219,13.2609578 13,13.1644539 13,13.0657415 L13,11 L7,11 L7,9 L13,9 Z M16,4 L4,4 L4,16 L16,16 L16,17 C16,17.5522847 15.5522847,18 15,18 L3,18 C2.44771525,18 2,17.5522847 2,17 L2,3 C2,2.44771525 2.44771525,2 3,2 L15,2 C15.5522847,2 16,2.44771525 16,3 L16,4 Z" id="Combined-Shape" fill="#687176"></path>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

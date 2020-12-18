@@ -177,6 +177,11 @@ input::-webkit-input-placeholder {
     border-radius: 5px; */
 }
 
+.label-icon {
+    font-size: 16px;
+    font-weight: bold;
+}
+
 .input-half {
     width: calc(50% - 20px) !important;
 }
@@ -256,6 +261,12 @@ tr:hover {
     background: var(--tr-hover-bg-color) !important;
 }
 
+.no-hover {}
+
+.no-hover:hover {
+    background: none !important;
+}
+
 td {
     /* border-bottom: var(--line-border); */
     border-top: 0px;
@@ -271,9 +282,9 @@ td {
 
 .td-num {
     text-align: left;
-    width: 30px;
-    padding-left: 5px;
-    padding-right: 0px;
+    width: 26px;
+    /* padding-left: 0px; */
+    padding-right: 0px !important;
     font-size: 12px;
     color: var(--font-color-light);
     border-right: var(--bar-border);
@@ -292,7 +303,18 @@ td {
 
 .td-download {
     width: 14px;
+    font-weight: bold;
     /* background: #432; */
+}
+
+.td-download :hover {
+    color: var(--blue-2);
+}
+
+.td-alert {
+    width: 100%;
+    padding: 10px;
+    text-align: center;
 }
 
 

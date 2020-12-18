@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="24px" height="24px" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 49.2 (51160) - http://www.bohemiancoding.com/sketch -->
+    <title>icon-tip</title>
+    <desc>Created with Sketch.</desc>
+    <defs></defs>
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Toast/↳Elements/icons/tips" transform="translate(3.000000, 3.000000)" fill="#FFFFFF">
+            <path d="M10,12 L10,9 L10,7 L7,7 L7,9 L8,9 L8,12 L7,12 L7,14 L8,14 L10,14 L11,14 L11,12 L10,12 Z M0,9 C0,4.02954545 4.02913636,0 9,0 C13.9704545,0 18,4.02954545 18,9 C18,13.9704545 13.9704545,18 9,18 C4.02913636,18 0,13.9704545 0,9 Z M8,4 L8,6 L10,6 L10,4 L8,4 Z" id="ic_tips_info"></path>
+        </g>
+    </g>
+</svg>

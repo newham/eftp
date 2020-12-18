@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="24px" height="24px" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 49.3 (51167) - http://www.bohemiancoding.com/sketch -->
+    <title>icon-upload-light</title>
+    <desc>Created with Sketch.</desc>
+    <defs></defs>
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="weiyun2018_WEB_mainicon" transform="translate(-727.000000, -1363.000000)">
+            <g id="Bar/Action-Bar/↳Elements/icons/save" transform="translate(729.000000, 1365.000000)">
+                <g id="ic_add">
+                    <rect id="Rectangle-6" x="0" y="0" width="20" height="20"></rect>
+                    <path d="M11,7.9998062 L11,14 L9,14 L9,7.9998062 L5.97159466,7.9998062 C5.86738317,7.9998062 5.76577594,7.96724464 5.68097557,7.90667294 C5.45626927,7.74616844 5.40422343,7.4338934 5.56472793,7.20918711 L9.59313326,1.56941963 C9.62520309,1.52452187 9.66448314,1.48524182 9.7093809,1.453172 C9.9340872,1.2926675 10.2463622,1.34471334 10.4068667,1.56941963 L14.4352721,7.20918711 C14.4958438,7.29398748 14.5284053,7.39559472 14.5284053,7.4998062 C14.5284053,7.77594858 14.3045477,7.9998062 14.0284053,7.9998062 L11,7.9998062 Z M3,12 L3,16 L17,16 L17,12 L19,12 L19,17 C19,17.5522847 18.5522847,18 18,18 L2,18 C1.44771525,18 1,17.5522847 1,17 L1,12 L3,12 Z" id="Combined-Shape" fill="#FFFFFF"></path>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

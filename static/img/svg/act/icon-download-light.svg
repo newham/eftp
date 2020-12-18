@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="24px" height="24px" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 49 (51002) - http://www.bohemiancoding.com/sketch -->
+    <title>ic_download_white</title>
+    <desc>Created with Sketch.</desc>
+    <defs></defs>
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="weiyun2018_WEB_mainicon" transform="translate(-167.000000, -1363.000000)">
+            <g id="ic/download_white" transform="translate(169.000000, 1365.000000)">
+                <g id="ic_download_white">
+                    <rect id="Rectangle-49" x="0" y="0" width="20" height="20"></rect>
+                    <path d="M11,7 L14.9128897,7 C15.1890321,7 15.4128897,7.22385763 15.4128897,7.5 C15.4128897,7.61935564 15.3701936,7.73477413 15.292518,7.82539569 L10.3796283,13.5571003 C10.1999172,13.7667632 9.88426723,13.791044 9.67460431,13.6113329 C9.65516491,13.5946706 9.63703405,13.5765397 9.6203717,13.5571003 L4.70748202,7.82539569 C4.52777094,7.61573277 4.55205171,7.30008277 4.76171463,7.1203717 C4.85233619,7.04269608 4.96775468,7 5.08711032,7 L9,7 L9,2 L11,2 L11,7 Z M3,12 L3,16 L17,16 L17,12 L19,12 L19,17 C19,17.5522847 18.5522847,18 18,18 L2,18 C1.44771525,18 1,17.5522847 1,17 L1,12 L3,12 Z" id="Combined-Shape" fill="#FFFFFF"></path>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

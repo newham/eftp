@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="40px" height="40px" viewBox="0 0 40 40" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 49 (51002) - http://www.bohemiancoding.com/sketch -->
+    <title>ico_psd_mini</title>
+    <desc>Created with Sketch.</desc>
+    <defs>
+        <rect id="path-1" x="5" y="3" width="30" height="34" rx="1"></rect>
+    </defs>
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="weiyun2018_WEB_fileicon" transform="translate(-538.000000, -500.000000)">
+            <g id="fileico/psd_mini" transform="translate(538.000000, 500.000000)">
+                <g id="ico_psd_mini">
+                    <rect id="bg" x="0" y="0" width="40" height="40"></rect>
+                    <g id="Rectangle-23-Copy">
+                        <use fill="#FFFFFF" fill-rule="evenodd" xlink:href="#path-1"></use>
+                        <rect stroke="#E0E0E0" stroke-width="1" x="5.5" y="3.5" width="29" height="33" rx="1"></rect>
+                    </g>
+                    <path d="M14,22 L14,28 L11,28 L11,12 L12,12 L16,12 C18.7614237,12 21,14.2385763 21,17 C21,19.7614237 18.7614237,22 16,22 L14,22 Z M14,15 L14,19 L16.0020869,19 C17.1017394,19 18,18.1045695 18,17 C18,15.8877296 17.1055038,15 16.0020869,15 L14,15 Z M29,16.4162672 L29,19.0539695 C28.1464788,18.519127 24.7492969,17.7801468 24.7492969,19.2740606 C24.7492969,20.8855093 29.4980824,20.7249553 29.4980824,24.5227182 C29.4980824,27.5577388 25.6190431,28.9229754 22.1460752,27.327194 L22.1460752,24.5371775 C23.898557,25.688413 26.4988494,25.9040827 26.4988494,24.5227182 C26.4988494,22.9035457 22,23.1242846 22,19.2740606 C22,15.4600477 27.4746155,15.7196278 29,16.4162672 Z" id="ico_psd_small" fill="#4C94F0"></path>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

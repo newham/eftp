@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="26px" height="26px" viewBox="0 0 26 26" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 52.2 (67145) - http://www.bohemiancoding.com/sketch -->
+    <title>icon-pop-confirm-info</title>
+    <desc>Created with Sketch.</desc>
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Dialog/↳Elements/Icons/info">
+            <g id="Dialog/↳Elements/Tips/Normal">
+                <path d="M13,26 C20.1797017,26 26,20.1797017 26,13 C26,5.82029825 20.1797017,0 13,0 C5.82029825,0 0,5.82029825 0,13 C0,20.1797017 5.82029825,26 13,26 Z" id="bg" fill="#2980FF"></path>
+                <path d="M14,17 L15.5,17 L15.5,19 L10.5,19 L10.5,17 L12,17 L12,12 L10.5,12 L10.5,10 L12,10 L14,10 L14,17 Z M11,6.5 C11,5.67157288 11.6657972,5 12.5,5 C13.3284271,5 14,5.66579723 14,6.5 C14,7.32842712 13.3342028,8 12.5,8 C11.6715729,8 11,7.33420277 11,6.5 Z" id="i" fill="#FFFFFF"></path>
+            </g>
+        </g>
+    </g>
+</svg>

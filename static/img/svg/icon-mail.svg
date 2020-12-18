@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="40px" height="40px" viewBox="0 0 40 40" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 52.2 (67145) - http://www.bohemiancoding.com/sketch -->
+    <title>icon-mail</title>
+    <desc>Created with Sketch.</desc>
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Dialog/↳Elements/Icons/E-mail">
+            <g>
+                <rect id="Rectangle-7" x="0" y="0" width="40" height="40"></rect>
+                <path d="M31,14.4875609 L21.2024404,18.773925 C20.4358881,19.1092863 19.5641119,19.1092863 18.7975596,18.773925 L9,14.4875609 L9,10.9999355 C9,10.4476508 9.44771525,9.99993551 10,9.99993551 L30,9.99993551 C30.5522847,9.99993551 31,10.4476508 31,10.9999355 L31,14.4875609 Z M31,16.9307761 L31,28.9999355 C31,29.5522203 30.5522847,29.9999355 30,29.9999355 L10,29.9999355 C9.44771525,29.9999355 9,29.5522203 9,28.9999355 L9,16.9307761 L18.7982463,21.2145245 C19.5644045,21.5494854 20.4355955,21.5494854 21.2017537,21.2145245 L31,16.9307761 Z" id="ic" fill="#7C878E"></path>
+            </g>
+        </g>
+    </g>
+</svg>

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="24px" height="24px" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 49.1 (51147) - http://www.bohemiancoding.com/sketch -->
+    <title>navic/safebox_select</title>
+    <desc>Created with Sketch.</desc>
+    <defs></defs>
+    <g id="navic/safebox_select" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="ic_safebox_select">
+            <rect id="Rectangle-14" x="0" y="0" width="24" height="24"></rect>
+            <path d="M11,12.7324356 L11,15 C11,15.5522847 11.4477153,16 12,16 C12.5522847,16 13,15.5522847 13,15 L13,12.7324356 C13.5978014,12.3866262 14,11.7402824 14,11 C14,9.8954305 13.1045695,9 12,9 C10.8954305,9 10,9.8954305 10,11 C10,11.7402824 10.4021986,12.3866262 11,12.7324356 Z M12,22 C8.79336249,21.2057027 4,17.396705 4,11 L4,7.61803399 C4,7.23926193 4.21400238,6.89299881 4.5527864,6.7236068 L11.5527864,3.2236068 C11.8343139,3.08284305 12.1656861,3.08284305 12.4472136,3.2236068 L19.4472136,6.7236068 C19.7859976,6.89299881 20,7.23926193 20,7.61803399 L20,11 C20,17.396705 15.2066375,21.2057027 12,22 Z" id="Combined-Shape" fill="#2980FF"></path>
+        </g>
+    </g>
+</svg>

@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="40px" height="40px" viewBox="0 0 40 40" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 49 (51002) - http://www.bohemiancoding.com/sketch -->
+    <title>ico_pptx_mini</title>
+    <desc>Created with Sketch.</desc>
+    <defs>
+        <rect id="path-1" x="8" y="3" width="27" height="34" rx="1"></rect>
+    </defs>
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="weiyun2018_WEB_fileicon" transform="translate(-537.000000, -420.000000)">
+            <g id="fileico/pptx_mini" transform="translate(538.000000, 420.000000)">
+                <g id="ico_pptx_mini">
+                    <rect id="bg" x="0" y="0" width="40" height="40"></rect>
+                    <g id="Rectangle-23-Copy">
+                        <use fill="#FFFFFF" fill-rule="evenodd" xlink:href="#path-1"></use>
+                        <rect stroke="#E0E0E0" stroke-width="1" x="8.5" y="3.5" width="26" height="33" rx="1"></rect>
+                    </g>
+                    <path d="M23,12 L23,17 L28,17 C28,19.7614237 25.7614237,22 23,22 C20.2385763,22 18,19.7614237 18,17 C18,14.2385763 20.2385763,12 23,12 Z M24,11 C26.7614237,11 29,13.2385763 29,16 L24,16 L24,11 Z M12,24 L31,24 L31,26 L12,26 L12,24 Z M12,28 L31,28 L31,30 L12,30 L12,28 Z" id="Combined-Shape" fill="#E5E5E5"></path>
+                    <path d="M4.87596527,11.8905043 L18.8759653,10.1405043 C19.4239852,10.0720018 19.9237754,10.4607275 19.9922779,11.0087475 C19.997421,11.0498923 20,11.0913172 20,11.1327822 L20,31.8672178 C20,32.4195025 19.5522847,32.8672178 19,32.8672178 C18.958535,32.8672178 18.9171101,32.8646388 18.8759653,32.8594957 L4.87596527,31.1094957 C4.37553644,31.0469421 4,30.6215411 4,30.1172178 L4,12.8827822 C4,12.3784589 4.37553644,11.9530579 4.87596527,11.8905043 Z" id="Rectangle-29" fill="#E8673A"></path>
+                    <path d="M8.96,16.648902 L12.46,16.4155687 C14.2383569,16.2970116 15.68,17.8291107 15.68,19.8376079 C15.68,21.8461051 14.2383569,23.4403928 12.46,23.3985491 L10.64,23.3557256 L10.64,26.616902 L8.96,26.504902 L8.96,16.648902 Z M10.5411765,18.2212942 L10.5411765,21.576902 L12.4682353,21.576902 C13.3687843,21.576902 14.0988235,20.7903278 14.0988235,19.8200393 C14.0988235,18.8497508 13.3687843,18.0956227 12.4682353,18.1356471 L10.5411765,18.2212942 Z" id="ico_ppt_small" fill="#FFFFFF"></path>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

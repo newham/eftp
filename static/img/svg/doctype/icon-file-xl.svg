@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="160px" height="130px" viewBox="0 0 160 130" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 52.3 (67297) - http://www.bohemiancoding.com/sketch -->
+    <title>icon-file-xl</title>
+    <desc>Created with Sketch.</desc>
+    <defs>
+        <path d="M51.2,7.9375 L103.6,7.9375 C104.704569,7.9375 105.6,8.8329305 105.6,9.9375 L105.6,93.25 C105.6,94.3545695 104.704569,95.25 103.6,95.25 L2,95.25 C0.8954305,95.25 1.3527075e-16,94.3545695 0,93.25 L0,7.9375 L0,2 C-1.3527075e-16,0.8954305 0.8954305,6.46995335e-16 2,4.4408921e-16 L43.8434597,-7.54951657e-15 C44.4483424,-7.66063172e-15 45.0207286,0.273755219 45.4004017,0.744638876 L51.2,7.9375 Z" id="path-1"></path>
+        <path d="M51.2,7.9375 L103.6,7.9375 C104.704569,7.9375 105.6,8.8329305 105.6,9.9375 L105.6,90.075 C105.6,91.1795695 104.704569,92.075 103.6,92.075 L2,92.075 C0.8954305,92.075 1.3527075e-16,91.1795695 0,90.075 L0,7.9375 L0,2 C-1.3527075e-16,0.8954305 0.8954305,6.46995335e-16 2,4.4408921e-16 L43.8434597,-7.54951657e-15 C44.4483424,-7.66063172e-15 45.0207286,0.273755219 45.4004017,0.744638876 L51.2,7.9375 Z" id="path-3"></path>
+    </defs>
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Content/Grid/↳File-icons/folder_large" transform="translate(0.000000, 4.000000)">
+            <g id="ic_folder_large">
+                <rect id="Rectangle-7" x="0" y="0" width="160" height="127"></rect>
+                <g id="ico_folder-copy-2" transform="translate(27.200000, 14.287500)">
+                    <mask id="mask-2" fill="white">
+                        <use xlink:href="#path-1"></use>
+                    </mask>
+                    <use id="Combined-Shape" fill="#5C99E7" xlink:href="#path-1"></use>
+                    <mask id="mask-4" fill="white">
+                        <use xlink:href="#path-3"></use>
+                    </mask>
+                    <use id="Combined-Shape" fill="#6AABFF" xlink:href="#path-3"></use>
+                    <polygon id="Rectangle-6" fill="#4C94F0" mask="url(#mask-4)" points="0 0 105.6 0 105.6 20.6375 0 20.6375"></polygon>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

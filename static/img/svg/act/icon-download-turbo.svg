@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="24px" height="24px" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 52.2 (67145) - http://www.bohemiancoding.com/sketch -->
+    <title>icon-download-turbo</title>
+    <desc>Created with Sketch.</desc>
+    <defs>
+        <linearGradient x1="0%" y1="100%" x2="100%" y2="0%" id="linearGradient-1">
+            <stop stop-color="#E2B882" offset="0%"></stop>
+            <stop stop-color="#C4925E" offset="100%"></stop>
+        </linearGradient>
+    </defs>
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Artboard" transform="translate(-76.000000, -28.000000)">
+            <g id="icon-download-turbo" transform="translate(76.000000, 28.000000)">
+                <g id="Group-3">
+                    <rect id="Rectangle" x="0" y="0" width="24" height="24"></rect>
+                    <path d="M9.65,12 L14,12 L5,22 L7.1,15 L4,15 L7.5,5 L13.5,5 L9.65,12 Z M15.2325424,6 L24,6 L23.5833333,7 L14.6825424,7 L15.2325424,6 Z M13.5825424,9 L22.75,9 L22.3333333,10 L13.0325424,10 L13.5825424,9 Z M16.5841219,12 L21.5,12 L21.0833333,13 L15.7659401,13 L16.5841219,12 Z M14.1295764,15 L20.25,15 L19.8333333,16 L13.3113946,16 L14.1295764,15 Z" id="Combined-Shape" fill="url(#linearGradient-1)"></path>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

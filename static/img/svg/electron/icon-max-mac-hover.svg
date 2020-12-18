@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="16px" height="16px" viewBox="0 0 16 16" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 50.2 (55047) - http://www.bohemiancoding.com/sketch -->
+    <title>icon-max-mac-hover</title>
+    <desc>Created with Sketch.</desc>
+    <defs></defs>
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Traffic-Lights-(Mouse-Over-1)" transform="translate(-38.000000, 2.000000)">
+            <circle id="Traffic-Light---Zoom" stroke="#1AAB2B" stroke-width="0.5" fill="#2ACB42" cx="46" cy="6" r="6"></circle>
+            <path d="M43,4.5 L47.5,9 L43.4987723,9 C43.223308,9 43,8.78295565 43,8.50122768 L43,4.5 Z M49,7.5 L44.5,3 L48.5012277,3 C48.776692,3 49,3.21704435 49,3.49877232 L49,7.5 Z" id="Icon---Full-Screen" fill="#006600"></path>
+        </g>
+    </g>
+</svg>

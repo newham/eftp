@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="40px" height="40px" viewBox="0 0 40 40" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 49 (51002) - http://www.bohemiancoding.com/sketch -->
+    <title>ico_fla_mini</title>
+    <desc>Created with Sketch.</desc>
+    <defs>
+        <rect id="path-1" x="5" y="3" width="30" height="34" rx="1"></rect>
+    </defs>
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="weiyun2018_WEB_fileicon" transform="translate(-88.000000, -580.000000)">
+            <g id="fileico/fla_mini" transform="translate(88.000000, 580.000000)">
+                <g id="ico_fla_mini">
+                    <rect id="bg" x="0" y="0" width="40" height="40"></rect>
+                    <g id="Rectangle-23-Copy">
+                        <use fill="#FFFFFF" fill-rule="evenodd" xlink:href="#path-1"></use>
+                        <rect stroke="#E0E0E0" stroke-width="1" x="5.5" y="3.5" width="29" height="33" rx="1"></rect>
+                    </g>
+                    <path d="M22.4838356,18 L26,18 L26,21 L21.2261877,21 C20.1803763,23.6483896 19.5780679,24.8503702 18.5070121,26.1223906 C16.9206445,28.0064122 14.8023044,29 12,29 L12,26 C15.4011795,26 16.6220424,24.5500638 18.6098215,19.4548302 C19.7704463,16.4798226 20.3767775,15.2176135 21.5057088,13.8754025 C23.0890933,11.9928821 25.2033044,11 28,11 L28,14 C25.2588389,14 23.9389655,14.9456504 22.4838356,18 Z" id="Combined-Shape" fill="#FF5555" fill-rule="nonzero"></path>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

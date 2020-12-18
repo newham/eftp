@@ -211,9 +211,10 @@ body {
 }
 
 .icon {
-    height: 14px;
+    max-height: 32px;
+    max-width: 32px;
     /* margin-right: 5px; */
-    margin-bottom: -2px;
+    margin-bottom: -6px;
 }
 
 .btn-icon {

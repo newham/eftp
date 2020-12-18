@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="134px" height="134px" viewBox="0 0 134 134" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 52.2 (67145) - http://www.bohemiancoding.com/sketch -->
+    <title>ic_tencentdocs_large</title>
+    <desc>Created with Sketch.</desc>
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="ic_tencentdocs_large">
+            <rect id="bg" x="0" y="0" width="134" height="134"></rect>
+            <path d="M21,9 L84.0252604,9 L88.8957062,9 L114,31.0600568 L114,38.2334559 L114,124 C114,124.552285 113.552285,125 113,125 L21,125 C20.4477153,125 20,124.552285 20,124 L20,10 C20,9.44771525 20.4477153,9 21,9 Z" id="Rectangle-23-Copy" fill="#4C94F0"></path>
+            <g id="分组" transform="translate(42.550000, 70.350000)" fill="#FFFFFF" fill-rule="nonzero">
+                <rect id="Rectangle" x="0.45" y="0.65" width="48" height="10"></rect>
+                <rect id="Rectangle" x="0.45" y="17.65" width="48" height="10"></rect>
+            </g>
+            <polygon id="Rectangle" fill="#00DCFF" fill-rule="nonzero" opacity="0.699999988" points="88.9058594 9.06226807 113.928625 31.0797679 88.9058594 31.0797679"></polygon>
+        </g>
+    </g>
+</svg>
