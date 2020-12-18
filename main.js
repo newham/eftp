@@ -98,7 +98,7 @@ function createIndexWindow() {
 
     win.on('close', (event) => {
         // console.log('close win', win.id, locked)
-        if (processLock > 0) {
+        if (processLock > 0 && BrowserWindow.getAllWindows().length == 1) {
             event.preventDefault()
             dialog.showMessageBox(win, {
                 buttons: ["OK", "Cancel"],

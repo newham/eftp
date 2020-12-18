@@ -2,103 +2,105 @@ var remote = require('electron').remote;
 const node_ssh = require('node-ssh')
 const path = require("path");
 // const readline = require('readline');
-// ---------------data---------------
+// ---------------data-start--------------
 let ssh_list = []
 
 const ls_history_max = 100
 
 const max_infos_num = 100
 
-let ssh_index = -1
+const max_list_num = 200
+
+let current_ssh_id = -1
 
 let bs_list = []
 
 const loading_html = '<img class="img-loading" src="static/img/loading.gif">'
 
 function getCurrentDir() {
-    return ssh_list[ssh_index].currentDir
+    return ssh_list[current_ssh_id].currentDir
 }
 
 function setCurrentDir(dir) {
-    ssh_list[ssh_index].currentDir = dir
+    ssh_list[current_ssh_id].currentDir = dir
 }
 
-function getUserSSHInfo(id = ssh_index) {
+function getUserSSHInfo(id = current_ssh_id) {
     return ssh_list[id].userSSHInfo
 }
 
 function setUserSSHInfo(userSSHInfo) {
-    ssh_list[ssh_index].userSSHInfo = userSSHInfo
+    ssh_list[current_ssh_id].userSSHInfo = userSSHInfo
 }
 
-function getSSH(id = ssh_index) {
+function getSSH(id = current_ssh_id) {
     return ssh_list[id].ssh
 }
 
-function setSSH(ssh) {
-    ssh_list[ssh_index].ssh = ssh
+function setSSH(id, ssh) {
+    ssh_list[id].ssh = ssh
 }
 
 function put_ls_history(current, dir) {
-    ssh_list[ssh_index].ls_history.push({ currentDir: current, dir: dir })
+    ssh_list[current_ssh_id].ls_history.push({ currentDir: current, dir: dir })
 }
 
 function get_ls_history() {
-    return ssh_list[ssh_index].ls_history
+    return ssh_list[current_ssh_id].ls_history
 }
 
 function setIsShowHidden(isShow) {
-    ssh_list[ssh_index].isShowHidden = isShow
+    ssh_list[current_ssh_id].isShowHidden = isShow
 }
 
 function getIsShowHidden() {
-    return ssh_list[ssh_index].isShowHidden
+    return ssh_list[current_ssh_id].isShowHidden
 }
 
 function plusInfos_count(n) {
-    ssh_list[ssh_index].infos_count += n
+    ssh_list[current_ssh_id].infos_count += n
 }
 
 function resetInfos_count() {
-    ssh_list[ssh_index].infos_count = 0
+    ssh_list[current_ssh_id].infos_count = 0
 }
 
 function getInfos_count() {
-    return ssh_list[ssh_index].infos_count
+    return ssh_list[current_ssh_id].infos_count
 }
 
 function resetFileList() {
-    ssh_list[ssh_index].fileList = []
+    ssh_list[current_ssh_id].fileList = []
 }
 
 function getFileList() {
-    return ssh_list[ssh_index].fileList
+    return ssh_list[current_ssh_id].fileList
 }
 
-function setBackIndex(index) {
-    return ssh_list[ssh_index].backIndex = index
+function setBackIndex(id) {
+    return ssh_list[current_ssh_id].backIndex = id
 }
 
 function getBackIndex() {
-    return ssh_list[ssh_index].backIndex
+    return ssh_list[current_ssh_id].backIndex
 }
 
 function get_ls_lock() {
-    return ssh_list[ssh_index].ls_lock
+    return ssh_list[current_ssh_id].ls_lock
 }
 
 function set_ls_lock(lock) {
-    ssh_list[ssh_index].ls_lock = lock
+    ssh_list[current_ssh_id].ls_lock = lock
 }
 
 function get_copy_from() {
-    return ssh_list[ssh_index].copy_from
+    return ssh_list[current_ssh_id].copy_from
 }
 
 function set_copy_from(from) {
-    ssh_list[ssh_index].copy_from = from
+    ssh_list[current_ssh_id].copy_from = from
 }
-// ---------------data---------------
+// ---------------data-end--------------
 
 
 function getHome(username) {
@@ -169,14 +171,40 @@ let showPath = (path) => {
     document.querySelector('#path').innerHTML = path
 }
 
+function show_ssh_alert(color, msg = 'ssh正在连接...') {
+    if (color == 'danger') {
+        msg = 'ssh连接失败! 请检查网络或配置'
+    }
+    document.querySelector('#file_list').innerHTML = `<tr><td class="td-head txt-${color}">${msg}</td></tr>`
+}
+
 function ls(dir, isShow = getIsShowHidden()) {
-    if (get_ls_lock() || is_closed) {
+    let ssh_client = getSSH()
+    if (get_ls_lock()) {
+        console.log('ls locked')
+        return
+    }
+    if (ssh_client == null) { //ssh正在连接
+        show_ssh_alert('info')
+        console.log('ssh正在连接')
+        return
+    }
+    if (ssh_client == -1) { //ssh连接失败
+        show_ssh_alert('danger')
         return
     }
     //dir = "" 刷新
-    document.querySelector('#file_list').innerHTML = ""
+    // show_ssh_alert('info', `ls ${dir}`) //显示正在进行的操作
+    // >>>>>>>>>>list缓存-start
+    if (dir == null && ssh_list[current_ssh_id].fileList.length > 0) {
+        ssh_list[current_ssh_id].fileList.forEach((fileInfo, i) => {
+            document.querySelector('#file_list').innerHTML += getFileHTML(fileInfo)
+        })
+        console.log('ls', getCurrentDir(), 'from tmp')
+        return
+    }
+    // >>>>>>>>>>list缓存-end
     resetFileList()
-        //
     backIndex = getBackIndex()
     ls_history = get_ls_history()
     currentDir = getCurrentDir()
@@ -219,26 +247,32 @@ function ls(dir, isShow = getIsShowHidden()) {
     if (isShow) {
         arg = '-lha'
     }
-    let first = false
-    getSSH().exec('ls', [arg, getCurrentDir()], {
+    let first = true
+    let n = -1 //计数
+    ssh_client.exec('ls', [arg, getCurrentDir()], {
         onStdout(chunk) {
-            //add ../ to list
             //避免bug（重复添加向上）
-            if (!first && getCurrentDir() != "/" && !isShow) {
-                //add up
-                up_file = init_fileInfo()
-                up_file.name = ".."
-                up_file.isDir = true
-                setFileInfo(up_file)
-                first = true
+            if (first) {
+                document.querySelector('#file_list').innerHTML = "" //清空列表
+                if (getCurrentDir() != "/" && !isShow) {
+                    //add up
+                    up_file = init_fileInfo()
+                    up_file.name = ".."
+                    up_file.isDir = true
+                    setFileInfo(up_file)
+                    first = false
+                }
             }
             //parse ls
             read_line(chunk, getUserSSHInfo().characterSet, (line, i) => {
-                parse_ls_line(line, i)
+                if (n++ > max_list_num) {
+                    return false
+                }
+                parse_ls_line(line, n)
             })
         },
         onStderr(chunk) {
-            // console.log('stderrChunk', chunk.toString(getUserSSHInfo().characterSet))
+            console.log('stderrChunk', chunk.toString(getUserSSHInfo().characterSet))
         }
     }).then(() => {
         // addInfo('success')
@@ -251,10 +285,10 @@ function ls(dir, isShow = getIsShowHidden()) {
         // console.log("exception", res)
         doProcess(id, 'failed', res)
         set_ls_lock(false)
-            // set connect_closed
+
+        // set connect_closed
         if (res.indexOf('No response from server') != -1 || res.indexOf('ERR_ASSERTION') != -1) {
-            is_closed = true
-            console.log('is_closed', is_closed)
+            console.log('No response from server')
         }
     })
 }
@@ -287,7 +321,7 @@ let init_fileInfo = () => {
         year: "",
         name: "",
         isDir: false,
-        id: -1
+        id: 0
     }
 }
 
@@ -324,15 +358,15 @@ function getFileHTML(fileInfo) {
         if (fileInfo.name == "..") {
             tr_html = '<tr>'
         }
-        return '{0}<td class="td-icon"><img class="icon" src="static/img/folder.png"></td><td class="td-head" colspan="3"><a onclick="ls(\'{2}\')" href="#"><div class="{1}">{2}</div></a></td></div>'.format(tr_html, font_class, fileInfo.name)
+        return '{0}<td class="td-num">{3}</td><td class="td-icon"><img class="icon" src="static/img/folder.png"></td><td class="td-head" colspan="3"><a onclick="ls(\'{2}\')" href="#"><div class="{1}">{2}</div></a></td></div>'.format(tr_html, font_class, fileInfo.name, fileInfo.id)
     } else {
-        return '<tr oncontextmenu="showFileMenu({0})"><td class="td-icon"><img class="icon" src="static/img/file-3.png"></td><td class="td-head"><div class="{1}">{2}</div></td><td>{3}B</td><td class="td-download"><a href="#" onclick="download_file(\'{2}\')">⇩</a></div>'.format(fileInfo.id, font_class, fileInfo.name, fileInfo.size)
+        return '<tr oncontextmenu="showFileMenu({0})"><td class="td-num">{4}</td><td class="td-icon"><img class="icon" src="static/img/file-3.png"></td><td class="td-head"><div class="{1}">{2}</div></td><td>{3}B</td><td class="td-download"><a href="#" onclick="download_file(\'{2}\')">⇩</a></div>'.format(fileInfo.id, font_class, fileInfo.name, fileInfo.size, fileInfo.id)
     }
 }
 
 function setFileInfo(fileInfo) {
     //push to list
-    ssh_list[ssh_index].fileList.push(fileInfo)
+    ssh_list[current_ssh_id].fileList.push(fileInfo)
         //set html
     document.querySelector('#file_list').innerHTML += getFileHTML(fileInfo)
 }
@@ -578,11 +612,11 @@ function to_login() {
         // window.location.href = 'login.html'
 }
 
-function connectSSH() {
+function connectSSH(ssh_id = current_ssh_id) {
     let ssh = new node_ssh()
-        //
     let userSSHInfo = getUserSSHInfo()
     let id = addInfo('connect', '{0}@{1}:{2}'.format(userSSHInfo.username, userSSHInfo.host, userSSHInfo.port))
+    show_ssh_alert('info') //显示正在连接
     ssh.connect({
         host: userSSHInfo.host,
         username: userSSHInfo.username,
@@ -590,14 +624,15 @@ function connectSSH() {
         privateKey: userSSHInfo.privateKey,
         port: userSSHInfo.port,
     }).then(() => {
-        setSSH(ssh)
+        setSSH(ssh_id, ssh)
             // console.log("connect success!")
         doProcess(id)
         ls("")
     }).catch((excp) => {
-        // console.log("connect failed!", error)
+        setSSH(ssh_id, -1)
+            // console.log("connect failed!", error)
         doProcess(id, 'failed', excp)
-        is_closed = true
+            // ls("")
     })
 }
 
@@ -812,14 +847,14 @@ function new_ssh(userSSHInfo, currentDir) {
             copy_from: "",
         })
         //最后一个是最新
-    ssh_index = ssh_list.length - 1
+    current_ssh_id = ssh_list.length - 1
         //设置窗口标题
     setTitle()
         //设置激活
-        // setTabActive(ssh_index)
+        // setTabActive(current_ssh_id)
     setTabs()
         //加载list
-    connectSSH()
+    connectSSH(current_ssh_id)
 }
 
 function setTabActive(id) {
@@ -837,7 +872,7 @@ function setTabActive(id) {
 function setTabs() {
     document.getElementById('tab-bar').innerHTML = ''
     ssh_list.forEach((ssh, i) => {
-        if (i == ssh_index) {
+        if (i == current_ssh_id) {
             active_css = 'class="tab-active"'
         } else {
             active_css = ''
@@ -845,30 +880,36 @@ function setTabs() {
         document.getElementById('tab-bar').innerHTML += `<div ${active_css} id="tab-${i}" oncontextmenu="showTabMenu(${i})" onclick="to_ssh(${i})">${ssh.userSSHInfo.label}</div>`
     })
 
+    // clean old ls
+    document.getElementById('file_list').innerHTML = ''
 }
 
 function closeTab(id) {
     let i = addInfo('close', getUserSSHInfo(id).label)
-    getSSH(id).dispose()
+    let ssh_client = getSSH(id)
+    if (ssh_client) {
+        ssh_client.dispose()
+    }
     ssh_list.splice(id, 1)
     to_ssh(id - 1 > 0 ? id - 1 : 0, true)
     doProcess(i)
 }
 
-function to_ssh(index, isNew = false) {
+function to_ssh(id, isNew = false) {
     if (ssh_list.length == 0) {
         document.location.href = 'login.html'
     }
-    if (index == ssh_index && !isNew) {
+    if (id == current_ssh_id && !isNew) {
         return
     }
-    console.log("to ssh", index)
-    ssh_index = index
+    console.log("to ssh", id)
+    current_ssh_id = id
     let i = addInfo('to', `[${getUserSSHInfo().label}]`)
-        // setTabActive(index)
-    setTabs()
-    ls()
-    doProcess(i)
+
+    setTabs() //1.
+    ls() //2.
+    doProcess(i) //3.
+
 }
 
 function showSidebar() {
@@ -937,12 +978,9 @@ function hideMenu() {
     isfavouritesMenuShow = true
 }
 
-let is_closed = false
-
 function refresh() {
-    if (is_closed) {
+    if (!getSSH()) {
         connectSSH()
-        is_closed = false
     } else {
         ls()
     }
@@ -950,5 +988,6 @@ function refresh() {
 
 //设置主题
 setTheme()
-    //on init win
+
+//on init win
 new_ssh(remote.getGlobal('shareData').userSSHInfo, getHome(remote.getGlobal('shareData').userSSHInfo.username))

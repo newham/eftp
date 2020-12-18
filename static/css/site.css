@@ -6,7 +6,7 @@
     --title-bar-h: 38px;
     --tool-bar-h: 50px;
     --side-bar-r-w: 300px;
-    --side-bar-l-w: 150px;
+    --side-bar-l-w: 120px;
     --side-bar-padding: 0px;
     --foot-bar-h: 0px;
     --dialog-w: calc(100% - 160px);
@@ -165,8 +165,16 @@ input::-webkit-input-placeholder {
 
 .box label {
     font-size: 12px;
-    color: var(--font-color-light) !important;
     cursor: pointer;
+}
+
+.box img {
+    float: left;
+    height: 45px;
+    margin-right: 10px;
+    /* padding: 5px;
+    background: #fff;
+    border-radius: 5px; */
 }
 
 .input-half {
@@ -259,6 +267,16 @@ td {
     text-overflow: ellipsis;
     white-space: nowrap;
     overflow: hidden;
+}
+
+.td-num {
+    text-align: left;
+    width: 30px;
+    padding-left: 5px;
+    padding-right: 0px;
+    font-size: 12px;
+    color: var(--font-color-light);
+    border-right: var(--bar-border);
 }
 
 .td-icon {

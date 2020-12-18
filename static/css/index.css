@@ -55,11 +55,10 @@ body {
     /* background-color: #333; */
     border-right: var(--bar-border);
     /* color: var(--side-bar-font-color); */
-    /* text-align: center; */
+    text-align: center;
     /* padding: 0px var(--side-bar-padding); */
     overflow-y: auto;
     /* background: #333; */
-    /* text-align: center; */
     padding: 6px 0px;
     padding-top: calc(var(--title-bar-h));
     background: var(--side-bar-l-bg-color);
