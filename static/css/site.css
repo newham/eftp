@@ -170,12 +170,12 @@ input::-webkit-input-placeholder {
 }
 
 .box img {
-    margin-top: -20px;
-    margin-left: -25px;
-    margin-bottom: -5px;
-    float: left;
-    height: 72px;
-    margin-right: 10px;
+    margin-top: -30px;
+    margin-right: -3px;
+    margin-bottom: -8px;
+    float: right;
+    height: 80px;
+    /* margin-right: 10px; */
     /* padding: 5px;
     background: #fff;
     border-radius: 5px; */

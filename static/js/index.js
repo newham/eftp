@@ -185,12 +185,11 @@ function show_ssh_alert(color, msg = '正在连接...') {
 function ls(dir, isShow = getIsShowHidden()) {
     let ssh_client = getSSH()
     if (get_ls_lock()) {
-        console.log('ls locked')
+        // console.log('ls locked')
         return
     }
     if (ssh_client == null) { //ssh正在连接
         show_ssh_alert('info')
-        console.log('ssh正在连接')
         return
     }
     if (ssh_client == -1) { //ssh连接失败
@@ -721,16 +720,16 @@ function connectSSH(ssh_id = current_ssh_id) {
         setSSH(ssh_id, ssh)
             // console.log("connect success!")
         doProcess(id)
-        ls("")
         setTabs() //修改tabs
+        ls("")
     }).catch((excp) => {
         setSSH(ssh_id, -1)
             // console.log("connect failed!", error)
         doProcess(id, 'failed', excp)
+        setTabs() //修改tabs
         if (ssh_id == current_ssh_id) { //如果还停留在当前页面，则修改提示
             show_ssh_alert('danger')
         }
-        setTabs() //修改tabs
     })
 }
 
