@@ -1,6 +1,8 @@
 var remote = require('electron').remote;
+var process = require('child_process');
 const node_ssh = require('node-ssh')
 const path = require("path");
+
 // const readline = require('readline');
 // ---------------data-start--------------
 let ssh_list = []
@@ -149,7 +151,21 @@ function doProcess(id, tg = 'success', msg = '') {
     }
 }
 
-function addInfo(msg, file = '', isArray = false) {
+function open_file(id, file) {
+    console.log('open', id, file)
+    if (get_bs(id)) {
+        console.log('open error: is downloading')
+        return false //还在下载中
+    }
+    process.exec(`open "${file}"`, function(error, stdout, stderr) {
+        console.log("open error:" + error, "stdout:" + stdout, "stderr:" + stderr);
+        if (stderr) {
+            alert(stderr)
+        }
+    });
+}
+
+function addInfo(msg, file = '', isArray = false, path = '') {
     //get file
     if (isArray) {
         file = file.join(',')
@@ -159,12 +175,13 @@ function addInfo(msg, file = '', isArray = false) {
     // }
     //sha1 a id
     let id = new Date().getTime()
-    document.getElementById('infos').innerHTML += '<div class="line-div"><p><label>{0}</label>{1}</p><p id="{2}">{3}</p></div>'.format(msg, file, id, loading_html)
-        //滑动到底部
-    sidebar = document.getElementById('sidebar')
+    if (msg == 'download') {
+        file = `<a onclick="open_file('${id}','${path+file}')" class="link">${file}</a>`
+    }
+    document.getElementById('infos').innerHTML += `<div class="line-div"><p><label>${msg}</label>${file}</p><p id="${id}">${loading_html}</p></div>`
+    sidebar = document.getElementById('sidebar') //滑动到底部
     sidebar.scrollTop = sidebar.scrollHeight;
-    //加锁，退出提示，禁止清空
-    addLock(true)
+    addLock(true) //加锁，退出提示，禁止清空
         //infos_count++
     plusInfos_count(1)
     return id
@@ -189,10 +206,12 @@ function ls(dir, isShow = getIsShowHidden()) {
         return
     }
     if (ssh_client == null) { //ssh正在连接
-        show_ssh_alert('info')
+        showPath('')
+        show_ssh_alert('warning')
         return
     }
     if (ssh_client == -1) { //ssh连接失败
+        showPath('')
         show_ssh_alert('danger')
         return
     }
@@ -200,6 +219,7 @@ function ls(dir, isShow = getIsShowHidden()) {
     // show_ssh_alert('info', `ls ${dir}`) //显示正在进行的操作
     // >>>>>>>>>>list缓存-start
     if (dir == null && ssh_list[current_ssh_id].fileList.length > 0) {
+        showPath(getCurrentDir())
         ssh_list[current_ssh_id].fileList.forEach((fileInfo, i) => {
             document.querySelector('#file_list').innerHTML += getFileHTML(fileInfo)
         })
@@ -253,7 +273,7 @@ function ls(dir, isShow = getIsShowHidden()) {
     let n = -1 //计数
     ssh_client.exec('ls', [arg, getCurrentDir()], {
         onStdout(chunk) {
-            //set path
+            //0.set path
             showPath(getCurrentDir())
 
             //避免bug（重复添加向上）
@@ -491,13 +511,24 @@ function remove_bs(id) {
     }
 }
 
+function get_bs(id) {
+    let bs = null
+    bs_list.forEach((item, i) => {
+        console.log(item.id)
+        if (item.id == id) {
+            bs = item
+        }
+    })
+    return bs
+}
+
 function download_file(file) {
     showOpenFolderWin((ok, folder) => {
         if (!ok) {
             return
         }
         let currentDir = getCurrentDir()
-        let id = addInfo('download', file)
+        let id = addInfo('download', file, false, folder)
         push_bs(id, file, '↓')
         getSSH().getFile(folder + file, currentDir + file).then(function(Contents) {
             // console.log("The File", file, "successfully downloaded")
@@ -709,7 +740,7 @@ function connectSSH(ssh_id = current_ssh_id) {
     let ssh = new node_ssh()
     let userSSHInfo = getUserSSHInfo()
     let id = addInfo('connect', '{0}@{1}:{2}'.format(userSSHInfo.username, userSSHInfo.host, userSSHInfo.port))
-    show_ssh_alert('info') //显示正在连接
+    show_ssh_alert('warning') //显示正在连接
     ssh.connect({
         host: userSSHInfo.host,
         username: userSSHInfo.username,
@@ -719,17 +750,17 @@ function connectSSH(ssh_id = current_ssh_id) {
     }).then(() => {
         setSSH(ssh_id, ssh)
             // console.log("connect success!")
-        doProcess(id)
-        setTabs() //修改tabs
-        ls("")
+        setTabs(ssh_id) //1.修改tabs
+        ls("") //2.
+        doProcess(id) //3.
     }).catch((excp) => {
         setSSH(ssh_id, -1)
             // console.log("connect failed!", error)
-        doProcess(id, 'failed', excp)
-        setTabs() //修改tabs
-        if (ssh_id == current_ssh_id) { //如果还停留在当前页面，则修改提示
+        setTabs(ssh_id) //1.修改tabs
+        if (ssh_id == current_ssh_id) { //2.如果还停留在当前页面，则修改提示
             show_ssh_alert('danger')
         }
+        doProcess(id, 'failed', excp) //3.
     })
 }
 
@@ -932,26 +963,23 @@ ipcRenderer.on('add_ssh', (event, userSSHInfo) => {
 function new_ssh(userSSHInfo, currentDir) {
     // console.log(userSSHInfo.label)
     ssh_list.push({
-            userSSHInfo: userSSHInfo,
-            currentDir: currentDir,
-            ssh: null,
-            fileList: [],
-            isShowHidden: false,
-            infos_count: 0,
-            ls_history: [],
-            backIndex: 0,
-            ls_lock: false,
-            copy_from: "",
-        })
-        //最后一个是最新
-    current_ssh_id = ssh_list.length - 1
-        //设置窗口标题
-    setTitle()
-        //设置激活
-        // setTabActive(current_ssh_id)
-    setTabs()
-        //加载list
-    connectSSH(current_ssh_id)
+        userSSHInfo: userSSHInfo,
+        currentDir: currentDir,
+        ssh: null,
+        fileList: [],
+        isShowHidden: false,
+        infos_count: 0,
+        ls_history: [],
+        backIndex: 0,
+        ls_lock: false,
+        copy_from: "",
+    })
+
+    current_ssh_id = ssh_list.length - 1 //最后一个是最新
+    setTitle() //设置窗口标题
+    showPath('') //清空path
+    setTabs() //设置tab
+    connectSSH(current_ssh_id) //加载list
 }
 
 function setTabActive(id) {
@@ -966,7 +994,7 @@ function setTabActive(id) {
     }
 }
 
-function setTabs() {
+function setTabs(ssh_id = current_ssh_id) {
     document.getElementById('tab-bar').innerHTML = ''
     ssh_list.forEach((ssh, i) => {
         if (i == current_ssh_id) {
@@ -974,17 +1002,20 @@ function setTabs() {
         } else {
             active_css = ''
         }
-        let tag = ''
+        let tag = '●' //●,■,▲,▶
+        let tag_class = 'txt-success'
         if (ssh.ssh == -1) {
-            tag = '⚠️ '
+            tag_class = 'txt-danger'
         } else if (ssh.ssh == null) {
-            tag = '⇋ '
+            tag_class = 'txt-warning'
         }
-        document.getElementById('tab-bar').innerHTML += `<div ${active_css} id="tab-${i}" oncontextmenu="showTabMenu(${i})" onclick="to_ssh(${i})">${tag}${ssh.userSSHInfo.label}</div>`
+        document.getElementById('tab-bar').innerHTML += `<div ${active_css} id="tab-${i}" oncontextmenu="showTabMenu(${i})" onclick="to_ssh(${i})"><span class="${tag_class}">${tag} </span>${ssh.userSSHInfo.label}</div>`
     })
 
     // clean old ls
-    document.getElementById('file_list').innerHTML = ''
+    if (ssh_id == current_ssh_id) {
+        document.getElementById('file_list').innerHTML = ''
+    }
 }
 
 function closeTab(id) {

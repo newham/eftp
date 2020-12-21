@@ -344,11 +344,15 @@ p {
 }
 
 .txt-danger {
-    color: rgb(219, 27, 27);
+    color: rgb(226, 89, 89);
+}
+
+.txt-warning {
+    color: rgb(243, 192, 98);
 }
 
 .txt-success {
-    color: green;
+    color: rgb(112, 199, 112);
 }
 
 .txt-info {
@@ -506,4 +510,8 @@ p {
 
 .bg-color-4:active {
     background: #A020F0;
+}
+
+a.link {
+    text-decoration: underline;
 }

@@ -10,13 +10,13 @@ function showOpenFolderWin(f) {
         // ]
     }).then(result => {
         if (result.filePaths.length < 1) {
-            console.log('open win closed')
+            console.log('select folder win closed')
             f(false, '')
             return false
         }
         folder = result.filePaths[0] + '/'
-        console.log('open folder', folder)
-        // 调用f
+        console.log('select folder', folder)
+            // 调用f
         f(true, folder)
     }).catch(err => {
         alert(err)
@@ -33,12 +33,12 @@ function showOpenFilesWin(f) {
         // ]
     }).then(result => {
         if (result.filePaths.length < 1) {
-            console.log('open win closed')
+            console.log('select win closed')
             f(false, [])
             return false
         }
-        console.log('open', result.filePaths)
-        // 调用f
+        console.log('select folder', result.filePaths)
+            // 调用f
         f(true, result.filePaths)
     }).catch(err => {
         alert(err)
@@ -55,12 +55,12 @@ function showOpenFileWin(f) {
         // ]
     }).then(result => {
         if (result.filePaths.length < 1) {
-            console.log('open win closed')
+            console.log('select win closed')
             f(false, '')
             return false
         }
-        console.log('open', result.filePaths[0])
-        // 调用f
+        console.log('select folder', result.filePaths[0])
+            // 调用f
         f(true, result.filePaths[0])
     }).catch(err => {
         alert(err)

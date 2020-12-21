@@ -198,7 +198,7 @@ body {
     float: left;
     width: calc(100% - var(--side-bar-r-w) - var(--side-bar-l-w) - var(--side-bar-padding) * 2 - 1px);
     padding-bottom: 20px;
-    height: calc(100% - 20px);
+    height: calc(100% - 20px - 4px);
     overflow-y: auto;
     border-right: var(--side-bar-border);
 }
@@ -227,7 +227,7 @@ body {
 }
 
 #infos p {
-    padding: 5px 10px 0px 10px;
+    padding: 5px 5px 0px 10px;
     /* border-bottom: var(--side-bar-border); */
     /* overflow-x: hidden; */
     /* color: #ccc; */
@@ -240,6 +240,7 @@ body {
 
 .line-div {
     padding-bottom: 5px;
+    width: var(--side-bar-r-w);
     /* border-bottom: var(--side-bar-border); */
     /* overflow-x: hidden; */
 }
