@@ -121,7 +121,7 @@ function addLock(isLock = false) {
     ipcRenderer.send('set_lock', isLock)
 }
 
-function doProcess(id, tg = 'success', msg = '') {
+function done_process(id, tg = 'success', msg = '') {
     //clean
     document.getElementById(id).classList.remove('txt-success', 'txt-danger', 'txt-info')
         //set class
@@ -308,14 +308,14 @@ function ls(dir, isShow = getIsShowHidden()) {
         }
     }).then(() => {
         // addInfo('success')
-        // doProcess(id) //不显示ls记录
+        // done_process(id) //不显示ls记录
         set_ls_lock(false)
     }).catch((res) => {
         if (res) {
             res = res.toString()
         }
         // console.log("exception", res)
-        // doProcess(id, 'failed', res) //不显示ls记录
+        // done_process(id, 'failed', res) //不显示ls记录
         set_ls_lock(false)
         setCurrentDir(currentDir) //还原原路径
 
@@ -422,25 +422,32 @@ function getParentPath(file) {
 function upload_file(files) {
     let fileItems = []
     let currentDir = getCurrentDir()
+    let remotes = []
     files.forEach(f => {
         // console.log(currentDir + getFileName(f))
-        fileItems.push({ local: f, remote: currentDir + getFileName(f) })
+        let f_name = currentDir + getFileName(f)
+        fileItems.push({ local: f, remote: f_name })
+        remotes.push(f_name)
     });
     let id = addInfo('upload', files, true)
     push_bs(id, files.join(','), '↑')
         // setTimingProcess()
         // setProcess(20)
+    let watch_id = watch_upload_file(id, files, remotes)
     getSSH().putFiles(fileItems).then(function() {
         // console.log("The File thing is done")
-        doProcess(id)
+        done_watch(watch_id)
+        done_process(id)
         remove_bs(id)
             // addInfo('success')
         ls('')
     }, function(error) {
-        // console.log("Something's wrong", error)
-        doProcess(id, 'failed', error)
+        done_watch(watch_id)
+            // console.log("Something's wrong", error)
+        done_process(id, 'failed', error)
     }).catch((res) => {
-        doProcess(id, 'failed', res)
+        done_watch(watch_id)
+        done_process(id, 'failed', res)
     })
 }
 
@@ -488,11 +495,11 @@ function upload_folder() {
             }
         }).then(function(status) {
             // addInfo('success')
-            doProcess(id)
+            done_process(id)
             remove_bs(id)
             ls("") //刷新列表
         }).catch((res) => {
-            doProcess(id, 'failed', res)
+            done_process(id, 'failed', res)
         })
     })
 }
@@ -524,16 +531,54 @@ function get_bs(id) {
     return bs
 }
 
-function watch_load_file(ssh_id, id, file, f_size) {
+function watch_download_file(id, file, f_size) {
     return self.setInterval(() => {
-        fs.stat(file, (err, stats) => {
-            if (err) throw err;
-            let percentage = Math.ceil(stats.size / f_size * 100)
-                // console.log(stats.size, `${percentage}%`);
-            set_html(id, `<span>${stats.size}/${f_size} <span class="txt-info">${percentage}% </span><a onclick="" class="txt-danger">取消</a></span>`)
-        });
-        // console.log('watch', file)
+        // console.log(stats.size, `${percentage}%`);
+        set_file_status_info(id, fs.statSync(file).size, f_size)
+            // console.log('watch', file)
     }, 50);
+}
+
+function set_file_status_info(id, size, f_size) {
+    let percentage = Math.ceil(size / f_size * 100)
+    set_html(id, `<span>${size}/${f_size} <span class="txt-info">${percentage}% </span><a onclick="" class="txt-danger">取消</a></span>`)
+}
+
+function watch_upload_file(id, files, remotes) {
+    let total = 0
+    files.forEach((f) => { // 1. 获取本地上传文件[总大小]
+        total += fs.statSync(f).size
+    })
+    return self.setInterval(() => {
+        let size_sum = 0
+        remotes.forEach((remote) => { //按顺序计算上传文件的大小
+            getSSH().exec('stat', ['--format=%s', remote], {
+                    onStdout(chunk) {
+                        let size = parseInt(chunk.toString(getUserSSHInfo().characterSet))
+                            // let size_items_str = chunk.toString(getUserSSHInfo().characterSet)
+                            // let size_items = size_items_str.trim().split(/\s+/)
+                            // let size_sum = size_items.reduce((accumulator, currentValue) => {
+                            //     return parseInt(accumulator) + parseInt(currentValue);
+                            // }, 0);
+                            // console.log(size_sum)
+                        size_sum += size
+                        set_file_status_info(id, size_sum, total)
+
+                        if (size_sum == total) //到100%，自动删除进度
+                            done_process(id)
+                    },
+                    onStderr(chunk) {
+                        console.log('stat', chunk.toString(getUserSSHInfo().characterSet))
+                        done_process(id, 'failed', chunk.toString(getUserSSHInfo().characterSet))
+                    }
+                }).catch((res) => {
+                    console.log('stat', res)
+                        // console.log("exception", res)
+                    done_process(id, 'failed', res)
+                })
+                // console.log('watch', file)
+        })
+    }, 200);
 }
 
 function done_watch(id) {
@@ -552,28 +597,28 @@ function download_file(file) {
         getSSH().exec('stat', ['--format=%s', currentDir + file], {
             onStdout(chunk) {
                 let f_size = parseInt(chunk.toString(getUserSSHInfo().characterSet))
-                let watch_id = watch_load_file(current_ssh_id, id, folder + file, f_size)
+                let watch_id = watch_download_file(id, folder + file, f_size)
                 getSSH().getFile(folder + file, currentDir + file).then(function(Contents) {
                     // console.log("The File", file, "successfully downloaded")
                     // addInfo('success')
-                    doProcess(id)
+                    done_process(id)
                     remove_bs(id)
                     done_watch(watch_id) //关闭监听
                 }, function(error) {
                     // console.log("Something's wrong")
                     console.log(error)
                 }).catch((res) => {
-                    doProcess(id, 'failed', res)
+                    done_process(id, 'failed', res)
                     done_watch(watch_id) //关闭监听
                 })
             },
             onStderr(chunk) {
                 // console.log('dm', chunk)
-                doProcess(id, 'failed', chunk.toString(getUserSSHInfo().characterSet))
+                done_process(id, 'failed', chunk.toString(getUserSSHInfo().characterSet))
             }
         }).catch((res) => {
             // console.log("exception", res)
-            doProcess(id, 'failed', res)
+            done_process(id, 'failed', res)
         })
 
     })
@@ -591,11 +636,11 @@ function del_file(file, isDir) {
     }
     let id = addInfo('rm', file)
     getSSH().exec('rm', [tag, getCurrentDir() + file]).then(() => {
-        doProcess(id)
+        done_process(id)
         ls("")
     }).catch((res) => {
         // console.log("exception", res)
-        doProcess(id, 'failed', res)
+        done_process(id, 'failed', res)
     })
 }
 
@@ -760,12 +805,12 @@ function mkdir(dir_name = document.getElementById('dir_name').value) {
         //mkdir by ssh
     getSSH().mkdir(getCurrentDir() + dir_name).then(function() {
         // console.log("mkdir success", dir_name)
-        doProcess(id)
+        done_process(id)
             // ls(dir_name) //进入该文件夹
         ls("") //只刷新目录
     }, function(error) {
         // console.log(error)
-        doProcess(id, 'failed', error)
+        done_process(id, 'failed', error)
     })
     show_folder_dialog(false)
 }
@@ -797,7 +842,7 @@ function connectSSH(ssh_id = current_ssh_id) {
             // console.log("connect success!")
         setTabs(ssh_id) //1.修改tabs
         ls("") //2.
-        doProcess(id) //3.
+        done_process(id) //3.
     }).catch((excp) => {
         setSSH(ssh_id, -1)
             // console.log("connect failed!", error)
@@ -805,7 +850,7 @@ function connectSSH(ssh_id = current_ssh_id) {
         if (ssh_id == current_ssh_id) { //2.如果还停留在当前页面，则修改提示
             show_ssh_alert('danger')
         }
-        doProcess(id, 'failed', excp) //3.
+        done_process(id, 'failed', excp) //3.
     })
 }
 
@@ -909,7 +954,7 @@ function zip_folder(folder) {
         cwd: currentDir,
         onStdout(chunk) {
             read_line(chunk, getUserSSHInfo().characterSet, (line, i) => {
-                doProcess(id, 'info', line)
+                done_process(id, 'info', line)
             })
         },
         onStderr(chunk) {
@@ -917,11 +962,11 @@ function zip_folder(folder) {
         }
     }).then(() => {
         // addInfo('success')
-        doProcess(id)
+        done_process(id)
         ls('')
     }).catch((res) => {
         // console.log("exception", res)
-        doProcess(id, 'failed', res)
+        done_process(id, 'failed', res)
     })
 }
 
@@ -948,7 +993,7 @@ function unzip_file(file) {
     getSSH().exec(cmd, args, {
         onStdout(chunk) {
             read_line(chunk, getUserSSHInfo().characterSet, (line, i) => {
-                doProcess(id, 'info', line)
+                done_process(id, 'info', line)
             })
         },
         onStderr(chunk) {
@@ -956,11 +1001,11 @@ function unzip_file(file) {
         }
     }).then(() => {
         // addInfo('success')
-        doProcess(id)
+        done_process(id)
         ls('')
     }).catch((res) => {
         // console.log("exception", res)
-        doProcess(id, 'failed', res)
+        done_process(id, 'failed', res)
     })
 }
 
@@ -1042,16 +1087,16 @@ function copy(from = get_copy_from(), to = "") {
     if (from && from != "") {
         let id = addInfo('copy from', from)
         set_copy_from(getCurrentDir() + from)
-        doProcess(id)
+        done_process(id)
     }
     if (to && to != "" && get_copy_from() != "") {
         let id = addInfo('copy to', to)
         getSSH().exec('cp', ['-r', get_copy_from(), to]).then(() => {
-            doProcess(id)
+            done_process(id)
             set_copy_from('')
             ls()
         }).catch((res) => {
-            doProcess(id, 'failed', res)
+            done_process(id, 'failed', res)
         })
     }
 }
@@ -1133,7 +1178,7 @@ function closeTab(id) {
         ssh_client.dispose()
     }
     ssh_list.splice(id, 1) //删除ssh info
-    doProcess(i) //先解close锁
+    done_process(i) //先解close锁
     to_ssh(id - 1 > 0 ? id - 1 : 0, true) //跳转tab
 }
 
@@ -1151,7 +1196,7 @@ function to_ssh(id, isNew = false) {
 
     setTabs() //1.
     ls() //2.
-    doProcess(i) //3.
+    done_process(i) //3.
 
 }
 
