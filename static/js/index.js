@@ -17,7 +17,7 @@ let current_ssh_id = -1
 
 let bs_list = []
 
-const loading_html = '<img class="img-loading" src="static/img/loading.gif">'
+const default_loading_html = '<img class="img-loading" src="static/img/loading.gif">'
 
 function getCurrentDir() {
     return ssh_list[current_ssh_id].currentDir
@@ -174,9 +174,11 @@ function addInfo(msg, file = '', isArray = false, path = '') {
     //     file = ' : ' + file
     // }
     //sha1 a id
+    let loading_html = default_loading_html
     let id = new Date().getTime()
     if (msg == 'download') {
         file = `<a onclick="open_file('${id}','${path+file}')" class="link">${file}</a>`
+        loading_html = '' //显示百分比，而不是进度gif
     }
     document.getElementById('infos').innerHTML += `<div class="line-div"><p><label>${msg}</label>${file}</p><p id="${id}">${loading_html}</p></div>`
     sidebar = document.getElementById('sidebar') //滑动到底部
@@ -522,10 +524,16 @@ function get_bs(id) {
     return bs
 }
 
-function watch_download(file) {
+function watch_load_file(ssh_id, id, file, f_size) {
     return self.setInterval(() => {
-        console.log('watch', file)
-    }, 1000);
+        fs.stat(file, (err, stats) => {
+            if (err) throw err;
+            let percentage = Math.ceil(stats.size / f_size * 100)
+                // console.log(stats.size, `${percentage}%`);
+            set_html(id, `<span>${stats.size}/${f_size} <span class="txt-info">${percentage}% </span><a onclick="" class="txt-danger">取消</a></span>`)
+        });
+        // console.log('watch', file)
+    }, 50);
 }
 
 function done_watch(id) {
@@ -539,22 +547,35 @@ function download_file(file) {
             return
         }
         let currentDir = getCurrentDir()
-        let id = addInfo('download', file, false, folder)
-        let watch_id = watch_download(currentDir + file)
+        let id = addInfo('download', file, false, folder) //添加log
         push_bs(id, file, '↓')
-        getSSH().getFile(folder + file, currentDir + file).then(function(Contents) {
-            // console.log("The File", file, "successfully downloaded")
-            // addInfo('success')
-            doProcess(id)
-            remove_bs(id)
-            done_watch(watch_id) //关闭监听
-        }, function(error) {
-            // console.log("Something's wrong")
-            console.log(error)
+        getSSH().exec('stat', ['--format=%s', currentDir + file], {
+            onStdout(chunk) {
+                let f_size = parseInt(chunk.toString(getUserSSHInfo().characterSet))
+                let watch_id = watch_load_file(current_ssh_id, id, folder + file, f_size)
+                getSSH().getFile(folder + file, currentDir + file).then(function(Contents) {
+                    // console.log("The File", file, "successfully downloaded")
+                    // addInfo('success')
+                    doProcess(id)
+                    remove_bs(id)
+                    done_watch(watch_id) //关闭监听
+                }, function(error) {
+                    // console.log("Something's wrong")
+                    console.log(error)
+                }).catch((res) => {
+                    doProcess(id, 'failed', res)
+                    done_watch(watch_id) //关闭监听
+                })
+            },
+            onStderr(chunk) {
+                // console.log('dm', chunk)
+                doProcess(id, 'failed', chunk.toString(getUserSSHInfo().characterSet))
+            }
         }).catch((res) => {
+            // console.log("exception", res)
             doProcess(id, 'failed', res)
-            done_watch(watch_id) //关闭监听
         })
+
     })
 
 }
@@ -971,24 +992,37 @@ function parse_df_line(chunk) {
         // console.log(line)
         let line_items = line.trim().split(/\s+/)
         console.log(line_items)
-        html += `<tr><td>${line_items[0]}</td><td>${line_items[1]}</td><td>${line_items[2]}</td><td>${line_items[3]}</td><td>${line_items[4]}</td><td>${line_items[5]}</td></tr>\n`
+        let tag_class = ''
+        let left_percentage = line_items[4]
+        if (left_percentage == '100%') { //100% 没法比大小
+            tag_class = 'txt-danger'
+        } else if (left_percentage <= '30%') {
+            tag_class = 'txt-success'
+        } else if (left_percentage <= '50%') {
+            tag_class = 'txt-info'
+        } else if (left_percentage <= '70%') {
+            tag_class = 'txt-warning'
+        } else if (left_percentage <= '99%') {
+            tag_class = 'txt-danger'
+        }
+        html += `<tr><td>${line_items[0]}</td><td>${line_items[1]}</td><td>${line_items[2]}</td><td>${line_items[3]}</td><td><span class="${tag_class}">${line_items[4]}</span></td><td>${line_items[5]}</td></tr>\n`
     })
     return html
 }
 
-function check_ssh() {
-    if (getSSH() && getSSH() != -1) {
+function check_ssh(ssh_id = current_ssh_id) {
+    if (getSSH(ssh_id) && getSSH(ssh_id) != -1) {
         return true
     }
     return false
 }
 
-function ctrl_c() {
-    if (!check_ssh()) {
+function ctrl_c(ssh_id = current_ssh_id) {
+    if (!check_ssh(ssh_id)) {
         return
     }
     console.log('ctrl+c')
-    getSSH().exec('ctrl+c', [], {
+    getSSH(ssh_id).exec('ctrl+c', [], {
         onStdout(chunk) {
             console.log('stdoutChunk', chunk.toString(getUserSSHInfo().characterSet))
         },
