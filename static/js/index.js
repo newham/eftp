@@ -1083,18 +1083,25 @@ function exec(cmd = '', args = [], msg, f_ok, f_error) {
 
 }
 
-function copy(from = get_copy_from(), to = "") {
+function copy(from = get_copy_from(), to = "", cmd = 'cp') {
     if (from && from != "") {
-        let id = addInfo('copy from', from)
+        let id = addInfo(`${cmd} from`, from)
         set_copy_from(getCurrentDir() + from)
         done_process(id)
     }
     if (to && to != "" && get_copy_from() != "") {
-        let id = addInfo('copy to', to)
-        getSSH().exec('cp', ['-r', get_copy_from(), to]).then(() => {
+        let id = addInfo(`${cmd} to`, to)
+        let args = []
+        if (cmd == 'cp')
+            args = ['-r', get_copy_from(), to]
+        else if (cmd == 'mv')
+            args = [get_copy_from(), to]
+
+        //开始复制、粘贴
+        getSSH().exec(cmd, args).then(() => {
             done_process(id)
             set_copy_from('')
-            ls()
+            ls('')
         }).catch((res) => {
             done_process(id, 'failed', res)
         })

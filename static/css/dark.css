@@ -1,5 +1,5 @@
 :root {
-    --main-color: #666;
+    --main-color: #555;
     --side-bar-bg-color: #111;
     --side-bar-font-color: #2997ff;
     --side-bar-font-color-2: #eee;
@@ -20,8 +20,8 @@
     --btn-border: 0px solid #444;
     --btn-hover-bg-color: #777;
     --btn-active-bg-color: #444;
-    --tr-hover-bg-color: #888;
-    --tr-odd-bg-color: #444;
+    --tr-hover-bg-color: #666;
+    --tr-odd-bg-color: #4f4f4f;
     --tr-even-bg-color: var(--tr-odd-bg-color);
     --brag-box-bg-color: var(--main-color);
     --brag-box-border-color: #fff;

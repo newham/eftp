@@ -20,7 +20,7 @@
     --btn-border: 0px solid var(--bar-border-color);
     --btn-hover-bg-color: #ddd;
     --btn-active-bg-color: #eee;
-    --tr-hover-bg-color: #eee;
+    --tr-hover-bg-color: #ddd;
     --tr-odd-bg-color: #f5f5f5;
     --tr-even-bg-color: var(--tr-odd-bg-color);
     --brag-box-bg-color: #fff;
