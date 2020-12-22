@@ -536,12 +536,15 @@ function watch_download_file(id, file, f_size) {
         // console.log(stats.size, `${percentage}%`);
         set_file_status_info(id, fs.statSync(file).size, f_size)
             // console.log('watch', file)
-    }, 50);
+    }, 200);
 }
 
 function set_file_status_info(id, size, f_size) {
     let percentage = Math.ceil(size / f_size * 100)
-    set_html(id, `<span>${size}/${f_size} <span class="txt-info">${percentage}% </span><a onclick="" class="txt-danger">取消</a></span>`)
+    if (size == f_size) //到100%，自动删除进度
+        done_process(id)
+    else
+        set_html(id, `<span>${size}/${f_size} <span class="txt-info">${percentage}% </span><a onclick="" class="txt-danger">取消</a></span>`)
 }
 
 function watch_upload_file(id, files, remotes) {
@@ -563,9 +566,6 @@ function watch_upload_file(id, files, remotes) {
                             // console.log(size_sum)
                         size_sum += size
                         set_file_status_info(id, size_sum, total)
-
-                        if (size_sum == total) //到100%，自动删除进度
-                            done_process(id)
                     },
                     onStderr(chunk) {
                         console.log('stat', chunk.toString(getUserSSHInfo().characterSet))
