@@ -23,6 +23,7 @@
         <div id="tab-bar" class="tab-bar"></div>
         <div class="tab-bar">
             <div onclick="to_login()">＋</div>
+            <div onclick="show_space()" class="bottom">剩余空间</div>
         </div>
     </div>
     <div class="container" id="container">
@@ -36,7 +37,7 @@
             <button onclick="refresh()"><label class="label-icon">↺</label><label>刷新</label></button>
             <button onclick="showfavouritesMenu()"><label class="label-icon">☆</label><label>收藏</label></button>
             <button onclick="showHiddenFile()"><label class="label-icon">•</label><label>隐藏</label></button>
-            <button onclick="show_dialog(true)"><label class="label-icon">+</label><label>新建文件夹</label></button>
+            <button onclick="show_folder_dialog(true)"><label class="label-icon">+/</label><label>新建文件夹</label></button>
             <button onclick="show_backstageMenu()" id="btn_bs"><label class="label-icon">⇅</label><label>后台任务</label></button>
             <button onclick="upload_folder()"><label class="label-icon">⇧/</label><label>上传目录</label></button>
             <button onclick="upload()"><label class="label-icon">⇧</label><label>上传文件</label></button>
@@ -63,10 +64,25 @@
     <div class="foot-bar">
     </div>
     <div class="dialog" id="new_folder_dialog">
-        <p>新建文件夹</p>
+        <p class="dialog-title">新建文件夹</p>
         <input type="text" id="dir_name" onkeydown="keydown_mkdir()">
         <button onclick="mkdir()" class="btn-half-danger">确定</button>
-        <button onclick="show_dialog(false)" class="btn-half">取消</button>
+        <button onclick="show_folder_dialog(false)" class="btn-half">取消</button>
+    </div>
+    <div class="dialog" id="rename_dialog">
+        <p class="dialog-title">重命名</p>
+        <input type="text" id="file_rename" onkeydown="rename_file()">
+        <button onclick="rename_file()" class="btn-half-danger">确定</button>
+        <button onclick="show_folder_dialog(false)" class="btn-half">取消</button>
+    </div>
+    <div class="dialog" id="space_dialog">
+        <p class="dialog-title">剩余空间</p>
+        <div style="height:280px;display:block;overflow-y:auto;overflow-x:hidden;margin-bottom: 10px;">
+            <table>
+                <tbody id="left_space"></tbody>
+            </table>
+        </div>
+        <button onclick="show('space_dialog',false)" class="btn-full">确定</button>
     </div>
     <div class="drag_box" id="drag_box">
         <label onclick="showDargBox(false)">

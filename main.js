@@ -102,7 +102,7 @@ function createIndexWindow() {
             event.preventDefault()
             dialog.showMessageBox(win, {
                 buttons: ["OK", "Cancel"],
-                message: "有后台任务正在进行,确定退出?",
+                message: `有${processLock}个后台任务正在进行,确定退出?`,
                 cancelId: 1,
             }).then((result) => {
                 if (result.response == 0) { //ok

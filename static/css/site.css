@@ -190,6 +190,10 @@ input::-webkit-input-placeholder {
     width: calc(50% - 20px) !important;
 }
 
+.btn-full {
+    width: calc(100% - 3px) !important;
+}
+
 .btn-half,
 .btn-half-danger {
     width: calc(50% - 3px) !important;
@@ -217,6 +221,8 @@ input::-webkit-input-placeholder {
     /* width: calc(var(--dialog-w) - 20px); */
     /* left: calc(50% - var(--dialog-w) / 2); */
     width: calc(100% - var(--side-bar-l-w) * 2 - 20px);
+    max-height: 80%;
+    overflow-y: auto;
     left: var(--side-bar-l-w);
     padding: 10px;
     top: 0px;
@@ -248,6 +254,12 @@ input::-webkit-input-placeholder {
     text-align: left;
     margin-bottom: 12px;
     padding-left: 5px;
+}
+
+.dialog-title {
+    color: var(--blue-1);
+    font-weight: bolder;
+    font-size: 16px;
 }
 
 table,
@@ -408,6 +420,10 @@ p {
     text-align: center !important;
 }
 
+.txt-left {
+    text-align: left !important;
+}
+
 .txt-ellipsis {
     overflow: hidden;
     text-overflow: ellipsis;
@@ -416,6 +432,15 @@ p {
 
 .font-light {
     color: var(--font-color-light) !important;
+}
+
+.left {
+    float: left;
+}
+
+.bottom {
+    position: absolute;
+    bottom: 0;
 }
 
 

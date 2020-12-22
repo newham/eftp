@@ -80,7 +80,7 @@ body {
     /* border-left: 4px solid var(--side-bar-bg-color); */
     /* writing-mode: vertical-lr; */
     margin-left: 5px;
-    width: calc(100% - 20px);
+    width: calc(var(--side-bar-l-w) - 20px);
     /* background: var(--main-color); */
     /* background: var(--title-bar-bg-color); */
     /* border: 1px solid var(--bar-border-color); */

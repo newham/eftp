@@ -182,8 +182,8 @@ function addInfo(msg, file = '', isArray = false, path = '') {
     sidebar = document.getElementById('sidebar') //滑动到底部
     sidebar.scrollTop = sidebar.scrollHeight;
     addLock(true) //加锁，退出提示，禁止清空
-        //infos_count++
-    plusInfos_count(1)
+
+    plusInfos_count(1) //infos_count++
     return id
 }
 
@@ -262,9 +262,9 @@ function ls(dir, isShow = getIsShowHidden()) {
     //get parent path
     // parentPath = getParentPath(getCurrentDir())
     // console.log('ls', currentDir)
-    let id = addInfo('ls', getCurrentDir())
-        //arg
-    arg = '-lh'
+    // let id = addInfo('ls', getCurrentDir()) //不显示ls记录，ls太多了
+
+    arg = '-lh' //arg
     if (isShow) {
         arg = '-lha'
     }
@@ -306,14 +306,14 @@ function ls(dir, isShow = getIsShowHidden()) {
         }
     }).then(() => {
         // addInfo('success')
-        doProcess(id)
+        // doProcess(id) //不显示ls记录
         set_ls_lock(false)
     }).catch((res) => {
         if (res) {
             res = res.toString()
         }
         // console.log("exception", res)
-        doProcess(id, 'failed', res)
+        // doProcess(id, 'failed', res) //不显示ls记录
         set_ls_lock(false)
         setCurrentDir(currentDir) //还原原路径
 
@@ -522,6 +522,17 @@ function get_bs(id) {
     return bs
 }
 
+function watch_download(file) {
+    return self.setInterval(() => {
+        console.log('watch', file)
+    }, 1000);
+}
+
+function done_watch(id) {
+    window.clearInterval(id)
+    console.log('done watch:', id)
+}
+
 function download_file(file) {
     showOpenFolderWin((ok, folder) => {
         if (!ok) {
@@ -529,17 +540,20 @@ function download_file(file) {
         }
         let currentDir = getCurrentDir()
         let id = addInfo('download', file, false, folder)
+        let watch_id = watch_download(currentDir + file)
         push_bs(id, file, '↓')
         getSSH().getFile(folder + file, currentDir + file).then(function(Contents) {
             // console.log("The File", file, "successfully downloaded")
             // addInfo('success')
             doProcess(id)
             remove_bs(id)
+            done_watch(watch_id) //关闭监听
         }, function(error) {
             // console.log("Something's wrong")
             console.log(error)
         }).catch((res) => {
             doProcess(id, 'failed', res)
+            done_watch(watch_id) //关闭监听
         })
     })
 
@@ -672,22 +686,32 @@ function getFileName(file) {
     return file.substr(obj + 1); //文件名
 }
 
-function show_dialog(isShow) {
+function set_html(id, html) {
+    document.getElementById(id).innerHTML = html
+}
+
+function show(id, isShow) {
     if (isShow) {
-        document.getElementById('new_folder_dialog').style.display = 'block'
-        document.getElementById('dir_name').focus()
+        document.getElementById(id).style.display = 'block'
     } else {
-        document.getElementById('new_folder_dialog').style.display = 'none'
+        document.getElementById(id).style.display = 'none'
+    }
+}
+
+function show_folder_dialog(isShow) {
+    show('new_folder_dialog', isShow)
+    if (isShow) {
+        document.getElementById('dir_name').focus() //文件名-输入框
+    } else {
         document.getElementById('dir_name').value = ''
     }
-
 }
 
 function keydown_mkdir() {
     if (event.keyCode == 13) {
         mkdir()
     } else if (event.keyCode == 27) {
-        show_dialog(false)
+        show_folder_dialog(false)
     }
 }
 
@@ -703,7 +727,7 @@ function checkRename(filename, isDir) {
 
 function mkdir(dir_name = document.getElementById('dir_name').value) {
     if (!dir_name || dir_name == "") {
-        show_dialog(false)
+        show_folder_dialog(false)
         return
     }
     //检查重名
@@ -722,7 +746,7 @@ function mkdir(dir_name = document.getElementById('dir_name').value) {
         // console.log(error)
         doProcess(id, 'failed', error)
     })
-    show_dialog(false)
+    show_folder_dialog(false)
 }
 
 function to_login() {
@@ -919,7 +943,50 @@ function unzip_file(file) {
     })
 }
 
+function show_space() {
+    if (!check_ssh()) {
+        return
+    }
+    console.log('df')
+    getSSH().exec('df', ['-h'], {
+        onStdout(chunk) {
+            set_html('left_space', parse_df_line(chunk))
+                // set_html('left_space', chunk.toString(getUserSSHInfo().characterSet))
+            show('space_dialog', true)
+        },
+        onStderr(chunk) {
+            set_html('left_space', chunk.toString(getUserSSHInfo().characterSet))
+            show('space_dialog', true)
+        }
+    }).catch((res) => {
+        // console.log("exception", res)
+        set_html('left_space', res)
+        show('space_dialog', true)
+    })
+}
+
+function parse_df_line(chunk) {
+    let html = ''
+    read_line(chunk, getUserSSHInfo().characterSet, (line, i) => {
+        // console.log(line)
+        let line_items = line.trim().split(/\s+/)
+        console.log(line_items)
+        html += `<tr><td>${line_items[0]}</td><td>${line_items[1]}</td><td>${line_items[2]}</td><td>${line_items[3]}</td><td>${line_items[4]}</td><td>${line_items[5]}</td></tr>\n`
+    })
+    return html
+}
+
+function check_ssh() {
+    if (getSSH() && getSSH() != -1) {
+        return true
+    }
+    return false
+}
+
 function ctrl_c() {
+    if (!check_ssh()) {
+        return
+    }
     console.log('ctrl+c')
     getSSH().exec('ctrl+c', [], {
         onStdout(chunk) {
