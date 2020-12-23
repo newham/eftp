@@ -170,11 +170,11 @@ input::-webkit-input-placeholder {
 }
 
 .box img {
-    margin-top: -30px;
-    margin-right: -3px;
-    margin-bottom: -8px;
+    margin-top: -38px;
+    margin-right: -38px;
+    margin-bottom: -22px;
     float: right;
-    height: 80px;
+    height: 100px;
     /* margin-right: 10px; */
     /* padding: 5px;
     background: #fff;
@@ -184,6 +184,18 @@ input::-webkit-input-placeholder {
 .label-icon {
     font-size: 16px;
     font-weight: bold;
+}
+
+.input-1-4 {
+    width: calc(25% - 20px) !important;
+}
+
+.input-2-4 {
+    width: calc(50% - 20px) !important;
+}
+
+.input-3-4 {
+    width: calc(75% - 20px) !important;
 }
 
 .input-half {

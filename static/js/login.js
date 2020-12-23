@@ -7,7 +7,7 @@ function show_dialog(isShow, title = '新建Host') {
     document.getElementById('dialog_title').innerHTML = title
     if (isShow) {
         document.getElementById('new_ssh_dialog').style.display = 'block'
-        document.getElementById('host').focus()
+        document.getElementById('username').focus()
     } else {
         //清空dialog
         setSSHDialogVal(null)
@@ -26,47 +26,62 @@ function saveUserSSHInfo(userSSHInfo) {
         privateKey: userSSHInfo.privateKey,
         port: userSSHInfo.port,
     }).then(() => {
-        // edit
-        if (userSSHInfo.id != -1) {
-            console.log('edit', userSSHInfo.id)
-                //refresh
-            userSSH_list[userSSHInfo.id] = userSSHInfo
-                //write to config
-            writeConf(userSSH_list, (err) => {
-                if (err) {
-                    console.log(err)
-                } else {
-                    show_dialog(false)
-                        //重载页面
-                    loadConf()
-                }
-            })
-            return
-        }
-        // add
-        // ipcRenderer.send('add_userSSHInfo', userSSHInfo)
-        readConf((ok, conf) => {
-            if (ok) { //insert
-                userSSHInfo.id = conf.length
-                conf.push(userSSHInfo)
-                    // console.log(conf)
-            } else { //first
-                userSSHInfo.id = 0
-                conf = [userSSHInfo]
-            }
-            //save to config file
-            writeConf(conf, (err) => {
-                if (err) {
-                    console.log(err)
-                } else {
-                    //隐藏dialog
-                    show_dialog(false)
-                        //重载页面
-                    loadConf()
-                }
-            })
+        //1. 获取系统类型
+        ssh_test.exec('uname', [], {
+            onStdout(chunk) {
+                //set os type
+                userSSHInfo.osType = chunk.toString(userSSHInfo.characterSet).replace(/\n|\r/g, "") //！！！！注意去掉换行符
+                    // console.log('os type:', userSSHInfo.osType)
 
+                // edit
+                if (userSSHInfo.id != -1) {
+                    console.log('edit', userSSHInfo.id)
+                        //refresh
+                    userSSH_list[userSSHInfo.id] = userSSHInfo
+                        //write to config
+                    writeConf(userSSH_list, (err) => {
+                        if (err) {
+                            console.log(err)
+                        } else {
+                            show_dialog(false)
+                                //重载页面
+                            loadConf()
+                        }
+                    })
+                    return
+                }
+                // add
+                // ipcRenderer.send('add_userSSHInfo', userSSHInfo)
+                readConf((ok, conf) => {
+                    if (ok) { //insert
+                        userSSHInfo.id = conf.length
+                        conf.push(userSSHInfo)
+                            // console.log(conf)
+                    } else { //first
+                        userSSHInfo.id = 0
+                        conf = [userSSHInfo]
+                    }
+                    //save to config file
+                    writeConf(conf, (err) => {
+                        if (err) {
+                            console.log(err)
+                        } else {
+                            //隐藏dialog
+                            show_dialog(false)
+                                //重载页面
+                            loadConf()
+                        }
+                    })
+
+                })
+            },
+            onStderr(chunk) {
+                console.log('uname', chunk.toString(userSSHInfo.characterSet))
+            }
+        }).catch((res) => {
+            console.log('uname', res)
         })
+
 
     }, function(error) {
         console.log(error)
@@ -119,6 +134,7 @@ function addUserSSHInfo() {
         label: label,
         favourites: tmp_favourites,
         color: color,
+        osType: 'Linux',
     }
 
     console.log('add userSSHInfo', userSSHInfo.id, userSSHInfo.label)
@@ -154,11 +170,15 @@ function loadConf() {
             userSSH_list = conf
         }
         // add button
-        list_html.innerHTML += '<div class="c-3"><a class="box"  onclick="show_dialog(true)"><img src="static/img/individual-server.png">＋<br><label>New Host</label></a></div>'
+        list_html.innerHTML += '<div class="c-3"><a class="box" onclick="show_dialog(true)">＋<br><label>New Host</label></a></div>'
 
         // console.log(conf)
         userSSH_list.forEach(userSSHInfo => {
-            list_html.innerHTML += `<div class="c-3"><a class="box bg-color-${userSSHInfo.color}"  oncontextmenu="showHostMenu(${userSSHInfo.id})" onclick="goSSH(${userSSHInfo.id})"><img src="static/img/individual-server-2.png">${userSSHInfo.label}<br><label>${userSSHInfo.username}@${userSSHInfo.host}</label></a></div>`
+            let icon = 'static/img/svg/os/icon-linux.svg'
+            if (userSSHInfo.osType == 'Darwin') {
+                icon = 'static/img/svg/os/icon-mac.svg'
+            }
+            list_html.innerHTML += `<div class="c-3"><a class="box bg-color-${userSSHInfo.color}"  oncontextmenu="showHostMenu(${userSSHInfo.id})" onclick="goSSH(${userSSHInfo.id})"><img src="${icon}">${userSSHInfo.label}<br><label>${userSSHInfo.username}@${userSSHInfo.host}</label></a></div>`
         });
 
     })

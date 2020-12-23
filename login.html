@@ -79,14 +79,18 @@
 <body>
     <div class="dialog" id="new_ssh_dialog">
         <p id="dialog_title" class="dialog-title"></p>
-        <input type="text" id="host" placeholder="*服务器地址/域名" class="input-half" value="">
+        <!-- 第一行 -->
+        <input type="text" id="username" placeholder="*用户名" value="" class="input-1-4">
         <label> @ </label>
-        <input type="number" id="port" placeholder="*端口" class="input-half" value="22">
-        <input type="text" id="label" placeholder="标签（默认:用户名@服务器地址）">
-        <input type="text" id="username" placeholder="*用户名" value="">
-        <input type="password" id="password" placeholder="*密码" class="input-half" value="">
+        <input type="text" id="host" placeholder="*服务器地址/域名" class="input-2-4" value="">
+        <label> : </label>
+        <input type="number" id="port" placeholder="*端口" class="input-1-4" value="22">
+        <!-- 第二行 -->
+        <input type="password" id="password" placeholder="*密码" class="input-2-4" value="">
         <label>or</label>
-        <input type="password" id="privateKey" placeholder="*私钥路径" onclick="selectPK()" class="input-half">
+        <input type="password" id="privateKey" placeholder="*私钥路径" onclick="selectPK()" class="input-2-4">
+        <!-- 第三行 -->
+        <input type="text" id="label" placeholder="标签（默认:用户名@服务器地址）">
         <input type="hidden" id="id" value="-1">
         <input type="hidden" id="color" value="0">
         <div class="btn-group" id="color-group">

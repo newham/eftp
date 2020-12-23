@@ -1,5 +1,6 @@
 var remote = require('electron').remote;
 var process = require('child_process');
+var os = require('os');
 const node_ssh = require('node-ssh')
 const path = require("path");
 
@@ -115,12 +116,15 @@ function set_copy_from(from) {
 // ---------------data-end--------------
 
 
-function getHome(username) {
-    // console.log('get home', username)
-    if (username == "root") {
-        return "/root/"
+function getHome(username, osType = 'Linux') {
+    // console.log('get home', username, `"${osType}"`)
+    let home = `/home/${username}/`
+    if (osType == 'Darwin') {
+        home = `/Users/${username}/`
+    } else if (osType == 'WindowsNT') {
+        home = `/C/Users/${username}/`
     }
-    return "/home/" + username + "/"
+    return home
 }
 
 function addLock(isLock = false) {
@@ -258,7 +262,7 @@ function ls(dir, isShowHidden = getIsShowHidden()) {
         if (dir == UP_FILE_NAME) {
             setCurrentDir(getParentPath(currentDir))
         } else if (dir == HOME_FILE_NAME) {
-            setCurrentDir(getHome(getUserSSHInfo().username))
+            setCurrentDir(getHome(getUserSSHInfo().username, getUserSSHInfo().osType))
         } else if (dir == BACK_FILE_NAME) {
             if (backIndex < ls_history.length - 1) {
                 backIndex += 2
@@ -301,26 +305,23 @@ function ls(dir, isShowHidden = getIsShowHidden()) {
         document.getElementById('btn-show-hidden').classList.remove('txt-info')
     }
     let once = 0
-    let first = true
+
+    //>>>>> 添加../向上目录-start
+    document.querySelector('#file_list').innerHTML = "" //清空列表
+
+    if (getCurrentDir() != "/") { //添加上级目录标识
+        //add up
+        up_file = init_fileInfo()
+        up_file.name = UP_FILE_NAME
+        up_file.isDir = true
+        up_file.time = ''
+        set_file_info_html(up_file)
+        first = false
+    }
+    //>>>>> 添加../向上目录-end
+
     ssh_client.exec('ls', [arg, getCurrentDir()], {
         onStdout(chunk) {
-            //0.set path
-            showPath(getCurrentDir())
-
-            //避免bug（重复添加向上）
-            if (first) {
-                document.querySelector('#file_list').innerHTML = "" //清空列表
-
-                if (getCurrentDir() != "/") { //添加上级目录标识
-                    //add up
-                    up_file = init_fileInfo()
-                    up_file.name = UP_FILE_NAME
-                    up_file.isDir = true
-                    up_file.time = ''
-                    set_file_info_html(up_file)
-                    first = false
-                }
-            }
             if (n > MAX_LIST_NUM) {
                 if (once < 1) {
                     once++
@@ -331,16 +332,21 @@ function ls(dir, isShowHidden = getIsShowHidden()) {
             //parse line
             read_line(chunk, getUserSSHInfo().characterSet, (line) => {
                 n++
-                if (isShowHidden && n <= 0) { // 不添加.(本目录),..(上级目录)
+                if (isShowHidden && n <= 0) { // 不添加 【表头,.(本目录),..(上级目录)】
                     return
                 }
                 parse_ls_line(line, n)
             })
         },
         onStderr(chunk) {
-            console.log('stderrChunk', chunk.toString(getUserSSHInfo().characterSet))
+            let err = chunk.toString(getUserSSHInfo().characterSet)
+            showPath(`<span class="txt-danger">${err}</span>`) //*细节，在path栏直接显示错误比较直观
+            console.log('stderrChunk', err)
         }
     }).then(() => {
+        //0.set path
+        showPath(getCurrentDir())
+
         // addInfo('success')
         // done_process(id) //不显示ls记录
         set_ls_lock(false)
@@ -350,7 +356,8 @@ function ls(dir, isShowHidden = getIsShowHidden()) {
         }
         // console.log("exception", res)
         // done_process(id, 'failed', res) //不显示ls记录
-        addError(res) //提示错误
+        showPath(`<span class="txt-danger">${res}</span>`) //*细节，在path栏直接显示错误比较直观
+            // addError(res) //提示错误
         set_ls_lock(false)
         setCurrentDir(currentDir) //还原原路径
 
@@ -588,10 +595,14 @@ function watch_upload_file(id, files, remotes) {
     files.forEach((f) => { // 1. 获取本地上传文件[总大小]
         total += fs.statSync(f).size
     })
+    let arg = '--format=%s'
+    if (getUserSSHInfo().osType == 'Darwin') {
+        arg = '-f %z'
+    }
     return self.setInterval(() => {
         let size_sum = 0
         remotes.forEach((remote) => { //按顺序计算上传文件的大小
-            getSSH().exec('stat', ['--format=%s', remote], {
+            getSSH().exec('stat', [arg, remote], {
                     onStdout(chunk) {
                         let size = parseInt(chunk.toString(getUserSSHInfo().characterSet))
                             // let size_items_str = chunk.toString(getUserSSHInfo().characterSet)
@@ -630,7 +641,11 @@ function download_file(file) {
         let currentDir = getCurrentDir()
         let id = addInfo('download', file, false, folder) //添加log
         push_bs(id, file, '↓')
-        getSSH().exec('stat', ['--format=%s', currentDir + file], {
+        let arg = '--format=%s'
+        if (getUserSSHInfo().osType == 'Darwin') {
+            arg = '-f %z'
+        }
+        getSSH().exec('stat', [arg, currentDir + file], {
             onStdout(chunk) {
                 let f_size = parseInt(chunk.toString(getUserSSHInfo().characterSet))
                 let watch_id = watch_download_file(id, folder + file, f_size)
@@ -668,7 +683,7 @@ function del_file(file, isDir) {
     }
     let tag = '-f'
     if (isDir) {
-        tag = '-drf'
+        tag = '-rf'
     }
     let id = addInfo('rm', file)
     getSSH().exec('rm', [tag, getCurrentDir() + file]).then(() => {
@@ -1072,7 +1087,6 @@ function parse_df_line(chunk) {
     read_line(chunk, getUserSSHInfo().characterSet, (line, i) => {
         // console.log(line)
         let line_items = line.trim().split(/\s+/)
-        console.log(line_items)
         let tag_class = ''
         let left_percentage = line_items[4]
         if (left_percentage == '100%') { //100% 没法比大小
@@ -1146,7 +1160,7 @@ function copy(from = get_copy_from(), to = "", cmd = 'cp') {
 
 ipcRenderer.on('add_ssh', (event, userSSHInfo) => {
     // console.log("add ssh", userSSHInfo)
-    new_ssh(userSSHInfo, getHome(userSSHInfo.username))
+    new_ssh(userSSHInfo, getHome(userSSHInfo.username, userSSHInfo.osType))
 })
 
 function new_ssh(userSSHInfo, currentDir) {
@@ -1235,11 +1249,11 @@ function to_ssh(id, isNew = false) {
     }
     console.log("to ssh", id)
     current_ssh_id = id
-    let i = addInfo('to', `[${getUserSSHInfo().label}]`)
 
+    // let i = addInfo('to', `[${getUserSSHInfo().label}]`) //细节，不显示log
     setTabs() //1.
     ls() //2.
-    done_process(i) //3.
+        // done_process(i) //3.
 
 }
 
@@ -1315,7 +1329,7 @@ function refresh() {
         setTabs() //刷新tabs
         connectSSH() //重新连接
     } else if (getSSH()) {
-        ls()
+        ls('')
     }
 }
 
@@ -1323,4 +1337,5 @@ function refresh() {
 setTheme()
 
 //on init win
-new_ssh(remote.getGlobal('shareData').userSSHInfo, getHome(remote.getGlobal('shareData').userSSHInfo.username))
+let initUserSSHInfo = remote.getGlobal('shareData').userSSHInfo
+new_ssh(initUserSSHInfo, getHome(initUserSSHInfo.username, initUserSSHInfo.osType))
