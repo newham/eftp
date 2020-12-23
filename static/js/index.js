@@ -165,6 +165,10 @@ function open_file(id, file) {
     });
 }
 
+function addError(msg) {
+    document.getElementById('infos').innerHTML += `<div class="line-div"><p class="txt-danger">${msg}</p></div>`
+}
+
 function addInfo(msg, file = '', isArray = false, path = '') {
     //get file
     if (isArray) {
@@ -286,7 +290,7 @@ function ls(dir, isShow = getIsShowHidden()) {
                     up_file = init_fileInfo()
                     up_file.name = ".."
                     up_file.isDir = true
-                    setFileInfo(up_file)
+                    set_file_info_html(up_file)
                     first = false
                 }
             }
@@ -316,6 +320,7 @@ function ls(dir, isShow = getIsShowHidden()) {
         }
         // console.log("exception", res)
         // done_process(id, 'failed', res) //不显示ls记录
+        addError(res) //提示错误
         set_ls_lock(false)
         setCurrentDir(currentDir) //还原原路径
 
@@ -339,7 +344,7 @@ let read_line = (chunk = new Buffer(), encoding = 'utf8', f) => {
 let parse_ls_line = (line, id) => {
     line = line.replace(/\s+/g, ' ') //多个空格替换为一个空格的正则实例
     attrs = line.split(' ')
-    set_fileInfo(attrs, id)
+    set_file_info(attrs, id)
 }
 
 let init_fileInfo = () => {
@@ -359,7 +364,7 @@ let init_fileInfo = () => {
     }
 }
 
-let set_fileInfo = (attrs = [], id) => {
+let set_file_info = (attrs = [], id) => {
     if (attrs.length < 9) {
         return
     }
@@ -379,7 +384,7 @@ let set_fileInfo = (attrs = [], id) => {
     fileInfo.type = getFileType(fileInfo.name, fileInfo.isDir)
     fileInfo.id = id
 
-    setFileInfo(fileInfo)
+    set_file_info_html(fileInfo)
 }
 
 function getFileHTML(fileInfo) {
@@ -399,7 +404,7 @@ function getFileHTML(fileInfo) {
     }
 }
 
-function setFileInfo(fileInfo) {
+function set_file_info_html(fileInfo) {
     //push to list
     ssh_list[current_ssh_id].fileList.push(fileInfo)
         //set html
