@@ -158,7 +158,7 @@ function loadConf() {
 
         // console.log(conf)
         userSSH_list.forEach(userSSHInfo => {
-            list_html.innerHTML += '<div class="c-3"><a class="box bg-color-{5}"  oncontextmenu="showHostMenu({0})" onclick="goSSH({1})"><img src="static/img/individual-server-2.png">{2}<br><label>{3}@{4}</label></a></div>'.format(userSSHInfo.id, userSSHInfo.id, userSSHInfo.label, userSSHInfo.username, userSSHInfo.host, userSSHInfo.color)
+            list_html.innerHTML += `<div class="c-3"><a class="box bg-color-${userSSHInfo.color}"  oncontextmenu="showHostMenu(${userSSHInfo.id})" onclick="goSSH(${userSSHInfo.id})"><img src="static/img/individual-server-2.png">${userSSHInfo.label}<br><label>${userSSHInfo.username}@${userSSHInfo.host}</label></a></div>`
         });
 
     })

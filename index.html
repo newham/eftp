@@ -31,12 +31,12 @@
             <div id="path" class="path" ondblclick="maxWindow()"></div>
         </div>
         <div class="tool-bar">
-            <button onclick="ls('-1')"><label class="label-icon">←</label><label>返回</label></button>
-            <button onclick="ls('..')"><label class="label-icon">↑</label><label>向上</label></button>
-            <button onclick="ls('$HOME')"><label class="label-icon">~</label><label>主目录</label></button>
+            <button onclick="ls_back()"><label class="label-icon">←</label><label>返回</label></button>
+            <button onclick="ls_up()"><label class="label-icon">↑</label><label>向上</label></button>
+            <button onclick="ls_home()"><label class="label-icon">~</label><label>主目录</label></button>
             <button onclick="refresh()"><label class="label-icon">↺</label><label>刷新</label></button>
             <button onclick="showfavouritesMenu()"><label class="label-icon">☆</label><label>收藏</label></button>
-            <button onclick="showHiddenFile()"><label class="label-icon">•</label><label>隐藏</label></button>
+            <button onclick="showHiddenFile()" id="btn-show-hidden"><label class="label-icon">•</label><label>隐藏</label></button>
             <button onclick="show_folder_dialog(true)"><label class="label-icon">+/</label><label>新建文件夹</label></button>
             <button onclick="show_backstageMenu()" id="btn_bs"><label class="label-icon">⇅</label><label>后台任务</label></button>
             <!-- <button onclick="upload_folder()"><label class="label-icon">⇧/</label><label>上传目录</label></button> -->

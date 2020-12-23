@@ -9,15 +9,21 @@ let ssh_list = []
 
 const ls_history_max = 100
 
-const max_infos_num = 100
+const MAX_INFOS_NUM = 100
 
-const max_list_num = 200
+const MAX_LIST_NUM = 200
 
 let current_ssh_id = -1
 
 let bs_list = []
 
-const default_loading_html = '<img class="img-loading" src="static/img/loading.gif">'
+const LOADING_HTML = '<img class="img-loading" src="static/img/loading.gif">'
+
+const UP_FILE_NAME = '../'
+
+const BACK_FILE_NAME = '-1'
+
+const HOME_FILE_NAME = '$HOME'
 
 function getCurrentDir() {
     return ssh_list[current_ssh_id].currentDir
@@ -146,7 +152,7 @@ function done_process(id, tg = 'success', msg = '') {
     }
     //count
     // console.log(infos_count)
-    if (getInfos_count() > max_infos_num) {
+    if (getInfos_count() > MAX_INFOS_NUM) {
         clean_infos()
     }
 }
@@ -178,7 +184,7 @@ function addInfo(msg, file = '', isArray = false, path = '') {
     //     file = ' : ' + file
     // }
     //sha1 a id
-    let loading_html = default_loading_html
+    let loading_html = LOADING_HTML
     let id = new Date().getTime()
     if (msg == 'download') {
         file = `<a onclick="open_file('${id}','${path+file}')" class="link">${file}</a>`
@@ -205,7 +211,19 @@ function show_ssh_alert(color, msg = '正在连接...') {
     document.querySelector('#file_list').innerHTML = `<tr class="no-hover"><td class="td-alert txt-${color}">${msg}</td></tr>`
 }
 
-function ls(dir, isShow = getIsShowHidden()) {
+function ls_up() {
+    ls(UP_FILE_NAME)
+}
+
+function ls_back() {
+    ls(BACK_FILE_NAME)
+}
+
+function ls_home() {
+    ls(HOME_FILE_NAME)
+}
+
+function ls(dir, isShowHidden = getIsShowHidden()) {
     let ssh_client = getSSH()
     if (get_ls_lock()) {
         // console.log('ls locked')
@@ -237,11 +255,11 @@ function ls(dir, isShow = getIsShowHidden()) {
     ls_history = get_ls_history()
     currentDir = getCurrentDir()
     if (dir) {
-        if (dir == "..") {
+        if (dir == UP_FILE_NAME) {
             setCurrentDir(getParentPath(currentDir))
-        } else if (dir == '$HOME') {
+        } else if (dir == HOME_FILE_NAME) {
             setCurrentDir(getHome(getUserSSHInfo().username))
-        } else if (dir == '-1') {
+        } else if (dir == BACK_FILE_NAME) {
             if (backIndex < ls_history.length - 1) {
                 backIndex += 2
             }
@@ -270,13 +288,19 @@ function ls(dir, isShow = getIsShowHidden()) {
     // console.log('ls', currentDir)
     // let id = addInfo('ls', getCurrentDir()) //不显示ls记录，ls太多了
 
-    arg = '-lh' //arg
-    if (isShow) {
+    let arg = '-lh' //arg
+    let n = -1 //计数
+    if (isShowHidden) {
         arg = '-lha'
+        n = -3 //省略.,..,index从-3开始
+
+        // 改变tool-bar按钮css
+        document.getElementById('btn-show-hidden').classList.add('txt-info')
+    } else {
+        document.getElementById('btn-show-hidden').classList.remove('txt-info')
     }
     let once = 0
     let first = true
-    let n = -1 //计数
     ssh_client.exec('ls', [arg, getCurrentDir()], {
         onStdout(chunk) {
             //0.set path
@@ -285,16 +309,17 @@ function ls(dir, isShow = getIsShowHidden()) {
             //避免bug（重复添加向上）
             if (first) {
                 document.querySelector('#file_list').innerHTML = "" //清空列表
-                if (getCurrentDir() != "/" && !isShow) {
+
+                if (getCurrentDir() != "/") { //添加上级目录标识
                     //add up
                     up_file = init_fileInfo()
-                    up_file.name = ".."
+                    up_file.name = UP_FILE_NAME
                     up_file.isDir = true
                     set_file_info_html(up_file)
                     first = false
                 }
             }
-            if (n > max_list_num) {
+            if (n > MAX_LIST_NUM) {
                 if (once < 1) {
                     once++
                     document.querySelector('#file_list').innerHTML += `<tr><td colspan="5" class="txt-center">快不行了...只能显示前${n}行</td></tr>`
@@ -302,8 +327,11 @@ function ls(dir, isShow = getIsShowHidden()) {
                 return false
             }
             //parse line
-            read_line(chunk, getUserSSHInfo().characterSet, (line, i) => {
+            read_line(chunk, getUserSSHInfo().characterSet, (line) => {
                 n++
+                if (isShowHidden && n <= 0) { // 不添加.(本目录),..(上级目录)
+                    return
+                }
                 parse_ls_line(line, n)
             })
         },
@@ -394,13 +422,13 @@ function getFileHTML(fileInfo) {
         font_class = 'font-light'
     }
     if (fileInfo.isDir) {
-        tr_html = '<tr oncontextmenu="showFolderMenu({0})">'.format(fileInfo.id)
-        if (fileInfo.name == "..") {
+        tr_html = `<tr oncontextmenu="showFolderMenu(${fileInfo.id})">`
+        if (fileInfo.name == UP_FILE_NAME) {
             tr_html = '<tr>'
         }
-        return '{0}<td class="td-num">{3}</td><td class="td-icon"><img class="icon" src="static/img/svg/doctype/icon-{4}-m.svg"></td><td class="td-head" colspan="3"><a onclick="ls(\'{2}\')" href="#"><div class="{1}">{2}</div></a></td></div>'.format(tr_html, font_class, fileInfo.name, fileInfo.id, fileInfo.type)
+        return `${tr_html}<td class="td-num">${fileInfo.id}</td><td class="td-icon"><img class="icon" src="static/img/svg/doctype/icon-${fileInfo.type}-m.svg"></td><td class="td-head" colspan="3"><a onclick="ls('${fileInfo.name}')" href="#"><div class="${font_class}">${fileInfo.name}</div></a></td></div>`
     } else {
-        return '<tr oncontextmenu="showFileMenu({0})"><td class="td-num">{4}</td><td class="td-icon"><img class="icon" src="static/img/svg/doctype/icon-{5}-m.svg"></td><td class="td-head"><div class="{1}">{2}</div></td><td>{3}B</td><td class="td-download"><a href="#" onclick="download_file(\'{2}\')">⇩</a></div>'.format(fileInfo.id, font_class, fileInfo.name, fileInfo.size, fileInfo.id, fileInfo.type)
+        return `<tr oncontextmenu="showFileMenu(${fileInfo.id})"><td class="td-num">${fileInfo.id}</td><td class="td-icon"><img class="icon" src="static/img/svg/doctype/icon-${fileInfo.type}-m.svg"></td><td class="td-head"><div class="${font_class}">${fileInfo.name}</div></td><td>${fileInfo.size}B</td><td class="td-download"><a href="#" onclick="download_file('${fileInfo.name}')">⇩</a></div>`
     }
 }
 
@@ -632,7 +660,7 @@ function download_file(file) {
 
 function del_file(file, isDir) {
     let f_tag = isDir ? "文件夹" : "文件"
-    if (!confirm('确定删除-{0}-[{1}] ?'.format(f_tag, file))) {
+    if (!confirm(`确定删除-${f_tag}-[${file}] ?`)) {
         return
     }
     let tag = '-f'
@@ -834,7 +862,7 @@ function to_login() {
 function connectSSH(ssh_id = current_ssh_id) {
     let ssh = new node_ssh()
     let userSSHInfo = getUserSSHInfo()
-    let id = addInfo('connect', '{0}@{1}:{2}'.format(userSSHInfo.username, userSSHInfo.host, userSSHInfo.port))
+    let id = addInfo('connect', `${userSSHInfo.username}@${userSSHInfo.host}:${userSSHInfo.port}`)
     show_ssh_alert('warning') //显示正在连接
     ssh.connect({
         host: userSSHInfo.host,
@@ -914,9 +942,9 @@ let isfavouritesMenuShow = true
 
 function setfavouritesMenu() {
     // console.log(getUserSSHInfo().favourites)
-    setHTMLByID('favourites', '<button onclick="favourite_folder(\'{0}\',\'{1}\')">♥ 添加收藏</button>'.format(getFolderName(getCurrentDir(), false), getParentPath(getCurrentDir())))
+    setHTMLByID('favourites', `<button onclick="favourite_folder('${getFolderName(getCurrentDir(), false)}','${getParentPath(getCurrentDir())}')">♥ 添加收藏</button>`)
     getUserSSHInfo().favourites.forEach((fav, i) => {
-        appenHTMLByID('favourites', '\n<hr><button onclick="goFavourite({0})" oncontextmenu="showFavouriteMenu({0})">{1}{2}</button>'.format(i, fav.currentDir, fav.folder))
+        appenHTMLByID('favourites', `\n<hr><button onclick="goFavourite(${i})" oncontextmenu="showFavouriteMenu(${i})">${fav.currentDir}${fav.folder}</button>`)
     })
 }
 

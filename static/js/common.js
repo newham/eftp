@@ -1,11 +1,12 @@
 var remote = require('electron').remote;
 
-String.prototype.format = function () {
-    if (arguments.length == 0) return this;
-    for (var s = this, i = 0; i < arguments.length; i++)
-        s = s.replace(new RegExp("\\{" + i + "\\}", "g"), arguments[i]);
-    return s;
-};
+//请使用js原生的`${xxx}`方法代替
+// String.prototype.format = function () {
+//     if (arguments.length == 0) return this;
+//     for (var s = this, i = 0; i < arguments.length; i++)
+//         s = s.replace(new RegExp("\\{" + i + "\\}", "g"), arguments[i]);
+//     return s;
+// };
 
 // String.prototype.endWith = function(str){
 //     if(str==null || str=="" || this.length == 0 ||str.length > this.length){	
