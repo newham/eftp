@@ -334,21 +334,21 @@ body {
 
 #favouritesMenu .triangle-up,
 #favouritesMenu .triangle-up-box {
-    left: calc(var(--side-bar-l-w) + 46px * 5);
+    left: calc(var(--side-bar-l-w) + 46px * 5.2);
 }
 
 #favouritesMenu {
-    left: calc(var(--side-bar-l-w) + 46px * 5 - 90px);
+    left: calc(var(--side-bar-l-w) + 46px * 5.2 - 90px);
 }
 
 #backstageMenu .triangle-up,
 #backstageMenu .triangle-up-box {
     /* left: 410px !important; */
-    left: calc(var(--side-bar-l-w) + 46px * 9.5);
+    left: calc(var(--side-bar-l-w) + 46px * 9.8);
 }
 
 #backstageMenu {
-    left: calc(var(--side-bar-l-w) + 46px * 9.5 - 90px);
+    left: calc(var(--side-bar-l-w) + 46px * 9.8 - 90px);
 }
 
 .txt-search {
