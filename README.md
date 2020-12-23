@@ -1,5 +1,5 @@
-# EFTP —— 免费的SFTP客户端for Mac OS
-## 安全、简洁、实用、却不简单！
+# EFTP —— 免费&开源的SFTP客户端for Mac OS
+## 安全、简洁、实用、却不简单！好用到秒杀市面上绝大多数付费SFTP软件！
 
 1. 支持多Host
 
@@ -36,8 +36,6 @@
 <img src="cap_imgs/cap_3.png" style="border:1px solid #000">
 
 <img src="cap_imgs/cap_4.png" style="border:1px solid #000">
-
-<img src="cap_imgs/cap_5.png" style="border:1px solid #000">
 
 ## 已知BUG
 
