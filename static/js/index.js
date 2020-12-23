@@ -438,7 +438,7 @@ function getFileHTML(fileInfo) {
         }
         return `${tr_html}<td class="td-num">${fileInfo.id}</td><td class="td-icon"><img class="icon" src="static/img/svg/doctype/icon-${fileInfo.type}-m.svg"></td><td class="td-head"><a onclick="ls('${fileInfo.name}')" href="#"><div class="${font_class}">${fileInfo.name}</div></a></td><td>${fileInfo.time}</td><td colspan="2"></td></div>`
     } else {
-        return `<tr oncontextmenu="showFileMenu(${fileInfo.id})"><td class="td-num">${fileInfo.id}</td><td class="td-icon"><img class="icon" src="static/img/svg/doctype/icon-${fileInfo.type}-m.svg"></td><td class="td-head"><div class="${font_class}">${fileInfo.name}</div></td><td>${fileInfo.time}</td><td>${fileInfo.size}B</td><td class="td-download"><a href="#" onclick="download_file('${fileInfo.name}')">⇩</a></div>`
+        return `<tr oncontextmenu="showFileMenu(${fileInfo.id})"><td class="td-num">${fileInfo.id}</td><td class="td-icon"><img class="icon" src="static/img/svg/doctype/icon-${fileInfo.type}-m.svg"></td><td class="td-head"><div class="${font_class}">${fileInfo.name}</div></td><td>${fileInfo.time}</td><td>${fileInfo.size}</td><td class="td-download"><a href="#" onclick="download_file('${fileInfo.name}')">⇩</a></div>`
     }
 }
 
