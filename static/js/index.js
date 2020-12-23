@@ -276,6 +276,7 @@ function ls(dir, isShowHidden = getIsShowHidden()) {
             setCurrentDir(currentDir + dir + "/")
         }
     }
+    showPath(`${getCurrentDir()} <img src="static/img/loading.gif">`) //path栏显示进度，*细节设计
     setBackIndex(backIndex)
     put_ls_history(getCurrentDir(), dir)
         // console.log('add history', currentDir, ls_history.length)
@@ -315,6 +316,7 @@ function ls(dir, isShowHidden = getIsShowHidden()) {
                     up_file = init_fileInfo()
                     up_file.name = UP_FILE_NAME
                     up_file.isDir = true
+                    up_file.time = ''
                     set_file_info_html(up_file)
                     first = false
                 }
@@ -407,8 +409,9 @@ let set_file_info = (attrs = [], id) => {
     fileInfo.size = attrs[4]
     fileInfo.month = attrs[5]
     fileInfo.day = attrs[6]
-    fileInfo.year = attrs[7]
+    fileInfo.hour = attrs[7]
     fileInfo.name = attrs.slice(8).join(' ')
+    fileInfo.time = ` ${fileInfo.hour} ${fileInfo.month}${fileInfo.day}`
     fileInfo.type = getFileType(fileInfo.name, fileInfo.isDir)
     fileInfo.id = id
 
@@ -426,9 +429,9 @@ function getFileHTML(fileInfo) {
         if (fileInfo.name == UP_FILE_NAME) {
             tr_html = '<tr>'
         }
-        return `${tr_html}<td class="td-num">${fileInfo.id}</td><td class="td-icon"><img class="icon" src="static/img/svg/doctype/icon-${fileInfo.type}-m.svg"></td><td class="td-head" colspan="3"><a onclick="ls('${fileInfo.name}')" href="#"><div class="${font_class}">${fileInfo.name}</div></a></td></div>`
+        return `${tr_html}<td class="td-num">${fileInfo.id}</td><td class="td-icon"><img class="icon" src="static/img/svg/doctype/icon-${fileInfo.type}-m.svg"></td><td class="td-head"><a onclick="ls('${fileInfo.name}')" href="#"><div class="${font_class}">${fileInfo.name}</div></a></td><td>${fileInfo.time}</td><td colspan="2"></td></div>`
     } else {
-        return `<tr oncontextmenu="showFileMenu(${fileInfo.id})"><td class="td-num">${fileInfo.id}</td><td class="td-icon"><img class="icon" src="static/img/svg/doctype/icon-${fileInfo.type}-m.svg"></td><td class="td-head"><div class="${font_class}">${fileInfo.name}</div></td><td>${fileInfo.size}B</td><td class="td-download"><a href="#" onclick="download_file('${fileInfo.name}')">⇩</a></div>`
+        return `<tr oncontextmenu="showFileMenu(${fileInfo.id})"><td class="td-num">${fileInfo.id}</td><td class="td-icon"><img class="icon" src="static/img/svg/doctype/icon-${fileInfo.type}-m.svg"></td><td class="td-head"><div class="${font_class}">${fileInfo.name}</div></td><td>${fileInfo.time}</td><td>${fileInfo.size}B</td><td class="td-download"><a href="#" onclick="download_file('${fileInfo.name}')">⇩</a></div>`
     }
 }
 
