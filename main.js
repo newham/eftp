@@ -62,7 +62,7 @@ function createWindow() {
 
 function createIndexWindow() {
     // 默认值
-    let win_w = 1024
+    let win_w = 1100
     let minWidth = 900
     let height = 768
     let minHeight = 600
