@@ -1,5 +1,5 @@
 const { app, BrowserWindow, ipcMain, Menu, MenuItem, nativeTheme, dialog, screen } = require('electron')
-
+const os = require("os");
 // 兼容
 app.allowRendererProcessReuse = true
 
@@ -42,22 +42,24 @@ function createMenu() {
             ]
         }
     ];
+    // 设置menu
     Menu.setApplicationMenu(Menu.buildFromTemplate(template))
-        //设置dock
-    const dockMenu = Menu.buildFromTemplate([{
-        label: '新HOST',
-        click() {
-            createWindow()
-        }
-    }])
-    app.dock.setMenu(dockMenu)
+
+    //如果os是mac，设置dock
+    if (os.type == 'Darwin') {
+        return //不设置dock
+        app.dock.setMenu(Menu.buildFromTemplate([{
+            label: '新HOST',
+            click() {
+                createWindow()
+            }
+        }]))
+    }
 }
 
 function createWindow() {
-    // 创建菜单
-    createMenu()
-        // 创建窗口
-    return createIndexWindow()
+    createMenu() // 创建菜单
+    return createIndexWindow() // 创建窗口
 }
 
 function createIndexWindow() {
@@ -70,7 +72,7 @@ function createIndexWindow() {
     let y = null
 
     // 如果已有窗口，则保持原位置
-    if (BrowserWindow.getAllWindows().length > 0) {
+    if (BrowserWindow.getAllWindows().length > 0 && BrowserWindow.getFocusedWindow()) {
         let size = BrowserWindow.getFocusedWindow().getSize()
         let position = BrowserWindow.getFocusedWindow().getPosition()
         win_w = size[0]
