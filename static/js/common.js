@@ -74,3 +74,11 @@ function addClassByID(id, c) {
 function delClassByID(id, c) {
     document.getElementById(id).classList.remove(c)
 }
+
+function show(id, isShow) {
+    if (isShow) {
+        document.getElementById(id).style.display = 'block'
+    } else {
+        document.getElementById(id).style.display = 'none'
+    }
+}

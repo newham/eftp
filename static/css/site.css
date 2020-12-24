@@ -10,6 +10,7 @@
     --side-bar-padding: 0px;
     --foot-bar-h: 0px;
     --dialog-w: calc(100% - 160px);
+    --dialog-fixed-w: 260px;
     --btn-radius: 3px;
     --box-radius: 3px;
     --input-radius: 3px;
@@ -202,8 +203,12 @@ input::-webkit-input-placeholder {
     width: calc(50% - 20px) !important;
 }
 
+.btn {
+    padding: 0px 10px;
+}
+
 .btn-full {
-    width: calc(100% - 3px) !important;
+    width: 100% !important;
 }
 
 .btn-half,
@@ -212,17 +217,44 @@ input::-webkit-input-placeholder {
     border: none;
 }
 
-.btn-half-danger {
+.btn-half-danger,
+.btn-danger {
     background: var(--blue-1);
     color: #fff !important;
 }
 
-.btn-half-danger:hover {
+.btn-half-danger:hover,
+.btn-danger:hover {
     background: var(--blue-2);
 }
 
-.btn-half-danger:active {
+.btn-half-danger:active,
+.btn-danger:active {
     background: var(--blue-3);
+}
+
+.dialog-fixed {
+    width: var(--dialog-fixed-w) !important;
+    left: calc(50% - var(--dialog-fixed-w) / 2 - 10px) !important;
+    top: calc(var(--title-bar-h)) !important;
+    /* top: 60px !important; */
+    /* top: calc(var(--title-bar-h) + var(--tool-bar-h) + 10px) !important; */
+    border-radius: 10px !important;
+    min-height: 300px !important;
+}
+
+.dialog-fixed .r {
+    width: calc(100% - 20px);
+    position: absolute !important;
+    bottom: 10px;
+}
+
+.dialog-fixed .dialog-title {
+    text-align: center;
+}
+
+.dialog-fixed div {
+    font-size: 14px;
 }
 
 .dialog {
