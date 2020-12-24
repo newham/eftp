@@ -123,6 +123,8 @@ function getHome(username, osType = 'Linux') {
         home = `/Users/${username}/`
     } else if (osType == 'WindowsNT') {
         home = `/C/Users/${username}/`
+    } else if (osType == 'Linux' && username == 'root') {
+        home = `/root` //linux下root用户的目录是/root
     }
     return home
 }
