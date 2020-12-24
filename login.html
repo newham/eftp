@@ -99,6 +99,8 @@
             <button onclick="setColor(2)" class="bg-color-2"></button>
             <button onclick="setColor(3)" class="bg-color-3"></button>
             <button onclick="setColor(4)" class="bg-color-4"></button>
+            <button onclick="setColor(5)" class="bg-color-5"></button>
+            <button onclick="setColor(6)" class="bg-color-6"></button>
         </div>
         <div class="r">
             <button onclick="addUserSSHInfo()" class="btn-half-danger"> 保存 </button>
@@ -128,6 +130,15 @@
         </div>
         <div class="r">
             <button onclick="show('help_dialog',false)" class="btn-full btn-danger"> OK </button>
+        </div>
+    </div>
+    <div class="dialog dialog-fixed" id="loading_dialog">
+        <p class="dialog-title">添加服务器</p>
+        <div>
+            正在测试连接到:<br><label class="txt-info txt-bold" id="host_address"></label><br><br><img src="static/img/loading-3.gif">
+        </div>
+        <div class="r">
+            <button class="btn-full"> 请稍后 </button>
         </div>
     </div>
     <!-- <div class="header"> -->

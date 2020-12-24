@@ -21,16 +21,17 @@ host_menu.append(new MenuItem({
     }
 }))
 host_menu.append(new MenuItem({ type: 'separator' }))
-host_menu.append(new MenuItem({
-    label: '拷贝',
-    click() {
-        console.log('copy', selected_id)
-        userSSHInfo = userSSH_list[selected_id]
-        userSSHInfo.label += '的副本'
-        userSSHInfo.id = -1
-        saveUserSSHInfo(userSSHInfo)
-    }
-}))
+
+// host_menu.append(new MenuItem({ //仅供测试用，实际没有意义
+//     label: '拷贝',
+//     click() {
+//         console.log('copy', selected_id)
+//         userSSHInfo = userSSH_list[selected_id]
+//         userSSHInfo.label += '的副本'
+//         userSSHInfo.id = -1
+//         saveUserSSHInfo(userSSHInfo)
+//     }
+// }))
 
 function showHostMenu(id) {
     console.log('show menu', id)

@@ -236,10 +236,11 @@ input::-webkit-input-placeholder {
 .dialog-fixed {
     width: var(--dialog-fixed-w) !important;
     left: calc(50% - var(--dialog-fixed-w) / 2 - 10px) !important;
-    top: calc(var(--title-bar-h)) !important;
+    top: calc(50% - 200px) !important;
     /* top: 60px !important; */
     /* top: calc(var(--title-bar-h) + var(--tool-bar-h) + 10px) !important; */
     border-radius: 10px !important;
+    border-top: 1px solid var(--menu-border-color) !important;
     min-height: 300px !important;
 }
 
@@ -247,10 +248,6 @@ input::-webkit-input-placeholder {
     width: calc(100% - 20px);
     position: absolute !important;
     bottom: 10px;
-}
-
-.dialog-fixed .dialog-title {
-    text-align: center;
 }
 
 .dialog-fixed div {
@@ -301,6 +298,7 @@ input::-webkit-input-placeholder {
 }
 
 .dialog-title {
+    text-align: center !important;
     color: var(--blue-1);
     font-weight: bolder;
     font-size: 16px;
@@ -413,6 +411,10 @@ p {
 
 .txt-info {
     color: var(--blue-2);
+}
+
+.txt-bold {
+    font-weight: bold;
 }
 
 .drag_box {
@@ -545,15 +547,15 @@ p {
 /* bg-2 */
 
 .bg-color-2 {
-    background: #FFD700;
+    background: #e79f04;
 }
 
 .bg-color-2:hover {
-    background: #EEC900;
+    background: #e79f02bb;
 }
 
 .bg-color-2:active {
-    background: #CDAD00;
+    background: #c98a03;
 }
 
 
@@ -584,6 +586,30 @@ p {
 
 .bg-color-4:active {
     background: #A020F0;
+}
+
+.bg-color-5 {
+    background: #ff7801;
+}
+
+.bg-color-5:hover {
+    background: #f79c4d;
+}
+
+.bg-color-5:active {
+    background: #cb6002;
+}
+
+.bg-color-6 {
+    background: darkgray;
+}
+
+.bg-color-6:hover {
+    background: lightgray;
+}
+
+.bg-color-6:active {
+    background: gray;
 }
 
 a.link {
