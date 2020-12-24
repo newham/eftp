@@ -1084,11 +1084,14 @@ function show_space() {
 
 function parse_df_line(chunk) {
     let html = ''
+    let os_type = getUserSSHInfo().osType
     read_line(chunk, getUserSSHInfo().characterSet, (line, i) => {
-        // console.log(line)
-        let line_items = line.trim().split(/\s+/)
+        let line_items = line.trim().split(/\s+/) //根据空格拆分为数组
+        if (line_items[0] == 'map' && os_type == 'Darwin') { //忽略mac下的干扰项 map auto_home...
+            return
+        }
         let tag_class = ''
-        let left_percentage = line_items[4]
+        let left_percentage = line_items[4] // [0]Filesystem      [1]Size  [2]Used [3]Avail [4]Use%
         if (left_percentage == '100%') { //100% 没法比大小
             tag_class = 'txt-danger'
         } else if (left_percentage <= '30%') {
@@ -1100,7 +1103,7 @@ function parse_df_line(chunk) {
         } else if (left_percentage <= '99%') {
             tag_class = 'txt-danger'
         }
-        html += `<tr><td>${line_items[0]}</td><td>${line_items[1]}</td><td>${line_items[2]}</td><td>${line_items[3]}</td><td><span class="${tag_class}">${line_items[4]}</span></td><td>${line_items[5]}</td></tr>\n`
+        html += `<tr><td>${line_items[0]}</td><td>${line_items[1]}</td><td>${line_items[2]}</td><td>${line_items[3]}</td><td><span class="${tag_class}">${line_items[4]}</span></td></tr>\n`
     })
     return html
 }

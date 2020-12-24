@@ -27,11 +27,16 @@ function saveUserSSHInfo(userSSHInfo) {
         port: userSSHInfo.port,
     }).then(() => {
         //1. 获取系统类型
-        ssh_test.exec('uname', [], {
+        ssh_test.exec('uname', ['-s'], {
             onStdout(chunk) {
+                let os_type = chunk.toString(userSSHInfo.characterSet).replace(/\n|\r/g, "") //！！！！注意去掉换行符
+
+                if (!os_type in ['Darwin', 'Linux']) { //暂时不支持windows系统
+                    alert(`暂时不支持连接到${os_type}系统！`)
+                    return false
+                }
                 //set os type
-                userSSHInfo.osType = chunk.toString(userSSHInfo.characterSet).replace(/\n|\r/g, "") //！！！！注意去掉换行符
-                    // console.log('os type:', userSSHInfo.osType)
+                userSSHInfo.osType = os_type
 
                 // edit
                 if (userSSHInfo.id != -1) {
@@ -85,7 +90,7 @@ function saveUserSSHInfo(userSSHInfo) {
 
     }, function(error) {
         console.log(error)
-        alert("连接失败")
+        alert(`连接失败: ${error}`)
     })
 }
 
@@ -101,8 +106,6 @@ function addUserSSHInfo() {
     id = document.getElementById('id').value
     color = document.getElementById('color').value
     ssh = false
-
-    console.log('color,', color)
 
     if (host == "" || username == "" || (password == "" && privateKey == "")) {
         // show_dialog(false)
@@ -138,9 +141,9 @@ function addUserSSHInfo() {
     }
 
     console.log('add userSSHInfo', userSSHInfo.id, userSSHInfo.label)
-        //save to local
-    saveUserSSHInfo(userSSHInfo)
 
+    //save to local
+    saveUserSSHInfo(userSSHInfo)
 }
 
 function selectPK() {
@@ -169,8 +172,6 @@ function loadConf() {
             //save to memory
             userSSH_list = conf
         }
-        // add button
-        list_html.innerHTML += '<div class="c-3"><a class="box" onclick="show_dialog(true)">＋<br><label>New Host</label></a></div>'
 
         // console.log(conf)
         userSSH_list.forEach(userSSHInfo => {
@@ -181,6 +182,8 @@ function loadConf() {
             list_html.innerHTML += `<div class="c-3"><a class="box bg-color-${userSSHInfo.color}"  oncontextmenu="showHostMenu(${userSSHInfo.id})" onclick="goSSH(${userSSHInfo.id})"><img src="${icon}">${userSSHInfo.label}<br><label>${userSSHInfo.username}@${userSSHInfo.host}</label></a></div>`
         });
 
+        // add button
+        list_html.innerHTML += '<div class="c-3"><a class="box" onclick="show_dialog(true)">＋<br><label>New Host</label></a></div>'
     })
 
 }
@@ -260,5 +263,7 @@ function setColor(color = 0) {
 }
 
 setTheme() //设置主题
-    // delConf()
+
+// delConf() //删除配置（debug）
+
 loadConf()
