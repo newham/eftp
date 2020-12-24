@@ -32,6 +32,25 @@ function new_ssh() {
 }
 
 function saveUserSSHInfo(userSSHInfo) {
+    // edit 直接覆盖原值，不进行测试
+    if (userSSHInfo.id != -1) {
+        console.log('edit', userSSHInfo.id)
+            //refresh
+        userSSH_list[userSSHInfo.id] = userSSHInfo
+            //write to config
+        writeConf(userSSH_list, (err) => {
+            if (err) {
+                console.log(err)
+            } else {
+                // show_dialog(false)
+                //重载页面
+                loadConf()
+            }
+        })
+        show_dialog(false) //隐藏编辑框
+        return
+    }
+
     //隐藏编辑对话框
     // show_dialog(false)
 
@@ -40,7 +59,8 @@ function saveUserSSHInfo(userSSHInfo) {
     show('loading_dialog', true)
     save_lock = true //为保存按钮加锁
 
-    //test ssh
+    // add
+    //1. test ssh
     var ssh_test = new node_ssh()
     ssh_test.connect({
         host: userSSHInfo.host,
@@ -53,7 +73,7 @@ function saveUserSSHInfo(userSSHInfo) {
         show('loading_dialog', false) //隐藏连接测试loading框
         save_lock = false //保存锁解锁
 
-        //1. 获取系统类型
+        //2. 获取系统类型
         ssh_test.exec('uname', ['-s'], {
             onStdout(chunk) {
                 let os_type = chunk.toString(userSSHInfo.characterSet).replace(/\n|\r/g, "") //！！！！注意去掉换行符
@@ -65,24 +85,6 @@ function saveUserSSHInfo(userSSHInfo) {
                 //set os type
                 userSSHInfo.osType = os_type
 
-                // edit
-                if (userSSHInfo.id != -1) {
-                    console.log('edit', userSSHInfo.id)
-                        //refresh
-                    userSSH_list[userSSHInfo.id] = userSSHInfo
-                        //write to config
-                    writeConf(userSSH_list, (err) => {
-                        if (err) {
-                            console.log(err)
-                        } else {
-                            // show_dialog(false)
-                            //重载页面
-                            loadConf()
-                        }
-                    })
-                    return
-                }
-                // add
                 // ipcRenderer.send('add_userSSHInfo', userSSHInfo)
                 readConf((ok, conf) => {
                     if (ok) { //insert
@@ -93,7 +95,7 @@ function saveUserSSHInfo(userSSHInfo) {
                         userSSHInfo.id = 0
                         conf = [userSSHInfo]
                     }
-                    //save to config file
+                    //3. save to config file
                     writeConf(conf, (err) => {
                         if (err) {
                             console.log(err)
