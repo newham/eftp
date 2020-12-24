@@ -20,8 +20,8 @@ host_menu.append(new MenuItem({
         delSSHInfo(selected_id)
     }
 }))
-host_menu.append(new MenuItem({ type: 'separator' }))
 
+// host_menu.append(new MenuItem({ type: 'separator' }))
 // host_menu.append(new MenuItem({ //仅供测试用，实际没有意义
 //     label: '拷贝',
 //     click() {
