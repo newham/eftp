@@ -13,6 +13,7 @@
     --dialog-fixed-w: 260px;
     --btn-radius: 3px;
     --box-radius: 3px;
+    --box-w: 200px;
     --input-radius: 3px;
     /* --btn-h: 26px; */
     --btn-font-size: 15px;
@@ -100,6 +101,13 @@ input::-webkit-input-placeholder {
     /* WebKit browsers */
     color: var(--font-color-light);
     font-size: 16px;
+}
+
+.c {
+    width: var(--box-w);
+    padding: 0px 0px 10px 17px;
+    display: grid;
+    float: left;
 }
 
 .c-2 {

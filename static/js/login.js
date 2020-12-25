@@ -218,11 +218,11 @@ function loadConf() {
             if (userSSHInfo.osType == 'Darwin') {
                 icon = 'static/img/svg/os/icon-mac.svg'
             }
-            list_html.innerHTML += `<div class="c-3"><a class="box bg-color-${userSSHInfo.color}"  oncontextmenu="showHostMenu(${userSSHInfo.id})" onclick="goSSH(${userSSHInfo.id})"><img src="${icon}">${userSSHInfo.label}<br><label>${userSSHInfo.username}@${userSSHInfo.host}</label></a></div>`
+            list_html.innerHTML += `<div class="c-2-5"><a class="box bg-color-${userSSHInfo.color}"  oncontextmenu="showHostMenu(${userSSHInfo.id})" onclick="goSSH(${userSSHInfo.id})"><img src="${icon}">${userSSHInfo.label}<br><label>${userSSHInfo.username}@${userSSHInfo.host}</label></a></div>`
         });
 
         // add button
-        list_html.innerHTML += '<div class="c-3"><a class="box" onclick="new_ssh()">＋<br><label>New Host</label></a></div>'
+        list_html.innerHTML += '<div class="c-2-5"><a class="box" onclick="new_ssh()">＋<br><label>New Host</label></a></div>'
     })
 
 }
