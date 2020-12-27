@@ -184,17 +184,13 @@ function addError(msg) {
 function addInfo(msg, file = '', isArray = false, path = '') {
     //get file
     if (isArray) {
-        file = file.join(',')
+        file = file.join(',<br>')
     }
-    // if (file != "") {
-    //     file = ' : ' + file
-    // }
     //sha1 a id
     let loading_html = LOADING_HTML
     let id = new Date().getTime()
     if (msg == 'download') {
-        file = `<a onclick="open_file('${id}','${path+file}')" class="link">${file}</a>`
-        loading_html = '' //显示百分比，而不是进度gif
+        file = `<a onclick="open_file('${id}','${path+file}')" class="link">${file}</a>` //下载完成打开的连接
     }
     document.getElementById('infos').innerHTML += `<div class="line-div"><p><label>${msg}</label>${file}</p><p id="${id}">${loading_html}</p></div>`
     sidebar = document.getElementById('sidebar') //滑动到底部
@@ -295,10 +291,10 @@ function ls(dir, isShowHidden = getIsShowHidden()) {
     // console.log('ls', currentDir)
     // let id = addInfo('ls', getCurrentDir()) //不显示ls记录，ls太多了
 
-    let arg = '-lh' //arg
+    let arg = '-l' //arg
     let n = -1 //计数
     if (isShowHidden) {
-        arg = '-lha'
+        arg = '-la'
         n = -3 //省略.,..,index从-3开始
 
         // 改变tool-bar按钮css
@@ -393,7 +389,8 @@ let init_fileInfo = () => {
         type: "file",
         user: "",
         group: "",
-        size: "-",
+        size: 0,
+        formatSize: '',
         month: "",
         day: "",
         year: "",
@@ -415,7 +412,8 @@ let set_file_info = (attrs = [], id) => {
     fileInfo.fileCount = parseInt(attrs[1])
     fileInfo.user = attrs[2]
     fileInfo.group = attrs[3]
-    fileInfo.size = attrs[4]
+    fileInfo.size = parseInt(attrs[4])
+    fileInfo.formatSize = formatSize(fileInfo.size)
     fileInfo.month = attrs[5]
     fileInfo.day = attrs[6]
     fileInfo.hour = attrs[7]
@@ -433,14 +431,15 @@ function getFileHTML(fileInfo) {
     if (fileInfo.name.startsWith('.')) {
         font_class = 'font-light'
     }
-    if (fileInfo.isDir) {
+    if (fileInfo.isDir) { //目录
         tr_html = `<tr oncontextmenu="showFolderMenu(${fileInfo.id})">`
         if (fileInfo.name == UP_FILE_NAME) {
             tr_html = '<tr>'
         }
-        return `${tr_html}<td class="td-num">${fileInfo.id}</td><td class="td-icon"><img class="icon" src="static/img/svg/doctype/icon-${fileInfo.type}-m.svg"></td><td class="td-head"><a onclick="ls('${fileInfo.name}')" href="#"><div class="${font_class}">${fileInfo.name}</div></a></td><td>${fileInfo.time}</td><td colspan="2"></td></div>`
-    } else {
-        return `<tr oncontextmenu="showFileMenu(${fileInfo.id})"><td class="td-num">${fileInfo.id}</td><td class="td-icon"><img class="icon" src="static/img/svg/doctype/icon-${fileInfo.type}-m.svg"></td><td class="td-head"><div class="${font_class}">${fileInfo.name}</div></td><td>${fileInfo.time}</td><td>${fileInfo.size}</td><td class="td-download"><a href="#" onclick="download_file('${fileInfo.name}')">⇩</a></div>`
+        //<td class="td-num">${fileInfo.id}</td> //不显示行号了，显示的要素太臃肿了
+        return `${tr_html}<td class="td-icon"><img class="icon" src="static/img/svg/doctype/icon-${fileInfo.type}-m.svg"></td><td class="td-head"><a onclick="ls('${fileInfo.name}')" href="#" class="hover-link"><div class="${font_class}">${fileInfo.name}</div></a></td><td>${fileInfo.time}</td><td colspan="2"></td></div>`
+    } else { //文件
+        return `<tr oncontextmenu="showFileMenu(${fileInfo.id})" id="f-${fileInfo.id}"><td class="td-icon"><img class="icon" src="static/img/svg/doctype/icon-${fileInfo.type}-m.svg"></td><td class="td-head"><div class="${font_class}">${fileInfo.name}</div></td><td>${fileInfo.time}</td><td>${fileInfo.formatSize}</td><td class="td-download"><a href="#" onclick="download_file('${fileInfo.name}',${fileInfo.size})">⇩</a></div>`
     }
 }
 
@@ -581,7 +580,7 @@ function watch_download_file(id, file, f_size) {
         // console.log(stats.size, `${percentage}%`);
         set_file_status_info(id, fs.statSync(file).size, f_size)
             // console.log('watch', file)
-    }, 200);
+    }, 250); // 250毫秒，由于是本地调用，时间间隔可以短
 }
 
 function set_file_status_info(id, size, f_size) {
@@ -589,7 +588,7 @@ function set_file_status_info(id, size, f_size) {
     if (size == f_size) //到100%，自动删除进度
         done_process(id)
     else
-        set_html(id, `<span>${size}/${f_size} <span class="txt-info">${percentage}% </span><a onclick="" class="txt-danger">取消</a></span>`)
+        set_html(id, `<img class="img-loading" src="static/img/loading-4.gif"><span> ${size+'/'+f_size} <span class="txt-info">${percentage}% </span><a onclick="" class="txt-danger">取消</a></span>`)
 }
 
 function watch_upload_file(id, files, remotes) {
@@ -605,29 +604,19 @@ function watch_upload_file(id, files, remotes) {
         let size_sum = 0
         remotes.forEach((remote) => { //按顺序计算上传文件的大小
             getSSH().exec('stat', [arg, remote], {
-                    onStdout(chunk) {
-                        let size = parseInt(chunk.toString(getUserSSHInfo().characterSet))
-                            // let size_items_str = chunk.toString(getUserSSHInfo().characterSet)
-                            // let size_items = size_items_str.trim().split(/\s+/)
-                            // let size_sum = size_items.reduce((accumulator, currentValue) => {
-                            //     return parseInt(accumulator) + parseInt(currentValue);
-                            // }, 0);
-                            // console.log(size_sum)
-                        size_sum += size
-                        set_file_status_info(id, size_sum, total)
-                    },
-                    onStderr(chunk) {
-                        console.log('stat', chunk.toString(getUserSSHInfo().characterSet))
-                        done_process(id, 'failed', chunk.toString(getUserSSHInfo().characterSet))
-                    }
-                }).catch((res) => {
-                    console.log('stat', res)
-                        // console.log("exception", res)
-                    done_process(id, 'failed', res)
-                })
-                // console.log('watch', file)
+                onStdout(chunk) {
+                    let size = parseInt(chunk.toString(getUserSSHInfo().characterSet))
+                    size_sum += size
+                    set_file_status_info(id, size_sum, total)
+                },
+                onStderr(chunk) {
+                    console.log('stat', chunk.toString(getUserSSHInfo().characterSet))
+                }
+            }).catch((res) => {
+                // console.log('stat', res) //这里上传时可能出现许多次异常（上传导致的网络拥塞），可以忽略
+            })
         })
-    }, 200);
+    }, 500); //500毫秒
 }
 
 function done_watch(id) {
@@ -635,47 +624,43 @@ function done_watch(id) {
     console.log('done watch:', id)
 }
 
-function download_file(file) {
+function download_file(file, f_size) {
     showOpenFolderWin((ok, folder) => {
         if (!ok) {
             return
         }
         let currentDir = getCurrentDir()
         let id = addInfo('download', file, false, folder) //添加log
-        push_bs(id, file, '↓')
-        let arg = '--format=%s'
-        if (getUserSSHInfo().osType == 'Darwin') {
-            arg = '-f %z'
-        }
-        getSSH().exec('stat', [arg, currentDir + file], {
-            onStdout(chunk) {
-                let f_size = parseInt(chunk.toString(getUserSSHInfo().characterSet))
-                let watch_id = watch_download_file(id, folder + file, f_size)
-                getSSH().getFile(folder + file, currentDir + file).then(function(Contents) {
-                    // console.log("The File", file, "successfully downloaded")
-                    // addInfo('success')
-                    done_process(id)
-                    remove_bs(id)
-                    done_watch(watch_id) //关闭监听
-                }, function(error) {
-                    // console.log("Something's wrong")
-                    console.log(error)
-                }).catch((res) => {
-                    done_process(id, 'failed', res)
-                    done_watch(watch_id) //关闭监听
-                })
-            },
-            onStderr(chunk) {
-                // console.log('dm', chunk)
-                done_process(id, 'failed', chunk.toString(getUserSSHInfo().characterSet))
-            }
-        }).catch((res) => {
-            // console.log("exception", res)
+        push_bs(id, file, '↓') //添加到后台任务列表
+        let watch_id = watch_download_file(id, folder + file, f_size) //开始监控下载进度
+        getSSH().getFile(folder + file, currentDir + file).then(function(Contents) {
+            // console.log("The File", file, "successfully downloaded")
+            // addInfo('success')
+            //下载成功的操作
+            done_process(id) //停止log进度条
+            remove_bs(id) //删除后台任务
+            done_watch(watch_id) //关闭进度监听
+        }, function(error) { //下载失败
+            // console.log(error)
+            done_process(id, 'failed', error)
+            done_watch(watch_id) //关闭监听
+        }).catch((res) => { //下载异常
             done_process(id, 'failed', res)
+            done_watch(watch_id) //关闭监听
         })
-
     })
+}
 
+const K = 1024
+const UNITS = ['B', 'K', 'M', 'G', 'T', 'E']
+
+function formatSize(size) {
+    let i = 0
+    while (size > K) {
+        i++
+        size = parseInt(size / K)
+    }
+    return `${size}${UNITS[i]}`
 }
 
 function del_file(file, isDir) {

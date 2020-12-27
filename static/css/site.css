@@ -353,7 +353,7 @@ td {
     /* padding-left: 0px; */
     padding-right: 0px !important;
     font-size: 12px;
-    color: var(--font-color-light);
+    /* color: var(--font-color-light); */
     border-right: var(--bar-border);
 }
 
@@ -391,7 +391,13 @@ td {
 /* 偶数数行 even*/
 
 table tr:nth-child(even) {
+    color: var(--font-color);
     background: var(--tr-even-bg-color);
+}
+
+.tr-selected {
+    background: var(--blue-2) !important;
+    color: #eee !important;
 }
 
 
@@ -495,6 +501,10 @@ p {
 
 .left {
     float: left;
+}
+
+.right {
+    float: right;
 }
 
 .bottom {
@@ -621,5 +631,9 @@ p {
 }
 
 a.link {
+    text-decoration: underline;
+}
+
+a.hover-link :hover {
     text-decoration: underline;
 }
