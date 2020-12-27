@@ -652,15 +652,23 @@ function download_file(file, f_size) {
 }
 
 const K = 1024
-const UNITS = ['B', 'K', 'M', 'G', 'T', 'E']
 
-function formatSize(size) {
+function formatSize(size) { //时间复杂度 O(1)
     let i = 0
-    while (size > K) {
-        i++
+    let unit = ''
+    if (size < K) {
+        unit = 'B'
+    } else if (size < K * K) {
         size = parseInt(size / K)
+        unit = 'K'
+    } else if (size < K * K * K) {
+        size = parseInt(size / K / K)
+        unit = 'M'
+    } else if (size < K * K * K * K) {
+        size = (size / K / K / K).toFixed(1) //保留一位小数
+        unit = 'G'
     }
-    return `${size}${UNITS[i]}`
+    return `${size}${unit}`
 }
 
 function del_file(file, isDir) {
