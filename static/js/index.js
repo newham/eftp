@@ -12,7 +12,7 @@ const ls_history_max = 100
 
 const MAX_INFOS_NUM = 100
 
-const MAX_LIST_NUM = 200
+const MAX_LIST_NUM = 1000
 
 let current_ssh_id = -1
 
@@ -178,7 +178,7 @@ function open_file(id, file) {
 }
 
 function addError(msg) {
-    document.getElementById('infos').innerHTML += `<div class="line-div"><p class="txt-danger">${msg}</p></div>`
+    document.getElementById('infos').insertAdjacentHTML("beforeend", `<div class="line-div"><p class="txt-danger">${msg}</p></div>`)
 }
 
 function addInfo(msg, file = '', isArray = false, path = '') {
@@ -192,7 +192,7 @@ function addInfo(msg, file = '', isArray = false, path = '') {
     if (msg == 'download') {
         file = `<a onclick="open_file('${id}','${path+file}')" class="link">${file}</a>` //下载完成打开的连接
     }
-    document.getElementById('infos').innerHTML += `<div class="line-div"><p><label>${msg}</label>${file}</p><p id="${id}">${loading_html}</p></div>`
+    document.getElementById('infos').insertAdjacentHTML("beforeend", `<div class="line-div"><p><label>${msg}</label>${file}</p><p id="${id}">${loading_html}</p></div>`)
     sidebar = document.getElementById('sidebar') //滑动到底部
     sidebar.scrollTop = sidebar.scrollHeight;
     addLock(true) //加锁，退出提示，禁止清空
@@ -247,7 +247,7 @@ function ls(dir, isShowHidden = getIsShowHidden()) {
     if (dir == null && ssh_list[current_ssh_id].fileList.length > 0) {
         showPath(getCurrentDir())
         ssh_list[current_ssh_id].fileList.forEach((fileInfo, i) => {
-            document.querySelector('#file_list').innerHTML += getFileHTML(fileInfo)
+            document.querySelector('#file_list').insertAdjacentHTML('beforeend', getFileHTML(fileInfo))
         })
         return
     }
@@ -323,7 +323,7 @@ function ls(dir, isShowHidden = getIsShowHidden()) {
             if (n > MAX_LIST_NUM) {
                 if (once < 1) {
                     once++
-                    document.querySelector('#file_list').innerHTML += `<tr><td colspan="5" class="txt-center">快不行了...只能显示前${n}行</td></tr>`
+                    document.querySelector('#file_list').insertAdjacentHTML("beforeend", `<tr><td colspan="5" class="txt-center">快不行了...只能显示前${n}行</td></tr>`)
                 }
                 return false
             }
@@ -446,8 +446,9 @@ function getFileHTML(fileInfo) {
 function set_file_info_html(fileInfo) {
     //push to list
     ssh_list[current_ssh_id].fileList.push(fileInfo)
-        //set html
-    document.querySelector('#file_list').innerHTML += getFileHTML(fileInfo)
+
+    //set html
+    document.querySelector('#file_list').insertAdjacentHTML('beforeend', getFileHTML(fileInfo))
 }
 
 function getParentPath(file) {
@@ -588,7 +589,7 @@ function set_file_status_info(id, size, f_size) {
     if (size == f_size) //到100%，自动删除进度
         done_process(id)
     else
-        set_html(id, `<img class="img-loading" src="static/img/loading-4.gif"><span> ${size+'/'+f_size} <span class="txt-info">${percentage}% </span><a onclick="" class="txt-danger">取消</a></span>`)
+        set_html(id, `<img class="img-loading" src="static/img/loading-4.gif"><span> ${formatSize(size) +'/'+formatSize(f_size)} <span class="txt-info">${percentage}% </span><a onclick="" class="txt-danger">取消</a></span>`)
 }
 
 function watch_upload_file(id, files, remotes) {
@@ -1210,7 +1211,7 @@ function setTabs(ssh_id = current_ssh_id) {
         } else if (ssh.ssh == null) {
             tag_class = 'txt-warning'
         }
-        document.getElementById('tab-bar').innerHTML += `<div ${active_css} id="tab-${i}" oncontextmenu="showTabMenu(${i})" onclick="to_ssh(${i})"><span class="${tag_class}">${tag} </span>${ssh.userSSHInfo.label}</div>`
+        document.getElementById('tab-bar').insertAdjacentHTML("beforeend", `<div ${active_css} id="tab-${i}" oncontextmenu="showTabMenu(${i})" onclick="to_ssh(${i})"><span class="${tag_class}">${tag} </span>${ssh.userSSHInfo.label}</div>`)
     })
 
     // clean old ls
