@@ -11,10 +11,10 @@
     --foot-bar-h: 0px;
     --dialog-w: calc(100% - 160px);
     --dialog-fixed-w: 260px;
-    --btn-radius: 3px;
-    --box-radius: 3px;
+    --btn-radius: 8px;
+    --box-radius: 16px;
     --box-w: 200px;
-    --input-radius: 3px;
+    --input-radius: 8px;
     /* --btn-h: 26px; */
     --btn-font-size: 15px;
     --title-bar-padding: 78px;
