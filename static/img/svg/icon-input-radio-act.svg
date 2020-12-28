@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="24px" height="24px" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 49 (51002) - http://www.bohemiancoding.com/sketch -->
+    <title>Slice</title>
+    <desc>Created with Sketch.</desc>
+    <defs></defs>
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Group-4" transform="translate(2.000000, 2.000000)">
+            <circle id="Oval" stroke="#2980FF" stroke-width="2" cx="10" cy="10" r="9"></circle>
+            <circle id="Oval" fill="#2980FF" cx="10" cy="10" r="5.83333333"></circle>
+        </g>
+    </g>
+</svg>

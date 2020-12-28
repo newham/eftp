@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="134px" height="134px" viewBox="0 0 134 134" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 51.2 (57519) - http://www.bohemiancoding.com/sketch -->
+    <title>icon-note-l</title>
+    <desc>Created with Sketch.</desc>
+    <defs></defs>
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="ico_note_big">
+            <rect id="Rectangle-8" x="0" y="0" width="134" height="134"></rect>
+            <g id="Group-6" transform="translate(8.000000, 0.000000)">
+                <rect id="Rectangle-23-Copy" stroke="#E0E0E0" fill="#FFFFFF" x="0.5" y="0.5" width="117" height="133" rx="2"></rect>
+                <path d="M71.9746561,39 L67.2867396,47 L24,47 L24,39 L71.9746561,39 Z M62.5988232,55 L57.9109067,63 L24,63 L24,55 L62.5988232,55 Z M53.8089798,70 L49.1210633,78 L24,78 L24,70 L53.8089798,70 Z M44.4331469,86 L44.0896625,86.5861612 L43.6257452,94 L24,94 L24,86 L44.4331469,86 Z" id="Combined-Shape" fill="#DCDCDC"></path>
+                <path d="M74.6525185,46.9667411 L87.4951203,54.3814207 L64.5781286,94.5361803 L53.8668234,101.690564 C53.5330796,101.913481 53.1368681,102.02088 52.7376597,101.99664 C51.7186807,101.934766 50.9422168,101.048961 51.003379,100.018138 L51.7724161,87.0568638 L74.6525185,46.9667411 Z M77.4330234,42.0947883 L83.1942876,32 L96,39.4793165 L90.2756252,49.5094678 L77.4330234,42.0947883 Z" id="Combined-Shape" fill="#30B383"></path>
+            </g>
+        </g>
+    </g>
+</svg>

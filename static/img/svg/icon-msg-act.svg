@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="24px" height="24px" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 50.2 (55047) - http://www.bohemiancoding.com/sketch -->
+    <title>icon-team-notification-blue</title>
+    <desc>Created with Sketch.</desc>
+    <defs></defs>
+    <g id="Symbol" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Bar/Navigation-Bar/↳Elements/List/icons/notification_select">
+            <g id="icon-team-notification-blue">
+                <rect id="Rectangle-13" x="0" y="0" width="24" height="24"></rect>
+                <path d="M13,4.07767239 C15.9136324,4.53463463 18.1971284,6.95692666 18.3991141,9.98671095 L18.804878,16.0731707 L20.4,18.2 C20.5656854,18.4209139 20.5209139,18.7343146 20.3,18.9 C20.2134519,18.9649111 20.1081851,19 20,19 L4,19 C3.72385763,19 3.5,18.7761424 3.5,18.5 C3.5,18.3918149 3.53508894,18.2865481 3.6,18.2 L5.19512195,16.0731707 L5.60088594,9.98671095 C5.80287156,6.95692666 8.08636761,4.53463463 11,4.07767239 L11,3 C11,2.44771525 11.4477153,2 12,2 C12.5522847,2 13,2.44771525 13,3 L13,4.07767239 Z M10,20 L14,20 C14,21.1045695 13.1045695,22 12,22 C10.8954305,22 10,21.1045695 10,20 Z" id="Combined-Shape" fill="#2980FF"></path>
+            </g>
+        </g>
+    </g>
+</svg>

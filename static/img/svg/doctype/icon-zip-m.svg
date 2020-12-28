@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="40px" height="40px" viewBox="0 0 40 40" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 49 (51002) - http://www.bohemiancoding.com/sketch -->
+    <title>ico_zip_mini</title>
+    <desc>Created with Sketch.</desc>
+    <defs>
+        <rect id="path-1" x="5" y="3" width="30" height="34" rx="1"></rect>
+    </defs>
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="weiyun2018_WEB_fileicon" transform="translate(-268.000000, -580.000000)">
+            <g id="fileico/zip_mini" transform="translate(268.000000, 580.000000)">
+                <g id="ico_zip_mini">
+                    <rect id="bg" x="0" y="0" width="40" height="40"></rect>
+                    <g id="Rectangle-23-Copy">
+                        <use fill="#FFFFFF" fill-rule="evenodd" xlink:href="#path-1"></use>
+                        <rect stroke="#E0E0E0" stroke-width="1" x="5.5" y="3.5" width="29" height="33" rx="1"></rect>
+                    </g>
+                    <path d="M17,12 L17,14 L20,14 L20,12 L28,12 L28,28 L12,28 L12,12 L17,12 Z M20,14 L20,16 L23,16 L23,14 L20,14 Z M17,16 L17,18 L20,18 L20,16 L17,16 Z M20,18 L20,20 L23,20 L23,18 L20,18 Z M17,20 L17,22 L20,22 L20,20 L17,20 Z M20,22 L20,24 L23,24 L23,22 L20,22 Z" id="Combined-Shape" fill="#4C94F0"></path>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

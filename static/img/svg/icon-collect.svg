@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="240px" height="190px" viewBox="0 0 240 190" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 51.2 (57519) - http://www.bohemiancoding.com/sketch -->
+    <title>icon-collect</title>
+    <desc>Created with Sketch.</desc>
+    <defs>
+        <linearGradient x1="80.936179%" y1="7.19221647%" x2="50%" y2="66.3258094%" id="linearGradient-1">
+            <stop stop-color="#A4C4FF" offset="0%"></stop>
+            <stop stop-color="#A4C4FF" stop-opacity="0" offset="100%"></stop>
+        </linearGradient>
+        <linearGradient x1="18.0818841%" y1="-23.9712023%" x2="61.7072157%" y2="68.1564301%" id="linearGradient-2">
+            <stop stop-color="#A4C4FF" offset="0%"></stop>
+            <stop stop-color="#FFFFFF" stop-opacity="0" offset="100%"></stop>
+        </linearGradient>
+        <path d="M0.256439649,25.1760396 L43.1078669,0.351764441 L100.127422,33.2737694 L57.2759946,58.0980445 L0.256439649,25.1760396 Z" id="path-3"></path>
+        <path d="M0.256439649,25.1760396 L43.1078669,0.351764441 L100.127422,33.2737694 L57.2759946,58.0980445 L0.256439649,25.1760396 Z" id="path-5"></path>
+    </defs>
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="box">
+            <rect id="Rectangle-2" x="0" y="0" width="240" height="190"></rect>
+            <path d="M70.2231063,137.909373 L127.242661,170.831378 L102.9,184.933333 L45.9,152 L70.2231063,137.909373 Z" id="Combined-Shape" fill="url(#linearGradient-1)" opacity="0.5"></path>
+            <path d="M126.966667,170.490942 L169.818094,145.666667 L169.917531,145.72408 L194.457339,159.892897 L151.390672,184.592897 L126.966667,170.490942 Z" id="Combined-Shape" fill="url(#linearGradient-2)" opacity="0.5"></path>
+            <g id="Group-13-Copy-3" transform="translate(51.600000, 53.200000)">
+                <g id="Group-15" transform="translate(18.366667, 7.600000)">
+                    <polygon id="Rectangle-10" fill="#80B3FF" points="57 57.6333333 100.066667 32.3 100.066667 84.8666667 57 110.2"></polygon>
+                    <polygon id="Rectangle-10" fill="#4383EB" points="0 24.7 57 57.6333333 57 110.2 0 77.2666667"></polygon>
+                    <g id="Group-4" transform="translate(29.133333, 76.633333)"></g>
+                </g>
+                <g id="Group-16">
+                    <polygon id="Combined-Shape" fill="#B6D9FE" points="18.6231063 32.7760396 0 24.7 43.0666667 0 61.4745336 7.95176444 83.6 3.8 140.6 36.7333333 118.494089 40.8737694 136.166667 60.8 93.7333333 86.1333333 75.6426613 65.6980445 57.6333333 86.1333333 1.26666667 52.5666667"></polygon>
+                    <path d="M18.6231063,32.7760396 L61.4745336,7.95176444 L118.494089,40.8737694 L75.6426613,65.6980445 L18.6231063,32.7760396 Z" id="Mask" fill="#D9DFFB"></path>
+                    <g id="Path-6" transform="translate(18.366667, 7.600000)">
+                        <mask id="mask-4" fill="white">
+                            <use xlink:href="#path-3"></use>
+                        </mask>
+                        <use id="Mask" fill="#FFFFFF" xlink:href="#path-3"></use>
+                        <mask id="mask-6" fill="white">
+                            <use xlink:href="#path-5"></use>
+                        </mask>
+                        <use id="Mask" fill="#4384EB" xlink:href="#path-5"></use>
+                        <rect id="Rectangle-11" fill="#80B3FF" opacity="0.5" mask="url(#mask-6)" x="-23.4333333" y="-21.5333333" width="66.5" height="100.066667"></rect>
+                    </g>
+                </g>
+                <path d="M18.6231761,32.7760799 L75.6426613,65.6980445 L75.4463214,65.8117862 L57.6333333,86.1333333 L1.26666667,52.5666667 L18.6231761,32.7760799 Z" id="Combined-Shape" fill="#B6D9FE"></path>
+                <path d="M75.6426613,65.6980445 L118.494089,40.8737694 L118.992195,41.1613665 L136.166667,60.8 L93.7333333,86.1333333 L75.7482307,65.7589983 L75.6426613,65.6980445 Z" id="Combined-Shape" fill="#B6D9FE"></path>
+            </g>
+            <circle id="Oval" fill="#A1CCFF" cx="116.833333" cy="46.8666667" r="3.16666667"></circle>
+            <circle id="Oval" fill="#C97ADB" cx="43.05" cy="92.15" r="2.85"></circle>
+            <circle id="Oval" fill="#84D4C9" cx="185.55" cy="26.9166667" r="2.85"></circle>
+            <rect id="Rectangle-12" fill="#D9EBFF" transform="translate(153.625259, 5.758592) rotate(45.000000) translate(-153.625259, -5.758592) " x="150.624882" y="0.615089583" width="6.00075336" height="10.2870058"></rect>
+            <rect id="Rectangle-12" fill="#4399FF" transform="translate(162.624741, 43.717374) scale(-1, 1) rotate(17.000000) translate(-162.624741, -43.717374) " x="160.320766" y="39.7677019" width="4.60795027" height="7.89934333"></rect>
+            <polygon id="Rectangle-12" fill="#D9EBFF" transform="translate(29.655521, 35.180854) scale(-1, 1) rotate(16.000000) translate(-29.655521, -35.180854) " points="29.9185622 30.5570413 33.1727993 39.8046677 26.1382422 39.7739775"></polygon>
+            <polygon id="Rectangle-12" fill="#F7D43C" transform="translate(207.164108, 63.948209) scale(-1, 1) rotate(-2.000000) translate(-207.164108, -63.948209) " points="207.373795 60.2622741 209.967954 67.6341437 204.360263 67.6096786"></polygon>
+            <polygon id="Rectangle-12" fill="#82D5CD" transform="translate(91.350334, 6.656413) scale(-1, 1) rotate(-53.000000) translate(-91.350334, -6.656413) " points="91.5442892 3.24701381 93.9438223 10.0658115 88.7568456 10.043182"></polygon>
+            <rect id="Rectangle-12" fill="#54DC82" opacity="0.800000012" transform="translate(73.170261, 37.591437) scale(-1, 1) rotate(-17.000000) translate(-73.170261, -37.591437) " x="70.1032147" y="32.3336436" width="6.13409221" height="10.5155867"></rect>
+        </g>
+    </g>
+</svg>

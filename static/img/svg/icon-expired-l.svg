@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="80px" height="80px" viewBox="0 0 80 80" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 50.2 (55047) - http://www.bohemiancoding.com/sketch -->
+    <title>icon-expired-l</title>
+    <desc>Created with Sketch.</desc>
+    <defs></defs>
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="icon-expired-l">
+            <g id="Dialog/↳Elements/Tips/Normal">
+                <path d="M40,80 C62.09139,80 80,62.09139 80,40 C80,17.90861 62.09139,0 40,0 C17.90861,0 0,17.90861 0,40 C0,62.09139 17.90861,80 40,80 Z" id="bg" fill="#A2AAAD"></path>
+                <polygon id="Rectangle-3" fill="#FFFFFF" points="37 15 43 15 43 43 37 43"></polygon>
+                <rect id="Rectangle-3" fill="#FFFFFF" x="37" y="37" width="24" height="6"></rect>
+            </g>
+        </g>
+    </g>
+</svg>

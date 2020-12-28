@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="40px" height="40px" viewBox="0 0 40 40" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 49 (51002) - http://www.bohemiancoding.com/sketch -->
+    <title>ico_keynotes_mini</title>
+    <desc>Created with Sketch.</desc>
+    <defs>
+        <rect id="path-1" x="5" y="3" width="30" height="34" rx="1"></rect>
+    </defs>
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="weiyun2018_WEB_fileicon" transform="translate(-358.000000, -500.000000)">
+            <g id="fileico/keynotes_mini" transform="translate(358.000000, 500.000000)">
+                <g id="ico_keynotes_mini">
+                    <rect id="bg" x="0" y="0" width="40" height="40"></rect>
+                    <g id="Rectangle-23-Copy">
+                        <use fill="#FFFFFF" fill-rule="evenodd" xlink:href="#path-1"></use>
+                        <rect stroke="#E0E0E0" stroke-width="1" x="5.5" y="3.5" width="29" height="33" rx="1"></rect>
+                    </g>
+                    <path d="M21,20 L21,26 L24,26 L24,28 L16,28 L16,26 L19,26 L19,20 L12,20 L13,12 L27,12 L28,20 L21,20 Z" fill="#4C94F0"></path>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

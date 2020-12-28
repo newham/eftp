@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="24px" height="24px" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 49 (51002) - http://www.bohemiancoding.com/sketch -->
+    <title>ic_copy_nor</title>
+    <desc>Created with Sketch.</desc>
+    <defs></defs>
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="weiyun2018_WEB_mainicon" transform="translate(-377.000000, -1104.000000)">
+            <g id="ic/copy_nor" transform="translate(379.000000, 1106.000000)">
+                <g id="ic_copy_nor">
+                    <rect id="Rectangle-46" x="0" y="0" width="20" height="20"></rect>
+                    <path d="M8,4 L5,4 L5,2.99850233 C5,2.44704472 5.45734932,2 5.99464076,2 L13.4656185,2 C13.7462797,2 14.126716,2.15442968 14.331099,2.36083664 L17.6427017,5.70523392 C17.8400321,5.90451849 18,6.28691049 18,6.57199486 L18,14.0097785 C18,14.5566627 17.5525106,15 17.0014977,15 L16,15 L16,12 L16,7.03533936 L12.9950562,4 L8,4 Z M2,5.99850233 C2,5.44704472 2.45734932,5 2.99464076,5 L10.4656185,5 C10.7462797,5 11.126716,5.15442968 11.331099,5.36083664 L14.6427017,8.70523392 C14.8400321,8.90451849 15,9.28691049 15,9.57199486 L15,17.0097785 C15,17.5566627 14.5525106,18 14.0014977,18 L2.99850233,18 C2.44704472,18 2,17.5525106 2,17.0014977 L2,5.99850233 Z M4,7 L4,16 L13,16 L13,10.0353394 L9.99505615,7 L4,7 Z" fill="#687176"></path>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

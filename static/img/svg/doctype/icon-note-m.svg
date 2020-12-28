@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="40px" height="40px" viewBox="0 0 40 40" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 49 (51002) - http://www.bohemiancoding.com/sketch -->
+    <title>ico_note_mini</title>
+    <desc>Created with Sketch.</desc>
+    <defs>
+        <rect id="path-1" x="5" y="3" width="30" height="34" rx="1"></rect>
+    </defs>
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="weiyun2018_WEB_fileicon" transform="translate(-628.000000, -580.000000)">
+            <g id="fileico/note_mini" transform="translate(628.000000, 580.000000)">
+                <g id="ico_note_mini">
+                    <rect id="bg" x="0" y="0" width="40" height="40"></rect>
+                    <g id="Rectangle-23-Copy">
+                        <use fill="#FFFFFF" fill-rule="evenodd" xlink:href="#path-1"></use>
+                        <rect stroke="#E0E0E0" stroke-width="1" x="5.5" y="3.5" width="29" height="33" rx="1"></rect>
+                    </g>
+                    <path d="M23.2433137,13 L22.0764506,15 L11,15 L11,13 L23.2433137,13 Z M20.9095875,17 L19.7427244,19 L11,19 L11,17 L20.9095875,17 Z M18.5758613,21 L17.4089982,23 L11,23 L11,21 L18.5758613,21 Z M16.242135,25 L16.1158577,25.216439 L16.0047394,27 L11,27 L11,25 L16.242135,25 Z" id="Combined-Shape" fill="#DCDCDC"></path>
+                    <path d="M24.1175927,15.1875821 L27.3979744,17.0815114 L21.5560009,27.2263223 L18.8139068,29.0414918 C18.7284684,29.098049 18.6270382,29.1252975 18.5248409,29.1191474 C18.2639822,29.1034493 18.0652075,28.8787079 18.080865,28.6171734 L18.2777385,25.3287129 L24.1175927,15.1875821 Z M24.8278162,13.9542519 L26.3217376,11.36 L29.6,13.2576094 L28.1081978,15.8481811 L24.8278162,13.9542519 Z" id="Combined-Shape" fill="#30B383"></path>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

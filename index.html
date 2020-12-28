@@ -11,369 +11,51 @@
     <link rel="stylesheet" type="text/css" href="static/css/light.css" id="theme-css" />
     <!-- <link rel="stylesheet" type="text/css" href="static/css/dark.css" id="theme-css" /> -->
     <link rel="stylesheet" type="text/css" href="static/css/site.css" />
+    <link rel="stylesheet" type="text/css" href="static/css/index.css" />
     <!-- load js -->
     <!-- <script src="static/js/jquery-3.5.0.min.js"></script> -->
     <!-- <script src="static/js/vue.min.js"></script> -->
-    <style>
-        html,
-        body {
-            margin: 0;
-            padding: 0;
-            background: var(--body-bg-color);
-            font-size: 15px;
-            color: var(--font-color);
-            height: 100%;
-            overflow: hidden;
-        }
-
-        #file_list div {
-            max-width: 380px;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            white-space: nowrap;
-        }
-
-        #title-bar {
-            width: 100%;
-            position: fixed;
-            left: 0;
-            top: 0;
-            -webkit-app-region: drag;
-            padding-left: var(--title-bar-padding);
-            background: var(--title-bar-bg-color);
-            margin: 0px;
-            height: var(--title-bar-h);
-            line-height: var(--title-bar-h);
-            border-bottom: var(--bar-border);
-            padding-bottom: 1px;
-        }
-
-        .container {
-            /* margin: 0px; */
-            /* margin-top: calc(var(--title-bar-h) + 1px); */
-            height: calc(100% - var(--foot-bar-h) - var(--title-bar-h) - var(--tab-bar-h));
-        }
-
-        .sidebar-l {
-            float: left;
-            width: calc(var(--side-bar-l-w) - 1px);
-            height: 100%;
-            background-color: var(--title-bar-bg-color);
-            /* background-color: #333; */
-            border-right: var(--bar-border);
-            /* color: var(--side-bar-font-color); */
-            /* text-align: center; */
-            /* padding: 0px var(--side-bar-padding); */
-            overflow-y: scroll;
-            /* background: #333; */
-            /* text-align: center; */
-            padding: 6px 0px;
-        }
-
-        .sidebar-l::-webkit-scrollbar {
-            display: none;
-            /* Chrome Safari */
-        }
-
-        .tab-bar div {
-            float: right;
-            padding: 10px 5px;
-            border-bottom-left-radius: 5px;
-            border-top-left-radius: 5px;
-            /* border-left: 4px solid var(--side-bar-bg-color); */
-            writing-mode: vertical-lr;
-            background: var(--btn-bg-color);
-            border: 1px solid var(--bar-border-color);
-            border-right: none;
-            margin-bottom: 5px;
-            /* font-size: 20px; */
-            /* color:#fff; */
-            user-select: none;
-            cursor: pointer;
-        }
-
-        .tab-active {
-            background: var(--btn-bg-color) !important;
-            color: var(--font-color);
-            /* color: var(--blue-2) !important; */
-            /* background: var(--blue-2) !important; 
-            color: #fff !important; */
-            /* border: none !important; */
-        }
-
-        .sidebar-r {
-            float: left;
-            width: calc(var(--side-bar-r-w) - 1px);
-            height: 100%;
-            background-color: var(--side-bar-bg-color);
-            /* color: var(--side-bar-font-color); */
-            /* text-align: center; */
-            padding: 0px var(--side-bar-padding);
-            overflow-y: scroll;
-        }
-
-        .path {
-            position: fixed;
-            top: 0px;
-            left: 305px;
-            width: calc(100% - 230px - 220px);
-            /* margin-left: 10px; */
-            padding-top: 1px;
-            /* height: var(--btn-h); */
-            /* background: #fff; */
-            color: var(--font-color);
-            /* margin: 0 auto;
-            height: var(--btn-h);
-            line-height: calc(var(--btn-h) - 2px);
-            padding: 0 5px;
-            border-radius: 5px; */
-            font-size: 14px;
-
-            /* background: red; */
-            /* width: 290px; */
-            display: block;
-            /* float: left; */
-            text-overflow: ellipsis;
-            white-space: nowrap;
-            overflow: hidden;
-        }
-
-        .sidebar-r button {
-            width: 100%;
-            border: none;
-            border-top: var(--line-border);
-            border-radius: 0px;
-        }
-
-        .main {
-            float: left;
-            width: calc(100% - var(--side-bar-r-w) - var(--side-bar-l-w) - var(--side-bar-padding) * 2 - 2px);
-            height: calc(100% - 50px);
-            overflow-y: scroll;
-            border-right: var(--bar-border);
-            padding-bottom: 50px;
-        }
-
-        .foot-bar {
-            height: var(--foot-bar-h);
-            overflow-y: scroll;
-            width: calc(100% - var(--side-bar-r-w) - var(--side-bar-padding) * 2);
-            background: var(--foot-bar-bg-color);
-        }
-
-        .icon {
-            height: 14px;
-            /* margin-right: 5px; */
-            margin-bottom: -2px;
-        }
-
-        .btn-icon {
-            margin-bottom: -2px;
-            height: 12px;
-        }
-
-        #infos {
-            padding-bottom: var(--btn-h);
-        }
-
-        #infos p {
-            padding: 5px 10px 0px 10px;
-            /* border-bottom: var(--side-bar-border); */
-            /* overflow-x: hidden; */
-        }
-
-        #infos p label {
-            color: var(--side-bar-font-color);
-            margin-right: 10px;
-        }
-
-        .line-div {
-            padding-bottom: 5px;
-            border-bottom: var(--side-bar-border);
-            /* overflow-x: hidden; */
-        }
-
-        .fix-btn {
-            width: calc(var(--side-bar-r-w) - 1px) !important;
-            position: fixed;
-            right: 0;
-            bottom: 0px;
-        }
-
-        .proccess-box {
-            height: 10px;
-            width: 100%;
-            background: #fff;
-        }
-
-        .proccess {
-            height: 100%;
-            width: 0px;
-            background: green;
-        }
-
-        .menu {
-            position: fixed;
-            top: calc(var(--title-bar-h) + 8px);
-            width: 200px;
-            max-height: 400px;
-            min-height: 40px;
-            background: var(--menu-bg-color);
-            border-radius: 10px;
-            /* border: var(--bar-border); */
-            border: 1px solid var(--menu-border-color);
-            display: none;
-            box-shadow: var(--box-shadow);
-            overflow-y: scroll;
-        }
-
-        .menu button:hover {
-            background: var(--blue-1);
-            color: #fff;
-        }
-
-        .menu .triangle-up {
-            position: fixed;
-            top: calc(var(--title-bar-h) - 0px);
-            width: 0;
-            height: 0;
-            border-width: 0 10px 10px;
-            border-style: solid;
-            border-color: transparent transparent var(--menu-bg-color);
-        }
-
-        .menu .triangle-up-box {
-            position: fixed;
-            top: calc(var(--title-bar-h) - 2px);
-            width: 0;
-            height: 0;
-            border-width: 0 10px 10px;
-            border-style: solid;
-            border-color: transparent transparent var(--menu-border-color);
-        }
-
-        .menu-body {
-            margin: 6px 0px;
-            /* border-top: 1px solid var(--menu-border-color); */
-            width: 100%;
-        }
-
-        .menu-body button {
-            padding-bottom: 2px;
-            width: 100%;
-            /* border-bottom: 1px solid var(--menu-border-color); */
-            border-radius: 0px;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            white-space: nowrap;
-            text-align: left;
-        }
-
-        .menu-body hr {
-            border: none;
-            border-bottom: 1px solid var(--menu-border-color);
-            margin: 0;
-            padding: 0;
-        }
-
-        #favouritesMenu .triangle-up,
-        #favouritesMenu .triangle-up-box {
-            left: 232px;
-        }
-
-        #favouritesMenu {
-            left: 142px;
-        }
-
-        #backstageMenu {
-            right: 60px;
-        }
-
-        #backstageMenu .triangle-up,
-        #backstageMenu .triangle-up-box {
-            right: 86px !important;
-        }
-
-        .txt-search {
-            position: fixed;
-            top: 6px;
-            right: 118px;
-            height: 24px;
-            width: 100px;
-            font-size: 12px;
-        }
-
-        .siderbar-r-btn {
-            height: 60px;
-            width: 10px;
-            line-height: 60px;
-            position: fixed;
-            top: calc(50% - 30px);
-            border: var(--bar-border);
-            background: var(--title-bar-bg-color);
-        }
-
-        .siderbar-r-btn.show-btn {
-            right: calc(var(--side-bar-r-w) - 11px);
-            border-bottom-right-radius: 5px;
-            border-top-right-radius: 5px;
-        }
-
-        .siderbar-r-btn.hide-btn {
-            right: 0px;
-            border-bottom-left-radius: 5px;
-            border-top-left-radius: 5px;
-        }
-    </style>
 </head>
 
 <body id="drag_area">
     <!-- <h1>Demo</h1> -->
-    <div id="title-bar">
-        <div style="display: block;float: left;">
-            <div style="float: left;">
-                <button onclick="ls('-1')">←</button>
-                <button onclick="ls('..')">../</button>
-                <button onclick="ls('$HOME')">~</button>
-                <button onclick="refresh()">↺</button>
-                <button onclick="showfavouritesMenu()">☆</button>
-                <button onclick="showHiddenFile()">•</button>
-            </div>
+    <div class="sidebar-l">
+        <div id="tab-bar" class="tab-bar"></div>
+        <div class="tab-bar">
+            <div onclick="to_login()">＋</div>
+            <div onclick="show_space()" class="bottom">剩余空间</div>
+        </div>
+    </div>
+    <div class="container" id="container">
+        <div id="title-bar">
             <div id="path" class="path" ondblclick="maxWindow()"></div>
         </div>
-        <div style="display: block;float: right;padding-right: 85px;">
-            <button onclick="show_dialog(true)">＋</button>
-            <button onclick="show_backstageMenu()" id="btn_bs">⇅</button>
-            <button onclick="upload_folder()">↑/</button>
-            <button onclick="upload()">↑</button>
+        <div class="tool-bar">
+            <button onclick="ls_back()"><label class="label-icon">←</label><label>返回</label></button>
+            <button onclick="ls_up()"><label class="label-icon">↑</label><label>向上</label></button>
+            <button onclick="ls_home()"><label class="label-icon">~</label><label>主目录</label></button>
+            <button onclick="refresh()"><label class="label-icon">↺</label><label>刷新</label></button>
+            <button onclick="showfavouritesMenu()"><label class="label-icon">☆</label><label>收藏</label></button>
+            <button onclick="showHiddenFile()" id="btn-show-hidden"><label class="label-icon">•</label><label>隐藏</label></button>
+            <button onclick="show_folder_dialog(true)"><label class="label-icon">+/</label><label>新建文件夹</label></button>
+            <button onclick="show_backstageMenu()" id="btn_bs"><label class="label-icon">⇅</label><label>后台任务</label></button>
+            <!-- <button onclick="upload_folder()"><label class="label-icon">⇧/</label><label>上传目录</label></button> -->
+            <button onclick="upload()"><label class="label-icon">⇧</label><label>上传文件</label></button>
+            <div style="float: right;margin-right: 5px;">
+                <button onclick="clean_infos()"><label class="label-icon">×</label><label>清屏</label></button>
+                <button onclick="showSidebar()" id="siderbar-hide-btn" style="color: var(--blue-2);"><label class="label-icon">≡</label><label>日志</label></button>
+            </div>
             <!-- <button onclick="ctrl_c()">X</button> -->
         </div>
-    </div>
-    <div class="tab-h-bar">
-        <div id="tab-bar"></div>
-        <div onclick="to_login()" class="tab-add">＋</div>
-        <!-- <div id="tab-bar" class="tab-bar-list"></div> -->
-        <!-- <div class="tab-bar">
-            <div onclick="to_login()">＋</div>
-        </div> -->
-    </div>
-    <div class="container" id="container" onclick="hideMenu()">
-        <div class="sidebar-l">
-            <!-- <div id="tab-bar" class="tab-bar"></div>
-            <div class="tab-bar">
-                <div onclick="to_login()">＋</div>
-            </div> -->
-        </div>
-        <div class="main" oncontextmenu="showDirMenu()">
+        <div class="main" oncontextmenu="showDirMenu()" onclick="hideMenu()">
             <table>
                 <tbody id="file_list">
 
                 </tbody>
             </table>
         </div>
-        <div class="siderbar-r-btn show-btn" onclick="showSidebar()" id="siderbar-hide-btn"> </div>
+        <!-- <div class="siderbar-r-btn show-btn" onclick="showSidebar()" id="siderbar-hide-btn"> </div> -->
         <div class="sidebar-r" id="sidebar" style="display: block;">
-            <button onclick="clean_infos()" class="fix-btn">↺</button>
             <div id="infos">
 
             </div>
@@ -382,17 +64,32 @@
     <div class="foot-bar">
     </div>
     <div class="dialog" id="new_folder_dialog">
-        <p>新建文件夹</p>
+        <p class="dialog-title">新建文件夹</p>
         <input type="text" id="dir_name" onkeydown="keydown_mkdir()">
         <button onclick="mkdir()" class="btn-half-danger">确定</button>
-        <button onclick="show_dialog(false)" class="btn-half">取消</button>
+        <button onclick="show_folder_dialog(false)" class="btn-half">取消</button>
+    </div>
+    <div class="dialog" id="rename_dialog">
+        <p class="dialog-title">重命名</p>
+        <input type="text" id="file_rename" onkeydown="rename_file()">
+        <button onclick="rename_file()" class="btn-half-danger">确定</button>
+        <button onclick="show_folder_dialog(false)" class="btn-half">取消</button>
+    </div>
+    <div class="dialog" id="space_dialog">
+        <p class="dialog-title">剩余空间</p>
+        <div style="height:280px;display:block;overflow-y:auto;overflow-x:hidden;margin-bottom: 10px;">
+            <table>
+                <tbody id="left_space"></tbody>
+            </table>
+        </div>
+        <button onclick="show('space_dialog',false)" class="btn btn-danger">确定</button>
     </div>
     <div class="drag_box" id="drag_box">
         <label onclick="showDargBox(false)">
-            <h1>X</h1>
+            <img src="static/img/svg/icon-close.svg">
         </label>
         <h1>请把文件拖放于此</h1>
-        <img src="static/img/upload-1.png">
+        <img class="bg-img" src="static/img/svg/icon-collect.svg">
     </div>
     <div class="menu" id="favouritesMenu" style="display: none;">
         <label class="triangle-up-box">

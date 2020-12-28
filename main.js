@@ -1,25 +1,27 @@
 const { app, BrowserWindow, ipcMain, Menu, MenuItem, nativeTheme, dialog, screen } = require('electron')
+const os = require("os");
+// 兼容
+app.allowRendererProcessReuse = true
 
 // global.data //全局数据
 global.shareData = {
-    userSSHInfo: {}, //一定要把数据放在结构体里面！！！
-    isDark: nativeTheme.shouldUseDarkColors,
-} //用于共享
+        userSSHInfo: {}, //一定要把数据放在结构体里面！！！
+        isDark: nativeTheme.shouldUseDarkColors,
+    } //用于共享
 
 let processLock = 0
 
 function createMenu() {
-    var template = [
-        {
+    var template = [{
             label: "Estp",
-            submenu: [
-                {
-                    label: "关于", click: function () {
+            submenu: [{
+                    label: "关于",
+                    click: function() {
                         app.showAboutPanel()
                     }
                 },
                 { type: 'separator' },
-                { label: "退出", accelerator: "CmdOrCtrl+Q", click: function () { app.quit() } },
+                { label: "退出", accelerator: "CmdOrCtrl+Q", click: function() { app.quit() } },
             ]
         },
         {
@@ -35,42 +37,62 @@ function createMenu() {
         {
             label: "显示",
             submenu: [
-                { label: "Light Theme", click: function () { setTheme(false) } },
-                { label: "Dark Theme", click: function () { setTheme(true) } },
+                { label: "Light Theme", click: function() { setTheme(false) } },
+                { label: "Dark Theme", click: function() { setTheme(true) } },
             ]
         }
     ];
+    // 设置menu
     Menu.setApplicationMenu(Menu.buildFromTemplate(template))
-    //设置dock
-    const dockMenu = Menu.buildFromTemplate([
-        {
+
+    //如果os是mac，设置dock
+    if (os.type == 'Darwin') {
+        return //不设置dock
+        app.dock.setMenu(Menu.buildFromTemplate([{
             label: '新HOST',
             click() {
                 createWindow()
             }
-        }
-    ])
-    app.dock.setMenu(dockMenu)
+        }]))
+    }
 }
 
 function createWindow() {
-    // 创建菜单
-    createMenu()
-    // 创建窗口
-    return createIndexWindow()
+    createMenu() // 创建菜单
+    return createIndexWindow() // 创建窗口
 }
 
 function createIndexWindow() {
+    // 默认值
+    let win_w = 1100
+    let minWidth = 900
+    let height = 768
+    let minHeight = 600
+    let x = null
+    let y = null
+
+    // 如果已有窗口，则保持原位置
+    if (BrowserWindow.getAllWindows().length > 0 && BrowserWindow.getFocusedWindow()) {
+        let size = BrowserWindow.getFocusedWindow().getSize()
+        let position = BrowserWindow.getFocusedWindow().getPosition()
+        win_w = size[0]
+        height = size[1]
+        x = position[0]
+        y = position[1]
+    }
+
     // 创建浏览器窗口
     const win = new BrowserWindow({
         title: "Eftp",
         titleBarStyle: "hiddenInset", //不显示标题栏,仅显示按钮
         // transparent:true, //透明度
         // opacity:0.99,
-        width: 1024,
-        minWidth: 650,
-        height: 768,
-        minHeight: 600,
+        x: x,
+        y: y,
+        width: win_w,
+        minWidth: minWidth,
+        height: height,
+        minHeight: minHeight,
         webPreferences: {
             nodeIntegration: true //enable node js
         }
@@ -78,11 +100,11 @@ function createIndexWindow() {
 
     win.on('close', (event) => {
         // console.log('close win', win.id, locked)
-        if (processLock > 0) {
+        if (processLock > 0 && BrowserWindow.getAllWindows().length == 1) {
             event.preventDefault()
             dialog.showMessageBox(win, {
                 buttons: ["OK", "Cancel"],
-                message: "有后台任务正在进行,确定退出?",
+                message: `有${processLock}个后台任务正在进行,确定退出?`,
                 cancelId: 1,
             }).then((result) => {
                 if (result.response == 0) { //ok

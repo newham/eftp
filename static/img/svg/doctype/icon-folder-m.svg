@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="40px" height="40px" viewBox="0 0 40 40" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 49.2 (51160) - http://www.bohemiancoding.com/sketch -->
+    <title>icon-folder-m</title>
+    <desc>Created with Sketch.</desc>
+    <defs></defs>
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <rect id="头像" fill="#2980FF" x="0" y="0" width="40" height="40" rx="2"></rect>
+        <path d="M20.2083333,14 L28.0066023,14 C28.5552407,14 29,14.4499488 29,15.0068455 L29,26.9931545 C29,27.5492199 28.5550537,28 28.0066023,28 L11.9933977,28 C11.4447593,28 11,27.5500512 11,26.9931545 L11,15.0068455 C11,15.0045619 11.0000075,15.00228 11.0000225,15 L11,12.9989566 C11,12.4472481 11.4541436,12 11.9968356,12 L18.1247025,12 C18.4010092,12 18.7664546,12.1786795 18.9354898,12.3921976 L20.2083333,14 Z M13,17 L13,19 L27,19 L27,17 L13,17 Z" id="Combined-Shape" fill="#FFFFFF"></path>
+    </g>
+</svg>

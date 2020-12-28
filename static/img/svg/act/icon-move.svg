@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="24px" height="24px" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 49.3 (51167) - http://www.bohemiancoding.com/sketch -->
+    <title>icon-move</title>
+    <desc>Created with Sketch.</desc>
+    <defs></defs>
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="weiyun2018_WEB_mainicon" transform="translate(-376.000000, -1212.000000)">
+            <g id="ic/move_nor" transform="translate(378.000000, 1214.000000)">
+                <g id="ic_edit_nor">
+                    <rect id="Rectangle-50" x="0" y="0" width="20" height="20"></rect>
+                    <g id="ic_move_out_nor-copy">
+                        <rect id="Rectangle-14" x="0" y="0" width="20" height="20"></rect>
+                        <path d="M2,7 L2,5 L2,2.99895656 C2,2.44724809 2.45414364,2 2.99683559,2 L8.62816441,2 C9.1787015,2 9.81043862,2.40459335 10.0450166,2.91639996 L10.0833333,3 L16.9991283,3 C17.5518945,3 18,3.44994876 18,4.00684547 L18,15.9931545 C18,16.5492199 17.5553691,17 16.9991283,17 L3.00087166,17 C2.4481055,17 2,16.5500512 2,15.9931545 L2,13 L4,13 L4,15 L16,15 L16,5 L4,5 L4,7 L2,7 Z" id="Combined-Shape" fill="#60686D"></path>
+                        <path d="M8,9 L8,6.93425855 C8,6.65811617 8.22385763,6.43425855 8.5,6.43425855 C8.59871249,6.43425855 8.69521634,6.46347756 8.7773501,6.5182334 L13.3759623,9.58397485 C13.6057266,9.73715108 13.6678136,10.0475858 13.5146373,10.2773501 C13.4780199,10.3322762 13.4308884,10.3794077 13.3759623,10.4160251 L8.7773501,13.4817666 C8.54758575,13.6349428 8.23715108,13.5728559 8.08397485,13.3430916 C8.02921901,13.2609578 8,13.1644539 8,13.0657415 L8,11 L2,11 L2,9 L8,9 Z" id="Combined-Shape" fill="#60686D"></path>
+                    </g>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

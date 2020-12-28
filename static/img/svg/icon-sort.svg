@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="14px" height="14px" viewBox="0 0 14 14" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 49.2 (51160) - http://www.bohemiancoding.com/sketch -->
+    <title>icon-sort</title>
+    <desc>Created with Sketch.</desc>
+    <defs></defs>
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="order" transform="translate(1.000000, 0.000000)">
+            <rect id="Rectangle-3" x="0" y="0" width="12" height="13"></rect>
+            <path d="M7,6 L9.31072812,6 C9.53164202,6 9.71072812,6.1790861 9.71072812,6.40000001 C9.71072812,6.46961078 9.692562,6.5380165 9.65802538,6.59845558 L6.34729726,12.3922298 C6.23769327,12.5840368 5.9933514,12.6506755 5.80154442,12.5410715 C5.73953191,12.5056358 5.68813846,12.4542423 5.65270274,12.3922298 L2.34197462,6.59845558 C2.23237063,6.4066486 2.29900932,6.16230673 2.4908163,6.05270274 C2.55125538,6.01816613 2.61966111,6 2.68927188,6 L5,6 L5,0 L7,0 L7,6 Z" id="Combined-Shape" fill="#687176"></path>
+        </g>
+    </g>
+</svg>

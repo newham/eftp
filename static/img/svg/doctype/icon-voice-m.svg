@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="40px" height="40px" viewBox="0 0 40 40" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 51.2 (57519) - http://www.bohemiancoding.com/sketch -->
+    <title>icon-note-audio-m</title>
+    <desc>Created with Sketch.</desc>
+    <defs></defs>
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="ico_note_small">
+            <g id="Group-10">
+                <g transform="translate(5.000000, 3.000000)">
+                    <rect id="Rectangle-27" stroke="#DCDCDC" fill="#FAFAFA" x="0.5" y="0.5" width="29" height="33" rx="1"></rect>
+                    <path d="M15,11 L15,13 L6,13 L6,11 L15,11 Z M11,15 L11,17 L6,17 L6,15 L11,15 Z M11.2473905,19 C11.4661083,19.7270839 11.7577217,20.3937506 12.1222307,21 L6,21 L6,19 L11.2473905,19 Z M13.8425954,23 C14.7116107,23.7207647 15.7640789,24.28948 17,24.7061461 L17,25 L6,25 L6,23 L13.8425954,23 Z" id="Combined-Shape" fill="#DCDCDC"></path>
+                    <g id="voice" transform="translate(13.000000, 9.000000)" fill="#30B383">
+                        <rect id="Rectangle-2" x="4" y="0" width="4" height="10" rx="2"></rect>
+                        <path d="M12,8 C12,11.3137085 9.3137085,14 6,14 C2.6862915,14 1.2662501e-14,11.3137085 1.22566887e-14,8 L2,8 C2,10.209139 3.790861,12 6,12 C8.209139,12 10,10.209139 10,8 L12,8 Z" id="Combined-Shape"></path>
+                        <path d="M10.75,7.5 L11.25,7.5 C11.6642136,7.5 12,7.83578644 12,8.25 L12,8.25 C12,8.66421356 11.6642136,9 11.25,9 L10.75,9 C10.3357864,9 10,8.66421356 10,8.25 L10,8.25 C10,7.83578644 10.3357864,7.5 10.75,7.5 Z" id="Rectangle-10"></path>
+                        <path d="M0.75,7.5 L1.25,7.5 C1.66421356,7.5 2,7.83578644 2,8.25 L2,8.25 C2,8.66421356 1.66421356,9 1.25,9 L0.75,9 C0.335786438,9 5.07265313e-17,8.66421356 0,8.25 L0,8.25 C-5.07265313e-17,7.83578644 0.335786438,7.5 0.75,7.5 Z" id="Rectangle-10"></path>
+                        <path d="M5,13 L7,13 L7,15.5 C7,15.7761424 6.77614237,16 6.5,16 L5.5,16 C5.22385763,16 5,15.7761424 5,15.5 L5,13 Z" id="Rectangle-6"></path>
+                    </g>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

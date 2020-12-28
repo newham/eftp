@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="24px" height="24px" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 49.1 (51147) - http://www.bohemiancoding.com/sketch -->
+    <title>navic/note_nor</title>
+    <desc>Created with Sketch.</desc>
+    <defs></defs>
+    <g id="navic/note_nor" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="ic_note_nor">
+            <rect id="Rectangle-7" x="0" y="0" width="24" height="24"></rect>
+            <path d="M8.53553391,18 L21,18 L21,20 L3,20 L3.107684,19.784632 L4.07155011,15.6078788 C4.11369322,15.4252587 4.20630877,15.2581573 4.33883453,15.1256316 L12.6213203,6.84314575 L16.1568542,10.3786797 L8.53553391,18 Z M17.5710678,8.96446609 L14.0355339,5.42893219 L15.4497475,4.01471863 C15.8402718,3.62419433 16.4734367,3.62419433 16.863961,4.01471863 L18.9852814,6.13603897 C19.3758057,6.52656326 19.3758057,7.15972824 18.9852814,7.55025253 L17.5710678,8.96446609 Z" id="Combined-Shape" fill="#7C878E"></path>
+        </g>
+    </g>
+</svg>

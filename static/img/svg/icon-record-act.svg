@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="24px" height="24px" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 50.2 (55047) - http://www.bohemiancoding.com/sketch -->
+    <title>icon-team-history-blue</title>
+    <desc>Created with Sketch.</desc>
+    <defs></defs>
+    <g id="Symbol" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Bar/Navigation-Bar/↳Elements/List/icons/activity_select">
+            <g id="icon-team-history-blue">
+                <rect id="Rectangle-13" x="0" y="0" width="24" height="24"></rect>
+                <path d="M16,15 L16,13 L14,13 L14,15 L14,17 L18,17 L18,15 L16,15 Z M19,10.2546893 C17.8661665,9.46381481 16.4872481,9 15,9 C11.1340068,9 8,12.1340068 8,16 C8,17.4872481 8.46381481,18.8661665 9.25468928,20 L5,20 C4.44771525,20 4,19.5522847 4,19 L4,4 C4,3.44771525 4.44771525,3 5,3 L14.6268482,3 C14.8942016,3 15.1504224,3.10705662 15.3383008,3.29726594 L18.7114526,6.71226726 C18.8963285,6.89943681 19,7.15192048 19,7.41500131 L19,10.2546893 Z M15,21 C12.2385763,21 10,18.7614237 10,16 C10,13.2385763 12.2385763,11 15,11 C17.7614237,11 20,13.2385763 20,16 C20,18.7614237 17.7614237,21 15,21 Z" id="Combined-Shape" fill="#2980FF"></path>
+            </g>
+        </g>
+    </g>
+</svg>

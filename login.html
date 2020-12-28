@@ -11,54 +11,143 @@
     <link rel="stylesheet" type="text/css" href="static/css/site.css" />
 
     <style>
+         :root {
+            --header-h: 75px
+        }
+        
         body {
-            -webkit-app-region: drag;
-            padding-top: 25px;
             background: var(--login-bg-color);
+            margin: 0;
+            padding: 0;
+            height: 100%;
         }
-
+        
         h1 {
-            margin: 5px 10px;
-            color: var(--font-color);
+            /* margin: 5px 10px; */
+            color: var(--blue-1);
+            margin: 0;
+            padding: 0;
         }
-
+        
+        .header {
+            padding: 0px 15px;
+            -webkit-app-region: drag;
+        }
+        
+        .header h1 {
+            font-size: calc(var(--header-h));
+            padding: 0;
+            margin: 0;
+        }
+        
+        .header img {
+            float: left;
+            max-height: var(--header-h);
+        }
+        
         .input-quarter {
             width: calc(25% - 10px) !important;
         }
-
+        
         td {
             background: #fff;
         }
-
+        
+        .title-bar {
+            height: var(--title-bar-h);
+            -webkit-app-region: drag;
+            line-height: var(--title-bar-h);
+            padding-right: 15px;
+            text-align: right;
+            font-size: 13px;
+            color: var(--font-color);
+        }
+        
+        .main {
+            position: fixed;
+            top: calc(var(--title-bar-h) + 5px);
+            /* top: calc(var(--title-bar-h) + var(--header-h) + 10px); */
+            left: 0;
+            height: calc(100% - var(--title-bar-h) - 20px);
+            width: 100%;
+            overflow-y: auto;
+            background: var(--login-bg-color);
+        }
     </style>
 </head>
 
 <body>
     <div class="dialog" id="new_ssh_dialog">
-        <p id="dialog_title"></p>
-        <input type="text" id="host" placeholder="*服务器地址/域名" class="input-half" value="">
+        <p id="dialog_title" class="dialog-title"></p>
+        <!-- 第一行 -->
+        <input type="text" id="username" placeholder="*用户名" value="" class="input-1-4">
         <label> @ </label>
-        <input type="number" id="port" placeholder="*端口" class="input-half" value="22">
-        <input type="text" id="label" placeholder="标签">
-        <input type="text" id="username" placeholder="*用户名" value="">
-        <input type="password" id="password" placeholder="*密码" class="input-half" value="">
+        <input type="text" id="host" placeholder="*服务器地址/域名" class="input-2-4" value="">
+        <label> : </label>
+        <input type="number" id="port" placeholder="*端口" class="input-1-4" value="22">
+        <!-- 第二行 -->
+        <input type="password" id="password" placeholder="*密码" class="input-2-4" value="">
         <label>or</label>
-        <input type="password" id="privateKey" placeholder="*私钥路径" onclick="selectPK()" class="input-half">
+        <input type="password" id="privateKey" placeholder="*私钥路径" onclick="selectPK()" class="input-2-4">
+        <!-- 第三行 -->
+        <input type="text" id="label" placeholder="标签（默认:用户名@服务器地址）">
         <input type="hidden" id="id" value="-1">
         <input type="hidden" id="color" value="0">
         <div class="btn-group" id="color-group">
-            <button class="active bg-color-0" onclick="setColor(0)"></button><button class="bg-color-1"
-                onclick="setColor(1)"></button><button onclick="setColor(2)" class="bg-color-2"></button><button
-                onclick="setColor(3)" class="bg-color-3"></button><button onclick="setColor(4)"
-                class="bg-color-4"></button>
+            <button class="active bg-color-0" onclick="setColor(0)"></button>
+            <button class="bg-color-1" onclick="setColor(1)"></button>
+            <button onclick="setColor(2)" class="bg-color-2"></button>
+            <button onclick="setColor(3)" class="bg-color-3"></button>
+            <button onclick="setColor(4)" class="bg-color-4"></button>
+            <button onclick="setColor(5)" class="bg-color-5"></button>
+            <button onclick="setColor(6)" class="bg-color-6"></button>
         </div>
         <div class="r">
             <button onclick="addUserSSHInfo()" class="btn-half-danger"> 保存 </button>
             <button onclick="show_dialog(false)" class="btn-half"> 取消 </button>
         </div>
     </div>
-    <h1>HOSTS</h1>
-    <div id='userSSH_list' class="r">
+    <div class="title-bar" ondblclick="maxWindow()">
+        <button onclick="show('about_dialog',true)">☂ 关于</button>
+        <button onclick="show('help_dialog',true)">? 帮助</button>
+    </div>
+    <div class="dialog dialog-fixed" id="about_dialog">
+        <p class="dialog-title">☂ 关于</p>
+        <div>
+            <img src="static/img/icon.ico" style="width: 80px;">
+        </div>
+        <div>
+            免费&开源的SFTP客户端 <br><br> 我们不会上传用户的任何隐私<br>（用户名、主机、密码、私钥等）
+        </div>
+        <div class="r">
+            <button onclick="show('about_dialog',false)" class="btn-full btn-danger"> OK </button>
+        </div>
+    </div>
+    <div class="dialog dialog-fixed" id="help_dialog">
+        <p class="dialog-title">? 帮助</p>
+        <div class="txt-left">
+            1.点击位于列表最后的[ + New Host ]图标，添加一个sftp服务器。<br><br> 2.右键已有sftp服务器图标弹出菜单，可编辑、删除、拷贝。<br><br> 3.支持连接到 Linux、Mac OS 服务器
+        </div>
+        <div class="r">
+            <button onclick="show('help_dialog',false)" class="btn-full btn-danger"> OK </button>
+        </div>
+    </div>
+    <div class="dialog dialog-fixed" id="loading_dialog">
+        <p class="dialog-title">添加服务器</p>
+        <div>
+            正在测试连接到:<br><label class="txt-info txt-bold" id="host_address"></label><br><br><img src="static/img/loading-3.gif">
+        </div>
+        <div class="r">
+            <button class="btn-full"> 请稍后 </button>
+        </div>
+    </div>
+    <!-- <div class="header"> -->
+    <!-- <img src="static/img/icon.ico"> -->
+    <!-- <h1>EFTP</h1> -->
+    <!-- </div> -->
+    <div class="main">
+        <div id='userSSH_list' class="r">
+        </div>
     </div>
     <script src="static/js/common.js"></script>
     <script src="static/js/dialog.js"></script>

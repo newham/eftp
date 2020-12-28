@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="16px" height="16px" viewBox="0 0 16 16" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 50.2 (55047) - http://www.bohemiancoding.com/sketch -->
+    <title>icon-close-mac-hover</title>
+    <desc>Created with Sketch.</desc>
+    <defs></defs>
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Traffic-Lights-(Mouse-Over-1)" transform="translate(2.000000, 2.000000)">
+            <circle id="Traffic-Light---Close" stroke="#E0443E" stroke-width="0.5" fill="#FF6258" cx="6" cy="6" r="6"></circle>
+            <path d="M6,6.70710678 L3.85355339,8.85355339 C3.65829124,9.04881554 3.34170876,9.04881554 3.14644661,8.85355339 C2.95118446,8.65829124 2.95118446,8.34170876 3.14644661,8.14644661 L5.29289322,6 L3.14644661,3.85355339 C2.95118446,3.65829124 2.95118446,3.34170876 3.14644661,3.14644661 C3.34170876,2.95118446 3.65829124,2.95118446 3.85355339,3.14644661 L6,5.29289322 L8.14644661,3.14644661 C8.34170876,2.95118446 8.65829124,2.95118446 8.85355339,3.14644661 C9.04881554,3.34170876 9.04881554,3.65829124 8.85355339,3.85355339 L6.70710678,6 L8.85355339,8.14644661 C9.04881554,8.34170876 9.04881554,8.65829124 8.85355339,8.85355339 C8.65829124,9.04881554 8.34170876,9.04881554 8.14644661,8.85355339 L6,6.70710678 Z" id="Icon---Close" fill="#760E0E" fill-rule="nonzero"></path>
+        </g>
+    </g>
+</svg>

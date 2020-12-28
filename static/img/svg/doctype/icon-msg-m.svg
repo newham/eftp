@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="40px" height="40px" viewBox="0 0 40 40" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 49 (51002) - http://www.bohemiancoding.com/sketch -->
+    <title>ico_msg_mini</title>
+    <desc>Created with Sketch.</desc>
+    <defs>
+        <rect id="path-1" x="8" y="3" width="27" height="34" rx="1"></rect>
+    </defs>
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="weiyun2018_WEB_fileicon" transform="translate(-718.000000, -420.000000)">
+            <g id="fileico/msg_mini" transform="translate(718.000000, 420.000000)">
+                <g id="ico_msg_mini">
+                    <rect id="bg" x="0" y="0" width="40" height="40"></rect>
+                    <g id="Rectangle-23-Copy">
+                        <use fill="#FFFFFF" fill-rule="evenodd" xlink:href="#path-1"></use>
+                        <rect stroke="#E0E0E0" stroke-width="1" x="8.5" y="3.5" width="26" height="33" rx="1"></rect>
+                    </g>
+                    <path d="M14.628822,15 L29.371178,15 L22,20.7331384 L14.628822,15 Z M31,16.2668616 L31,28 L13,28 L13,16.2668616 L22,23.2668616 L31,16.2668616 Z" id="Combined-Shape" fill="#E5E5E5"></path>
+                    <path d="M5.87596527,11.8905043 L19.8759653,10.1405043 C20.4239852,10.0720018 20.9237754,10.4607275 20.9922779,11.0087475 C20.997421,11.0498923 21,11.0913172 21,11.1327822 L21,31.8672178 C21,32.4195025 20.5522847,32.8672178 20,32.8672178 C19.958535,32.8672178 19.9171101,32.8646388 19.8759653,32.8594957 L5.87596527,31.1094957 C5.37553644,31.0469421 5,30.6215411 5,30.1172178 L5,12.8827822 C5,12.3784589 5.37553644,11.9530579 5.87596527,11.8905043 Z" id="Rectangle-29" fill="#0083EA"></path>
+                    <path d="M12.84,24.6472727 C14.332801,24.7000485 15.432,23.565772 15.432,21.44 C15.432,19.3202129 14.3247733,18.1802353 12.84,18.2327273 C11.3588485,18.2850912 10.3439996,19.443063 10.3439996,21.44 C10.3439996,23.4425943 11.3508152,24.5946248 12.84,24.6472727 Z M12.84,26.48 C10.6698596,26.3594366 8.76,24.6381794 8.76,21.44 C8.76,18.2418206 10.6840315,16.519776 12.84,16.4 C14.9959685,16.280224 17.16,17.9129287 17.16,21.44 C17.16,24.9670713 15.0101404,26.6005634 12.84,26.48 Z" id="ico_msg_small" fill="#FFFFFF" fill-rule="nonzero"></path>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

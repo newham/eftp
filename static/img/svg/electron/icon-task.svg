@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="16px" height="16px" viewBox="0 0 16 16" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 50.2 (55047) - http://www.bohemiancoding.com/sketch -->
+    <title>icon-task</title>
+    <desc>Created with Sketch.</desc>
+    <defs></defs>
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <path d="M1,4 L1,13 L9,13 L9,14 L0.5,14 C0.223857625,14 0,13.7761424 0,13.5 L0,1.5 C0,1.22385763 0.223857625,1 0.5,1 L5.76393202,1 C5.91917712,1 6.07229018,1.03614509 6.21114562,1.10557281 L8,3 L13.5,3 C13.7761424,3 14,3.22385763 14,3.5 L14,5 L13,5 L13,4 L7.76393202,4 L1,4 Z M1,3 L6.76393202,3 L5.76393202,2 L1,2 L1,3 Z M13,10.2928932 L13,7 L14,7 L14,10.2928932 L14.9142136,9.37867966 L15.6213203,10.0857864 L13.5,12.2071068 L12.7928932,11.5 L11.3786797,10.0857864 L12.0857864,9.37867966 L13,10.2928932 Z M11,13 L16,13 L16,14 L11,14 L11,13 Z" id="Combined-Shape" fill="#444143" fill-rule="nonzero"></path>
+    </g>
+</svg>

@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="134px" height="134px" viewBox="0 0 134 134" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 51.2 (57519) - http://www.bohemiancoding.com/sketch -->
+    <title>icon-note-audio-l</title>
+    <desc>Created with Sketch.</desc>
+    <defs></defs>
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="ico_note_big">
+            <rect id="Rectangle-8" x="0" y="0" width="134" height="134"></rect>
+            <g id="Group-6" transform="translate(8.000000, 0.000000)">
+                <rect id="Rectangle-23-Copy" stroke="#E0E0E0" fill="#FFFFFF" x="0.5" y="0.5" width="117" height="133" rx="2"></rect>
+                <path d="M59,40 L59,48 L24,48 L24,40 L59,40 Z M45,56 L45,64 L24,64 L24,56 L45,56 Z M45.3606361,71 C45.8098687,73.8923764 46.5333637,76.5590431 47.5311211,79 L24,79 L24,71 L45.3606361,71 Z M52.4729953,87 C55.4960651,90.4026587 59.413447,93.0693254 64.2251409,95 L24,95 L24,87 L52.4729953,87 Z" id="Combined-Shape" fill="#DCDCDC"></path>
+                <g id="voice" transform="translate(53.000000, 36.000000)" fill="#30B383">
+                    <rect id="Rectangle-2" x="15" y="0" width="18" height="42" rx="9"></rect>
+                    <path d="M48,31 L48,32 C48,45.254834 37.254834,56 24,56 C10.745166,56 1.623249e-15,45.254834 0,32 L0,31 L8,31 L8,33 C8,41.836556 15.163444,49 24,49 C32.836556,49 40,41.836556 40,33 L40,31 L48,31 Z" id="Combined-Shape"></path>
+                    <rect id="Rectangle-10" x="40" y="29" width="8" height="4" rx="1"></rect>
+                    <rect id="Rectangle-10" x="20" y="57" width="8" height="5" rx="1"></rect>
+                    <rect id="Rectangle-10" x="0" y="29" width="8" height="4" rx="1"></rect>
+                    <polygon id="Rectangle-6" points="20 49 28 49 28 58 20 58"></polygon>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>
