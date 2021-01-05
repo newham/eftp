@@ -1099,7 +1099,7 @@ function parse_df_line(chunk) {
         } else if (left_percentage <= '99%') {
             tag_class = 'txt-danger'
         }
-        html += `<tr><td>${line_items[0]}</td><td>${line_items[1]}</td><td>${line_items[2]}</td><td>${line_items[3]}</td><td><span class="${tag_class}">${line_items[4]}</span></td></tr>\n`
+        html += `<tr><td class="txt-left">${line_items[0]}</td><td class="txt-left">${line_items[1]}</td><td class="txt-left">${line_items[2]}</td><td class="txt-left">${line_items[3]}</td><td><span class="${tag_class}">${line_items[4]}</span></td></tr>\n`
     })
     return html
 }
