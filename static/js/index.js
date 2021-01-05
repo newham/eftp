@@ -439,7 +439,11 @@ function getFileHTML(fileInfo) {
         //<td class="td-num">${fileInfo.id}</td> //不显示行号了，显示的要素太臃肿了
         return `${tr_html}<td class="td-icon"><img class="icon" src="static/img/svg/doctype/icon-${fileInfo.type}-m.svg"></td><td class="td-head"><a onclick="ls('${fileInfo.name}')" href="#" class="hover-link"><div class="${font_class}">${fileInfo.name}</div></a></td><td>${fileInfo.time}</td><td colspan="2"></td></div>`
     } else { //文件
-        return `<tr oncontextmenu="showFileMenu(${fileInfo.id})" id="f-${fileInfo.id}"><td class="td-icon"><img class="icon" src="static/img/svg/doctype/icon-${fileInfo.type}-m.svg"></td><td class="td-head"><div class="${font_class}">${fileInfo.name}</div></td><td>${fileInfo.time}</td><td>${fileInfo.formatSize}</td><td class="td-download"><a href="#" onclick="download_file('${fileInfo.name}',${fileInfo.size})">⇩</a></div>`
+        var watch_link = ''
+        if (fileInfo.type == 'video' || fileInfo.type == 'flv') { //视频文件
+            watch_link = `<a onclick="watch_video('${fileInfo.name}')" href="#">▶</a>`
+        }
+        return `<tr oncontextmenu="showFileMenu(${fileInfo.id})" id="f-${fileInfo.id}"><td class="td-icon"><img class="icon" src="static/img/svg/doctype/icon-${fileInfo.type}-m.svg"></td><td class="td-head"><div class="${font_class}">${fileInfo.name}</div></td><td>${fileInfo.time}</td><td>${fileInfo.formatSize}</td><td class="td-download">${watch_link} <a href="#" onclick="download_file('${fileInfo.name}',${fileInfo.size})">⇩</a></div>`
     }
 }
 
@@ -462,6 +466,27 @@ function getParentPath(file) {
     i = file.lastIndexOf("/");
     // return file.substr(obj+1);//文件名
     return file.substr(0, i + 1) //路径
+}
+
+function watch_video(file) {
+    let folder = getHome(getUserSSHInfo().username, os.type)
+    let id = addInfo('video', file)
+    getSSH().getFile(folder + file, getCurrentDir() + file).then(function(Contents) {
+        // console.log("The File", file, "successfully downloaded")
+        // addInfo('success')
+        //下载成功的操作
+        done_process(id) //停止log进度条
+            // remove_bs(id) //删除后台任务
+            // done_watch(watch_id) //关闭进度监听
+    }, function(error) { //下载失败
+        console.log(error)
+        done_process(id, 'failed', error)
+            // done_watch(watch_id) //关闭监听
+    }).catch((res) => { //下载异常
+        console.log(res)
+        done_process(id, 'failed', res)
+            // done_watch(watch_id) //关闭监听
+    })
 }
 
 function upload_file(files) {
