@@ -12,7 +12,7 @@
     --dialog-w: calc(100% - 160px);
     --dialog-fixed-w: 260px;
     --btn-radius: 8px;
-    --box-radius: 16px;
+    --box-radius: 8px;
     --box-w: 200px;
     --input-radius: 8px;
     /* --btn-h: 26px; */
@@ -179,12 +179,15 @@ input::-webkit-input-placeholder {
 }
 
 .box img {
-    margin-top: -38px;
+    /* margin-top: -38px;
     margin-right: -38px;
     margin-bottom: -22px;
+    height: 100px; */
     float: right;
-    height: 100px;
-    /* margin-right: 10px; */
+    height: 80px;
+    margin-right: -13px;
+    margin-top: -18px;
+    margin-bottom: -22px;
     /* padding: 5px;
     background: #fff;
     border-radius: 5px; */
