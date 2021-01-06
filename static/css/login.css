@@ -60,3 +60,7 @@ td {
     overflow-y: auto;
     background: var(--login-bg-color);
 }
+
+#color-group {
+    text-align: center;
+}

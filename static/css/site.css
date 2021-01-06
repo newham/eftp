@@ -527,7 +527,7 @@ p {
     margin: 0px 5px;
     border-radius: 16px;
     color: #fff;
-    border: 2px solid #fff;
+    border: 2px solid var(--dialog-bg-color);
 }
 
 .active {
