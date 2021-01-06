@@ -440,8 +440,8 @@ function getFileHTML(fileInfo) {
         return `${tr_html}<td class="td-icon"><img class="icon" src="static/img/svg/doctype/icon-${fileInfo.type}-m.svg"></td><td class="td-head"><a onclick="ls('${fileInfo.name}')" href="#" class="hover-link"><div class="${font_class}">${fileInfo.name}</div></a></td><td>${fileInfo.time}</td><td colspan="2"></td></div>`
     } else { //文件
         var watch_link = ''
-        if (fileInfo.type == 'video' || fileInfo.type == 'flv') { //视频文件
-            watch_link = `<a onclick="watch_video('${fileInfo.name}')" href="#">▶</a>`
+        if (fileInfo.type == 'video' || fileInfo.type == 'flv') { //视频文件（暂时找不到好的远程播放的方法，本地缓存不能流媒体播放）
+            // watch_link = `<a onclick="watch_video('${fileInfo.name}')" href="#">▶</a>`
         }
         return `<tr oncontextmenu="showFileMenu(${fileInfo.id})" id="f-${fileInfo.id}"><td class="td-icon"><img class="icon" src="static/img/svg/doctype/icon-${fileInfo.type}-m.svg"></td><td class="td-head"><div class="${font_class}">${fileInfo.name}</div></td><td>${fileInfo.time}</td><td>${fileInfo.formatSize}</td><td class="td-download">${watch_link} <a href="#" onclick="download_file('${fileInfo.name}',${fileInfo.size})">⇩</a></div>`
     }
@@ -469,9 +469,24 @@ function getParentPath(file) {
 }
 
 function watch_video(file) {
-    let folder = getHome(getUserSSHInfo().username, os.type)
+    let folder = `${getHome(getUserSSHInfo().username, os.type)}.eftp/`
+    if (!fs.existsSync(folder)) {
+        fs.mkdirSync(folder)
+    }
     let id = addInfo('video', file)
-    getSSH().getFile(folder + file, getCurrentDir() + file).then(function(Contents) {
+    let tmp = folder + file
+    show('video_dialog', true)
+    if (fs.existsSync(tmp)) { //视频文件已经下载
+        done_process(id) //停止log进度条
+        document.getElementById('video').setAttribute('src', `file://${tmp}`) //直接播放
+        console.log('video', tmp)
+        return
+    }
+    setTimeout(() => { //2秒后开始播放
+        console.log('video', tmp)
+        document.getElementById('video').setAttribute('src', `file://${tmp}`)
+    }, 2000)
+    getSSH().getFile(tmp, getCurrentDir() + file).then(function(Contents) { //下载视频文件
         // console.log("The File", file, "successfully downloaded")
         // addInfo('success')
         //下载成功的操作
