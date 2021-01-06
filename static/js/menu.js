@@ -53,8 +53,9 @@ file_menu.append(new MenuItem({
             return
         }
         file_name = fileList[file_id].name
-        console.log('download file', file_name)
-        download_file(file_name)
+        file_size = fileList[file_id].size
+        console.log('download file', file_name, file_size)
+        download_file(file_name, file_size)
     }
 }))
 file_menu.append(new MenuItem({ type: 'separator' }))

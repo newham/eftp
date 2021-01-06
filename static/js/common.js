@@ -59,7 +59,7 @@ function maxWindow() {
     max = !max;
 }
 
-function appenHTMLByID(id, html) {
+function appendHTMLByID(id, html) {
     document.getElementById(id).insertAdjacentHTML('beforeend', html)
 }
 

@@ -1,6 +1,6 @@
 {
     "name": "eftp",
-    "version": "0.8.5",
+    "version": "0.8.6",
     "description": "a cool sftp client",
     "main": "main.js",
     "scripts": {

@@ -192,7 +192,7 @@ function addInfo(msg, file = '', isArray = false, path = '') {
     if (msg == 'download') {
         file = `<a onclick="open_file('${id}','${path+file}')" class="link">${file}</a>` //下载完成打开的连接
     }
-    document.getElementById('infos').insertAdjacentHTML("beforeend", `<div class="line-div"><p><label>${msg}</label>${file}</p><p id="${id}">${loading_html}</p></div>`)
+    document.getElementById('infos').insertAdjacentHTML("beforeend", `<div class="line-div" id="line_${id}"><p id="${'info_'+id}"><label>${msg}</label>${file}</p><p id="${id}">${loading_html}</p></div>`)
     sidebar = document.getElementById('sidebar') //滑动到底部
     sidebar.scrollTop = sidebar.scrollHeight;
     addLock(true) //加锁，退出提示，禁止清空
@@ -665,6 +665,18 @@ function done_watch(id) {
     console.log('done watch:', id)
 }
 
+function rm_file(file, id) {
+    console.log('rm local', file)
+    if (fs.existsSync(file)) {
+        try {
+            fs.unlinkSync(file) //删除本地文件
+        } catch (err) { //删除失败，警告
+            alert(err)
+        }
+    }
+    document.getElementById(`line_${id}`).remove()
+}
+
 function download_file(file, f_size) {
     showOpenFolderWin((ok, folder) => {
         if (!ok) {
@@ -681,6 +693,7 @@ function download_file(file, f_size) {
             done_process(id) //停止log进度条
             remove_bs(id) //删除后台任务
             done_watch(watch_id) //关闭进度监听
+            appendHTMLByID(`info_${id}`, ` <a onclick="rm_file('${folder + file}',${id})" class="txt-danger"> 删除</a>`) //显示删除
         }, function(error) { //下载失败
             // console.log(error)
             done_process(id, 'failed', error)
@@ -998,7 +1011,7 @@ function setfavouritesMenu() {
     // console.log(getUserSSHInfo().favourites)
     setHTMLByID('favourites', `<button onclick="favourite_folder('${getFolderName(getCurrentDir(), false)}','${getParentPath(getCurrentDir())}')">♥ 添加收藏</button>`)
     getUserSSHInfo().favourites.forEach((fav, i) => {
-        appenHTMLByID('favourites', `\n<hr><button onclick="goFavourite(${i})" oncontextmenu="showFavouriteMenu(${i})">${fav.currentDir}${fav.folder}</button>`)
+        appendHTMLByID('favourites', `\n<hr><button onclick="goFavourite(${i})" oncontextmenu="showFavouriteMenu(${i})">${fav.currentDir}${fav.folder}</button>`)
     })
 }
 
@@ -1344,14 +1357,14 @@ function setBsMenu() {
         // bs_list
         bs_list.forEach((item, i) => {
             if (i == 0) {
-                appenHTMLByID('bs_list', `\n<button >${item.status} ${item.file}</button>`)
+                appendHTMLByID('bs_list', `\n<button >${item.status} ${item.file}</button>`)
             } else {
-                appenHTMLByID('bs_list', `\n<hr><button >${item.status} ${item.file}</button>`)
+                appendHTMLByID('bs_list', `\n<hr><button >${item.status} ${item.file}</button>`)
             }
 
         })
     } else {
-        appenHTMLByID('bs_list', `\n<button >空</button>`)
+        appendHTMLByID('bs_list', `\n<button >空</button>`)
     }
 
 }
