@@ -8,7 +8,7 @@ const path = require("path");
 // ---------------data-start--------------
 let ssh_list = []
 
-const ls_history_max = 100
+const LS_HISTORY_MAX = 100
 
 const MAX_INFOS_NUM = 100
 
@@ -787,8 +787,16 @@ function getFileType(file, is_folder = false) {
         case 'apk':
             file_type = 'apk'
             break
+        case 'dmg':
+            file_type = 'ipa'
+            break
         case 'psd':
             file_type = 'ps'
+            break
+        case 'html':
+        case 'htm':
+        case 'url':
+            file_type = 'shared-link'
             break
         case 'txt':
         case 'md':
@@ -808,9 +816,14 @@ function getFileType(file, is_folder = false) {
         case 'flv':
             file_type = 'flv'
             break
+        case 'bt':
+        case 'torrent':
+            file_type = 'bt'
+            break
         case 'mp3':
         case 'm4a':
         case 'flac':
+        case 'wma':
             file_type = 'audio'
             break
         case 'jpg':
@@ -835,7 +848,6 @@ function getFileType(file, is_folder = false) {
         case 'java':
         case 'py':
         case 'ipynb':
-        case 'html':
         case 'js':
         case 'css':
             file_type = 'code'
@@ -926,6 +938,8 @@ function to_login() {
         // window.location.href = 'login.html'
 }
 
+var osTypeList = ['Linux', 'Darwin', 'WindowsNT']
+
 function connectSSH(ssh_id = current_ssh_id) {
     let ssh = new node_ssh()
     let userSSHInfo = getUserSSHInfo()
@@ -941,8 +955,30 @@ function connectSSH(ssh_id = current_ssh_id) {
         setSSH(ssh_id, ssh)
             // console.log("connect success!")
         setTabs(ssh_id) //1.修改tabs
-        ls("") //2.
-        done_process(id) //3.
+        ssh.exec('uname', ['-s'], { // 2.获取home（兼容不同的系统）
+            onStdout(chunk) {
+                let os_type = chunk.toString(userSSHInfo.characterSet).replace(/\n|\r/g, "") //！！！！注意去掉换行符
+
+                if (!osTypeList.includes(os_type)) { //暂时不支持windows系统
+                    alert(`暂时不支持连接到${os_type}系统！`)
+                    return false
+                }
+                //set os type
+                userSSHInfo.osType = os_type
+                setUserSSHInfo(userSSHInfo)
+
+                saveUserSSHInfo(userSSHInfo) //2.保存新的UserSSHInfo
+            },
+            onStderr(chunk) {
+                console.log('uname', chunk.toString(userSSHInfo.characterSet))
+                addError(chunk.toString(userSSHInfo.characterSet))
+            }
+        }).then(() => { //uname 成功
+            ls(HOME_FILE_NAME) //3.显示目录
+            done_process(id) //4.结束log
+        }).catch((res) => {
+            console.log('uname', res)
+        })
     }).catch((excp) => {
         setSSH(ssh_id, -1)
             // console.log("connect failed!", error)
@@ -1212,14 +1248,14 @@ function copy(from = get_copy_from(), to = "", cmd = 'cp') {
 
 ipcRenderer.on('add_ssh', (event, userSSHInfo) => {
     // console.log("add ssh", userSSHInfo)
-    new_ssh(userSSHInfo, getHome(userSSHInfo.username, userSSHInfo.osType))
+    new_ssh(userSSHInfo) //进入个人主目录
 })
 
-function new_ssh(userSSHInfo, currentDir) {
+function new_ssh(userSSHInfo) {
     // console.log(userSSHInfo.label)
     ssh_list.push({
         userSSHInfo: userSSHInfo,
-        currentDir: currentDir,
+        currentDir: '',
         ssh: null,
         fileList: [],
         isShowHidden: false,
@@ -1388,6 +1424,5 @@ function refresh() {
 //设置主题
 setTheme()
 
-//on init win
-let initUserSSHInfo = remote.getGlobal('shareData').userSSHInfo
-new_ssh(initUserSSHInfo, getHome(initUserSSHInfo.username, initUserSSHInfo.osType))
+//读取主进程的共享数据userSSHInfo
+new_ssh(remote.getGlobal('shareData').userSSHInfo)

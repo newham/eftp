@@ -198,19 +198,19 @@ input::-webkit-input-placeholder {
     font-weight: bold;
 }
 
-.input-1-4 {
+.c-1-4 {
     width: calc(25% - 20px) !important;
 }
 
-.input-2-4 {
+.c-2-4 {
     width: calc(50% - 20px) !important;
 }
 
-.input-3-4 {
+.c-3-4 {
     width: calc(75% - 20px) !important;
 }
 
-.input-half {
+.c-half {
     width: calc(50% - 20px) !important;
 }
 
@@ -524,7 +524,8 @@ p {
 }
 
 .btn-group button {
-    margin: 0px 5px;
+    /* margin-right: 2px; */
+    /* margin: 0px 2px; */
     border-radius: 16px;
     color: #fff;
     border: 2px solid var(--dialog-bg-color);

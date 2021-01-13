@@ -7,7 +7,7 @@ var lock = false //打开编辑框后，其他图标click锁
 
 var save_lock = false //保存、取消按钮锁
 
-function show_dialog(isShow, title = '新建Host') {
+function show_dialog(isShow, title = '新建HOST') {
     if (isShow) {
         document.getElementById('dialog_title').innerHTML = title //改变title
         lock = true //加锁
@@ -73,51 +73,25 @@ function saveUserSSHInfo(userSSHInfo) {
         show('loading_dialog', false) //隐藏连接测试loading框
         save_lock = false //保存锁解锁
 
-        //2. 获取系统类型
-        ssh_test.exec('uname', ['-s'], {
-            onStdout(chunk) {
-                let os_type = chunk.toString(userSSHInfo.characterSet).replace(/\n|\r/g, "") //！！！！注意去掉换行符
-
-                if (!os_type in ['Darwin', 'Linux']) { //暂时不支持windows系统
-                    alert(`暂时不支持连接到${os_type}系统！`)
-                    return false
-                }
-                //set os type
-                userSSHInfo.osType = os_type
-
-                // ipcRenderer.send('add_userSSHInfo', userSSHInfo)
-                readConf((ok, conf) => {
-                    if (ok) { //insert
-                        userSSHInfo.id = conf.length
-                        conf.push(userSSHInfo)
-                            // console.log(conf)
-                    } else { //first
-                        userSSHInfo.id = 0
-                        conf = [userSSHInfo]
-                    }
-                    //3. save to config file
-                    writeConf(conf, (err) => {
-                        if (err) {
-                            console.log(err)
-                        } else {
-                            //隐藏dialog
-                            // show_dialog(false)
-                            //重载页面
-                            loadConf()
-                        }
-                    })
-
-                })
-            },
-            onStderr(chunk) {
-                console.log('uname', chunk.toString(userSSHInfo.characterSet))
+        readConf((ok, conf) => { //保存
+            if (ok) { //insert
+                userSSHInfo.id = conf.length
+                conf.push(userSSHInfo)
+                    // console.log(conf)
+            } else { //first
+                userSSHInfo.id = 0
+                conf = [userSSHInfo]
             }
-        }).then(() => { //全部添加成功（connect成功，uname成功)
-            show_dialog(false) //隐藏编辑框
-        }).catch((res) => {
-            console.log('uname', res)
+            //3. save to config file
+            writeConf(conf, (err) => {
+                if (err) {
+                    console.log(err)
+                } else {
+                    show_dialog(false) //隐藏dialog
+                    loadConf() //重载页面
+                }
+            })
         })
-
 
     }, function(error) { // connect 失败
         show('loading_dialog', false)
@@ -141,6 +115,7 @@ function addUserSSHInfo() {
     port = document.getElementById('port').value
     id = document.getElementById('id').value
     color = document.getElementById('color').value
+    osType = document.getElementById('osType').value
     ssh = false
 
     if (host == "" || username == "" || (password == "" && privateKey == "")) {
@@ -173,7 +148,7 @@ function addUserSSHInfo() {
         label: label,
         favourites: tmp_favourites,
         color: color,
-        osType: 'Linux',
+        osType: osType,
     }
 
     console.log('add userSSHInfo', userSSHInfo.id, userSSHInfo.label)
@@ -183,7 +158,7 @@ function addUserSSHInfo() {
 }
 
 function selectPK() {
-    if (lock) {
+    if (save_lock) {
         return
     }
     showOpenFileWin((ok, pkfile) => {
@@ -197,12 +172,6 @@ function selectPK() {
     })
 }
 
-{
-    /* <div class="c-5">
-    <a class="box" href="index.html">ubuntu@shilizi.cn</a>
-    </div> */
-}
-
 function loadConf() {
     list_html = document.getElementById('userSSH_list')
     list_html.innerHTML = ""
@@ -214,11 +183,15 @@ function loadConf() {
 
         // console.log(conf)
         userSSH_list.forEach(userSSHInfo => {
-            let icon = 'static/img/svg/os/icon-linux.svg'
+            let icon = ''
             if (userSSHInfo.osType == 'Darwin') {
-                icon = 'static/img/svg/os/icon-mac.svg'
+                icon = '<img src="static/img/svg/os/icon-mac.svg">'
+            } else if (userSSHInfo.osType == 'Linux') {
+                icon = '<img src="static/img/svg/os/icon-linux.svg">'
+            } else if (userSSHInfo.osType == 'WindowsNT') {
+                icon = '<img src="static/img/svg/os/icon-win.svg">'
             }
-            list_html.insertAdjacentHTML('beforeend', `<div class="c-2-5"><a class="box bg-color-${userSSHInfo.color}"  oncontextmenu="showHostMenu(${userSSHInfo.id})" onclick="goSSH(${userSSHInfo.id})"><img src="${icon}">${userSSHInfo.label}<br><label>${userSSHInfo.username}@${userSSHInfo.host}</label></a></div>`)
+            list_html.insertAdjacentHTML('beforeend', `<div class="c-2-5"><a class="box bg-color-${userSSHInfo.color}"  oncontextmenu="showHostMenu(${userSSHInfo.id})" onclick="goSSH(${userSSHInfo.id})">${icon}${userSSHInfo.label}<br><label>${userSSHInfo.username}@${userSSHInfo.host}</label></a></div>`)
         });
 
         // add button
@@ -242,6 +215,9 @@ function goSSH(id) {
 
 function delSSHInfo(id) {
     if (lock) {
+        return false
+    }
+    if (!confirm(`确定删除 [${userSSH_list[id].label}]?`)) {
         return false
     }
     //删除
@@ -275,7 +251,7 @@ function editSSHInfo(userSSHInfo) {
 
 function setSSHDialogVal(userSSHInfo) {
     color = Math.floor((Math.random() * 7))
-    if (userSSHInfo) {
+    if (userSSHInfo) { //修改，设置为已有值
         color = userSSHInfo.color
         document.getElementById('host').value = userSSHInfo.host
         document.getElementById('username').value = userSSHInfo.username
@@ -285,7 +261,8 @@ function setSSHDialogVal(userSSHInfo) {
         document.getElementById('port').value = userSSHInfo.port
         document.getElementById('id').value = userSSHInfo.id
         document.getElementById('color').value = color
-    } else {
+        document.getElementById('osType').value = userSSHInfo.osType
+    } else { //新增，设置为默认值
         document.getElementById('host').value = ""
         document.getElementById('username').value = ""
         document.getElementById('label').value = ""
@@ -294,8 +271,26 @@ function setSSHDialogVal(userSSHInfo) {
         document.getElementById('port').value = 22
         document.getElementById('id').value = -1
         document.getElementById('color').value = color
+        document.getElementById('osType').value = ''
     }
     setColor(color)
+
+    // setOSType(osType)
+}
+
+var osTypeList = ['Linux', 'Darwin', 'WindowsNT']
+
+function setOSType(osType = 'Linux') {
+    os_group = document.getElementById('os-group').children;
+    for (i = 0; i < os_group.length; i++) {
+        if (i == osTypeList.indexOf(osType)) {
+            os_group[i].classList.add('active')
+            document.getElementById('osType').value = osType
+            console.log('set osType:', osType)
+        } else {
+            os_group[i].classList.remove('active')
+        }
+    }
 }
 
 function setColor(color = 0) {

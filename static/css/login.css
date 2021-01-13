@@ -62,5 +62,21 @@ td {
 }
 
 #color-group {
+    /* width: 50%;
+    float: left;
+    height: 37px;
+    line-height: 50px; */
+    padding: 5px 0px;
     text-align: center;
+}
+
+#os-group {
+    width: 50%;
+    float: left;
+    text-align: center;
+}
+
+#os-group img {
+    border: 2px solid var(--dialog-bg-color);
+    width: 38px;
 }
