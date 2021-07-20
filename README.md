@@ -37,6 +37,11 @@
 
 <img src="cap_imgs/cap_4.png" style="border:1px solid #000">
 
+## 下载
+
+1. 百度网盘: 链接: https://pan.baidu.com/s/1b68nzD5BXfBUNGAtRZV13Q  密码: 9roi
+2. GitHub: [eftp-0.8.7.dmg](https://github.com/newham/eftp/releases/download/v0.8.7/eftp-0.8.7.dmg)
+
 ## 已知BUG
 
 1. 下载大文件时不稳定, 容易到一半停止，网络原因可能性较大。
@@ -58,3 +63,6 @@
 7. 音频播放
 
 8. 多语言
+
+## 反馈
+新功能、Bug或者任何建议欢迎联系我，不吝赐教:[newham.cn@gmail.com](mailto:newham.cn@gmail.com)  
