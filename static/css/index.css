@@ -55,7 +55,7 @@ body {
     /* background-color: #333; */
     border-right: var(--bar-border);
     /* color: var(--side-bar-font-color); */
-    text-align: center;
+    text-align: left;
     /* padding: 0px var(--side-bar-padding); */
     overflow-y: auto;
     /* background: #333; */

@@ -1293,7 +1293,7 @@ function setTabs(ssh_id = current_ssh_id) {
         } else {
             active_css = ''
         }
-        let tag = '●' //●,■,▲,▶
+        let tag = '◆' //◆,●,■,▲,▶
         let tag_class = 'txt-success'
         if (ssh.ssh == -1) {
             tag_class = 'txt-danger'
