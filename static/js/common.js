@@ -1,62 +1,33 @@
-var remote = require('electron').remote;
+// common.js — 渲染进程公共工具，不再使用 remote 模块
 
-//请使用js原生的`${xxx}`方法代替
-// String.prototype.format = function () {
-//     if (arguments.length == 0) return this;
-//     for (var s = this, i = 0; i < arguments.length; i++)
-//         s = s.replace(new RegExp("\\{" + i + "\\}", "g"), arguments[i]);
-//     return s;
-// };
-
-// String.prototype.endWith = function(str){
-//     if(str==null || str=="" || this.length == 0 ||str.length > this.length){	
-//       return false;
-//     }
-//     if(this.substring(this.length - str.length)){
-//         return true;
-//     }else{
-//         return false;
-//     }
-//     return true;
-// };
-
-// String.prototype.startWith = function(str){
-//  if(str == null || str== "" || this.length== 0 || str.length > this.length){
-//     return false;
-//  } 
-//  if(this.substr(0,str.length) == str){
-//     return true;
-//  }else{
-//     return false;
-//   }       
-//  return true; 
-// };
-
-function setTheme() {
-    theme = document.getElementById('theme-css')
-    if (remote.getGlobal('shareData').isDark) {
+async function setTheme() {
+    const theme = document.getElementById('theme-css')
+    if (!theme) return
+    const shareData = await window.electronAPI.getShareData()
+    if (shareData && shareData.isDark) {
         theme.href = 'static/css/dark.css'
     } else {
         theme.href = 'static/css/light.css'
     }
 }
 
-const { ipcRenderer } = require('electron')
-
-ipcRenderer.on('themeChanged', (event, msg) => {
-    console.log("themeChanged: isDark", msg)
-    setTheme()
+// 监听主进程下发的主题变更
+window.electronAPI.onThemeChanged((isDark) => {
+    console.log("themeChanged: isDark", isDark)
+    const theme = document.getElementById('theme-css')
+    if (!theme) return
+    if (isDark) {
+        theme.href = 'static/css/dark.css'
+    } else {
+        theme.href = 'static/css/light.css'
+    }
 })
 
 var max = false
 
 function maxWindow() {
-    if (!max) {
-        remote.getCurrentWindow().maximize();
-    } else {
-        remote.getCurrentWindow().unmaximize();
-    }
-    max = !max;
+    window.electronAPI.maximizeWindow()
+    max = !max
 }
 
 function appendHTMLByID(id, html) {
@@ -81,4 +52,22 @@ function show(id, isShow) {
     } else {
         document.getElementById(id).style.display = 'none'
     }
+}
+
+// 文件选择对话框（单个）
+async function showOpenFileWin(cb) {
+    const result = await window.electronAPI.showOpenFileDialog()
+    cb(result.ok, result.ok ? result.file : null)
+}
+
+// 文件选择对话框（多个）
+async function showOpenFilesWin(cb) {
+    const result = await window.electronAPI.showOpenFilesDialog()
+    cb(result.ok, result.ok ? result.files : null)
+}
+
+// 文件夹选择对话框
+async function showOpenFolderWin(cb) {
+    const result = await window.electronAPI.showOpenFolderDialog()
+    cb(result.ok, result.ok ? result.folder : null)
 }

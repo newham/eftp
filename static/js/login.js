@@ -1,147 +1,105 @@
-var remote = require('electron').remote;
-const node_ssh = require('node-ssh')
+// login.js — 登录页逻辑，SSH 连接测试通过主进程 IPC 完成
 
 var userSSH_list = []
+var lock = false       // 打开编辑框后，其他图标 click 锁
+var save_lock = false  // 保存、取消按钮锁
 
-var lock = false //打开编辑框后，其他图标click锁
-
-var save_lock = false //保存、取消按钮锁
+// 临时 SSH ID（用于主进程连接池，login 页只做测试连接）
+const LOGIN_TEST_SSH_ID = '__login_test__'
 
 function show_dialog(isShow, title = '新建HOST') {
     if (isShow) {
-        document.getElementById('dialog_title').innerHTML = title //改变title
-        lock = true //加锁
+        document.getElementById('dialog_title').innerHTML = title
+        lock = true
         document.getElementById('new_ssh_dialog').style.display = 'block'
         document.getElementById('username').focus()
     } else {
-        if (save_lock) { //正在保存中，禁止取消dialog
-            return
-        }
-        lock = false //关闭dialog显示锁
+        if (save_lock) return
+        lock = false
         document.getElementById('new_ssh_dialog').style.display = 'none'
     }
 }
 
 function new_ssh() {
-    if (lock) {
-        return false
-    }
-    //清空dialog
+    if (lock) return false
     setSSHDialogVal(null)
     show_dialog(true)
 }
 
 function saveUserSSHInfo(userSSHInfo) {
-    // edit 直接覆盖原值，不进行测试
+    // 编辑已有记录：直接覆盖，不做连接测试
     if (userSSHInfo.id != -1) {
-        console.log('edit', userSSHInfo.id)
-            //refresh
         userSSH_list[userSSHInfo.id] = userSSHInfo
-            //write to config
         writeConf(userSSH_list, (err) => {
-            if (err) {
-                console.log(err)
-            } else {
-                // show_dialog(false)
-                //重载页面
-                loadConf()
-            }
+            if (err) console.log(err)
+            else loadConf()
         })
-        show_dialog(false) //隐藏编辑框
+        show_dialog(false)
         return
     }
 
-    //隐藏编辑对话框
-    // show_dialog(false)
-
-    //显示加载的对话框
+    // 新增：先测试连接
     document.getElementById('host_address').innerHTML = `${userSSHInfo.username}@${userSSHInfo.host}`
     show('loading_dialog', true)
-    save_lock = true //为保存按钮加锁
+    save_lock = true
 
-    // add
-    //1. test ssh
-    var ssh_test = new node_ssh()
-    ssh_test.connect({
-        host: userSSHInfo.host,
-        username: userSSHInfo.username,
-        password: userSSHInfo.password,
-        privateKey: userSSHInfo.privateKey,
-        port: userSSHInfo.port,
-    }).then(() => {
-        // 这里是connect 成功
-        show('loading_dialog', false) //隐藏连接测试loading框
-        save_lock = false //保存锁解锁
+    window.electronAPI.sshConnect(LOGIN_TEST_SSH_ID, userSSHInfo).then((result) => {
+        show('loading_dialog', false)
+        save_lock = false
+        // 测试完成立即断开
+        window.electronAPI.sshDispose(LOGIN_TEST_SSH_ID)
 
-        readConf((ok, conf) => { //保存
-            if (ok) { //insert
+        if (!result.ok) {
+            show_dialog(true, `<div class="txt-danger">连接失败: ${result.error}</div>`)
+            return
+        }
+
+        readConf((ok, conf) => {
+            if (ok) {
                 userSSHInfo.id = conf.length
                 conf.push(userSSHInfo)
-                    // console.log(conf)
-            } else { //first
+            } else {
                 userSSHInfo.id = 0
                 conf = [userSSHInfo]
             }
-            //3. save to config file
             writeConf(conf, (err) => {
-                if (err) {
-                    console.log(err)
-                } else {
-                    show_dialog(false) //隐藏dialog
-                    loadConf() //重载页面
+                if (err) console.log(err)
+                else {
+                    show_dialog(false)
+                    loadConf()
                 }
             })
         })
-
-    }, function(error) { // connect 失败
-        show('loading_dialog', false)
-        save_lock = false //保存锁解锁
-            // console.log(error)
-        show_dialog(true, `<div class="txt-danger">连接失败: ${error}</div>`) //在编辑框中显示错误
     })
 }
 
 var tmp_favourites = []
 
 function addUserSSHInfo() {
-    if (save_lock) {
-        return
-    }
-    host = document.getElementById('host').value
-    username = document.getElementById('username').value
-    label = document.getElementById('label').value
-    password = document.getElementById('password').value
-    privateKey = document.getElementById('privateKey').value
-    port = document.getElementById('port').value
-    id = document.getElementById('id').value
-    color = document.getElementById('color').value
-    osType = document.getElementById('osType').value
-    ssh = false
+    if (save_lock) return
+    const host = document.getElementById('host').value
+    const username = document.getElementById('username').value
+    let label = document.getElementById('label').value
+    const password = document.getElementById('password').value
+    const privateKey = document.getElementById('privateKey').value
+    let port = document.getElementById('port').value
+    const id = document.getElementById('id').value
+    const color = document.getElementById('color').value
+    const osType = document.getElementById('osType').value
 
     if (host == "" || username == "" || (password == "" && privateKey == "")) {
-        // show_dialog(false)
         alert('请正确输入必填项!')
         return
     }
+    if (port == "") port = 22
+    if (label == "") label = username + '@' + host
 
-    if (port == "") {
-        port = 22
-    }
-
-    if (label == "") {
-        label = username + '@' + host
-    }
-
-    if (privateKey != "") {
-        ssh = true
-    }
-
-    var userSSHInfo = {
+    const userSSHInfo = {
         id: id,
         host: host,
         username: username,
         password: password,
-        ssh: ssh,
+        ssh: privateKey !== "",
         privateKey: privateKey,
         characterSet: 'utf8',
         port: port,
@@ -151,37 +109,24 @@ function addUserSSHInfo() {
         osType: osType,
     }
 
-    console.log('add userSSHInfo', userSSHInfo.id, userSSHInfo.label)
-
-    //save to local
     saveUserSSHInfo(userSSHInfo)
 }
 
 function selectPK() {
-    if (save_lock) {
-        return
-    }
+    if (save_lock) return
     showOpenFileWin((ok, pkfile) => {
-        if (!ok) {
-            return
-        }
-        console.log("select pk:", pkfile)
+        if (!ok) return
         document.getElementById('privateKey').value = pkfile
-            //clean pwd
         document.getElementById('password').value = ''
     })
 }
 
 function loadConf() {
-    list_html = document.getElementById('userSSH_list')
+    const list_html = document.getElementById('userSSH_list')
     list_html.innerHTML = ""
     readConf((ok, conf) => {
-        if (ok) {
-            //save to memory
-            userSSH_list = conf
-        }
+        if (ok) userSSH_list = conf
 
-        // console.log(conf)
         userSSH_list.forEach(userSSHInfo => {
             let icon = ''
             if (userSSHInfo.osType == 'Darwin') {
@@ -191,67 +136,40 @@ function loadConf() {
             } else if (userSSHInfo.osType == 'WindowsNT') {
                 icon = '<img src="static/img/svg/os/icon-win.svg">'
             }
-            list_html.insertAdjacentHTML('beforeend', `<div class="c-2-5"><a class="box bg-color-${userSSHInfo.color}"  oncontextmenu="showHostMenu(${userSSHInfo.id})" onclick="goSSH(${userSSHInfo.id})">${icon}${userSSHInfo.label}<br><label>${userSSHInfo.username}@${userSSHInfo.host}</label></a></div>`)
-        });
+            list_html.insertAdjacentHTML('beforeend', `<div class="c-2-5"><a class="box bg-color-${userSSHInfo.color}" oncontextmenu="showHostMenu(${userSSHInfo.id})" onclick="goSSH(${userSSHInfo.id})">${icon}${userSSHInfo.label}<br><label>${userSSHInfo.username}@${userSSHInfo.host}</label></a></div>`)
+        })
 
-        // add button
         list_html.insertAdjacentHTML('beforeend', '<div class="c-2-5"><a class="box" onclick="new_ssh()">＋<br><label>New Host</label></a></div>')
     })
-
 }
 
 function goSSH(id) {
-    if (lock) {
-        return false
-    }
-    userSSHInfo = userSSH_list[id]
-    console.log('go ssh', userSSHInfo.label)
-    ipcRenderer.send('go_ssh', userSSHInfo)
-        // share data
-        // remote.getGlobal('shareData').userSSHInfo = userSSHInfo
-        // to html
-        // window.location.href = 'index.html'
+    if (lock) return false
+    const userSSHInfo = userSSH_list[id]
+    window.electronAPI.goSSH(userSSHInfo)
 }
 
 function delSSHInfo(id) {
-    if (lock) {
-        return false
-    }
-    if (!confirm(`确定删除 [${userSSH_list[id].label}]?`)) {
-        return false
-    }
-    //删除
+    if (lock) return false
+    if (!confirm(`确定删除 [${userSSH_list[id].label}]?`)) return false
     userSSH_list.splice(id, 1)
-        //更新id
-    userSSH_list.forEach((userSSHInfo, i) => {
-            userSSHInfo.id = i
-            userSSH_list[i] = userSSHInfo
-        })
-        //保存
-    writeConf(conf, (err) => {
-        if (err) {
-            console.log(err)
-        } else {
-            //重载页面
-            loadConf()
-        }
+    userSSH_list.forEach((info, i) => { info.id = i })
+    writeConf(userSSH_list, (err) => {
+        if (err) console.log(err)
+        else loadConf()
     })
 }
 
 function editSSHInfo(userSSHInfo) {
-    if (lock) {
-        return false
-    }
+    if (lock) return false
     setSSHDialogVal(userSSHInfo)
-        //set tmp_favourites 
-    tmp_favourites = userSSHInfo.favourites
-        //set title
+    tmp_favourites = userSSHInfo.favourites || []
     show_dialog(true, '编辑Host')
 }
 
 function setSSHDialogVal(userSSHInfo) {
-    color = Math.floor((Math.random() * 7))
-    if (userSSHInfo) { //修改，设置为已有值
+    let color = Math.floor(Math.random() * 7)
+    if (userSSHInfo) {
         color = userSSHInfo.color
         document.getElementById('host').value = userSSHInfo.host
         document.getElementById('username').value = userSSHInfo.username
@@ -262,7 +180,7 @@ function setSSHDialogVal(userSSHInfo) {
         document.getElementById('id').value = userSSHInfo.id
         document.getElementById('color').value = color
         document.getElementById('osType').value = userSSHInfo.osType
-    } else { //新增，设置为默认值
+    } else {
         document.getElementById('host').value = ""
         document.getElementById('username').value = ""
         document.getElementById('label').value = ""
@@ -274,19 +192,16 @@ function setSSHDialogVal(userSSHInfo) {
         document.getElementById('osType').value = ''
     }
     setColor(color)
-
-    // setOSType(osType)
 }
 
 var osTypeList = ['Linux', 'Darwin', 'WindowsNT']
 
 function setOSType(osType = 'Linux') {
-    os_group = document.getElementById('os-group').children;
-    for (i = 0; i < os_group.length; i++) {
+    const os_group = document.getElementById('os-group').children
+    for (let i = 0; i < os_group.length; i++) {
         if (i == osTypeList.indexOf(osType)) {
             os_group[i].classList.add('active')
             document.getElementById('osType').value = osType
-            console.log('set osType:', osType)
         } else {
             os_group[i].classList.remove('active')
         }
@@ -294,8 +209,8 @@ function setOSType(osType = 'Linux') {
 }
 
 function setColor(color = 0) {
-    color_group = document.getElementById('color-group').children;
-    for (i = 0; i < color_group.length; i++) {
+    const color_group = document.getElementById('color-group').children
+    for (let i = 0; i < color_group.length; i++) {
         if (i == color) {
             color_group[i].classList.add('active')
             document.getElementById('color').value = color
@@ -305,8 +220,5 @@ function setColor(color = 0) {
     }
 }
 
-setTheme() //设置主题
-
-// delConf() //删除配置（debug）
-
+setTheme()
 loadConf()

@@ -1,226 +1,138 @@
-const { Menu, MenuItem } = remote
-
-const host_menu = new Menu()
+// menu.js — 右键菜单，通过 IPC 让主进程弹出原生菜单，回调通过 onMenuAction 接收
 
 var selected_id = 0
-
 var copy_cmd = 'cp'
+var file_id = -1
+var folder_id = -1
+var favourite_id = -1
+var tab_id = -1
 
-host_menu.append(new MenuItem({
-    label: '编辑',
-    click() {
-        console.log('edit', selected_id)
-        editSSHInfo(userSSH_list[selected_id])
-    }
-}))
-host_menu.append(new MenuItem({ type: 'separator' }))
-host_menu.append(new MenuItem({
-    label: '删除',
-    click() {
-        delSSHInfo(selected_id)
-    }
-}))
+// 统一注册菜单动作回调
+window.electronAPI.onMenuAction((action) => {
+    // console.log('menu action', action)
+    switch (action.type) {
+        // ---- host menu ----
+        case 'host_edit':
+            editSSHInfo(userSSH_list[action.id])
+            break
+        case 'host_delete':
+            delSSHInfo(action.id)
+            break
 
-// host_menu.append(new MenuItem({ type: 'separator' }))
-// host_menu.append(new MenuItem({ //仅供测试用，实际没有意义
-//     label: '拷贝',
-//     click() {
-//         console.log('copy', selected_id)
-//         userSSHInfo = userSSH_list[selected_id]
-//         userSSHInfo.label += '的副本'
-//         userSSHInfo.id = -1
-//         saveUserSSHInfo(userSSHInfo)
-//     }
-// }))
+        // ---- file menu ----
+        case 'file_download': {
+            const fileList = getFileList()
+            if (action.id < 0 || !fileList[action.id]) return
+            download_file(fileList[action.id].name, fileList[action.id].size)
+            break
+        }
+        case 'file_copy': {
+            copy_cmd = 'cp'
+            const f = getFileList()[action.id]
+            copy(f.name)
+            break
+        }
+        case 'file_cut': {
+            copy_cmd = 'mv'
+            const f = getFileList()[action.id]
+            copy(f.name, null, 'mv')
+            break
+        }
+        case 'file_delete': {
+            const f = getFileList()[action.id]
+            del_file(f.name, f.isDir)
+            break
+        }
+        case 'file_unzip': {
+            const f = getFileList()[action.id]
+            unzip_file(f.name)
+            break
+        }
+        case 'file_rename': {
+            const f = getFileList()[action.id]
+            show_rename_dialog(true, f.name)
+            break
+        }
+
+        // ---- folder menu ----
+        case 'folder_copy': {
+            copy_cmd = 'cp'
+            const folder = getFileList()[action.id]
+            copy(folder.name)
+            break
+        }
+        case 'folder_cut': {
+            copy_cmd = 'mv'
+            const folder = getFileList()[action.id]
+            copy(folder.name, null, 'mv')
+            break
+        }
+        case 'folder_delete': {
+            if (action.id < 0) return
+            const folder = getFileList()[action.id]
+            del_file(folder.name, folder.isDir)
+            break
+        }
+        case 'folder_favourite': {
+            const folder = getFileList()[action.id]
+            favourite_folder(folder.name)
+            break
+        }
+        case 'folder_zip': {
+            const folder = getFileList()[action.id]
+            zip_folder(folder.name)
+            break
+        }
+        case 'folder_rename': {
+            const folder = getFileList()[action.id]
+            show_rename_dialog(true, folder.name)
+            break
+        }
+
+        // ---- favourite menu ----
+        case 'favourite_delete':
+            del_favourite(action.id)
+            break
+
+        // ---- dir menu ----
+        case 'dir_paste': {
+            const currentDir = getCurrentDir()
+            copy(null, currentDir, copy_cmd)
+            break
+        }
+
+        // ---- tab menu ----
+        case 'tab_close':
+            closeTab(action.id)
+            break
+    }
+})
 
 function showHostMenu(id) {
-    console.log('show menu', id)
     selected_id = id
-        // menuLock = true;
-    host_menu.popup({ window: remote.getCurrentWindow() })
+    window.electronAPI.showHostMenu(id)
 }
-
-/* ******file menu******* */
-const file_menu = new Menu()
-
-var file_id = -1
-
-file_menu.append(new MenuItem({
-    label: '下载',
-    click() {
-        fileList = getFileList()
-        if (file_id < 0 || !fileList[file_id]) { //可能由于没有权限，无法获得文件名
-            return
-        }
-        file_name = fileList[file_id].name
-        file_size = fileList[file_id].size
-        console.log('download file', file_name, file_size)
-        download_file(file_name, file_size)
-    }
-}))
-file_menu.append(new MenuItem({ type: 'separator' }))
-file_menu.append(new MenuItem({
-    label: '复制',
-    click() {
-        copy_cmd = 'cp'
-        fileList = getFileList()
-        file = fileList[file_id]
-        console.log('copy from', file.name)
-        copy(file.name)
-    }
-}))
-file_menu.append(new MenuItem({
-    label: '剪切',
-    click() {
-        copy_cmd = 'mv'
-        fileList = getFileList()
-        file = fileList[file_id]
-        console.log('cut from', file.name)
-        copy(file.name, null, 'mv')
-    }
-}))
-file_menu.append(new MenuItem({ type: 'separator' }))
-file_menu.append(new MenuItem({
-    label: '删除',
-    click() {
-        fileList = getFileList()
-        file = fileList[file_id]
-        console.log('delete', file.name)
-        del_file(file.name, file.isDir)
-    }
-}))
-file_menu.append(new MenuItem({ type: 'separator' }))
-file_menu.append(new MenuItem({
-    label: '解压',
-    click() {
-        fileList = getFileList()
-        file = fileList[file_id]
-        console.log('unzip', file.name)
-        unzip_file(file.name)
-    }
-}))
 
 function showFileMenu(id) {
     file_id = id
-    file_menu.popup({ window: remote.getCurrentWindow() })
+    window.electronAPI.showFileMenu(id)
 }
-
-/* ******folder menu******* */
-
-const folder_menu = new Menu()
-
-var folder_id = -1
-
-folder_menu.append(new MenuItem({
-    label: '复制',
-    click() {
-        copy_cmd = 'cp'
-        fileList = getFileList()
-        folder = fileList[folder_id]
-        console.log('copy from', folder.name)
-        copy(folder.name)
-    }
-}))
-folder_menu.append(new MenuItem({
-    label: '剪切',
-    click() {
-        copy_cmd = 'mv'
-        fileList = getFileList()
-        folder = fileList[folder_id]
-        console.log('cut from', folder.name)
-        copy(folder.name, null, 'mv')
-    }
-}))
-folder_menu.append(new MenuItem({ type: 'separator' }))
-folder_menu.append(new MenuItem({
-    label: '删除',
-    click() {
-        if (folder_id < 0) {
-            return
-        }
-        fileList = getFileList()
-        folder = fileList[folder_id]
-        console.log('delete', folder.name)
-        del_file(folder.name, folder.isDir)
-    }
-}))
-folder_menu.append(new MenuItem({ type: 'separator' }))
-folder_menu.append(new MenuItem({
-    label: '收藏',
-    click() {
-        fileList = getFileList()
-        folder = fileList[folder_id]
-        console.log('favourite', folder.name)
-        favourite_folder(folder.name)
-    }
-}))
-folder_menu.append(new MenuItem({ type: 'separator' }))
-folder_menu.append(new MenuItem({
-    label: '压缩',
-    click() {
-        fileList = getFileList()
-        folder = fileList[folder_id]
-        console.log('zip', folder.name)
-        zip_folder(folder.name)
-    }
-}))
 
 function showFolderMenu(id) {
     folder_id = id
-    folder_menu.popup({ window: remote.getCurrentWindow() })
+    window.electronAPI.showFolderMenu(id)
 }
-
-/* ******favourite menu******* */
-const favourite_menu = new Menu()
-
-var favourite_id = -1
-
-favourite_menu.append(new MenuItem({
-    label: '删除',
-    click() {
-        if (favourite_id < 0) {
-            return
-        }
-        console.log('delete favourite id', favourite_id)
-        del_favourite(favourite_id)
-    }
-}))
 
 function showFavouriteMenu(id) {
     favourite_id = id
-    favourite_menu.popup({ window: remote.getCurrentWindow() })
+    window.electronAPI.showFavouriteMenu(id)
 }
-
-/* ******current dir menu******* */
-const dir_menu = new Menu()
-
-dir_menu.append(new MenuItem({
-    label: '粘贴',
-    click() {
-        var currentDir = getCurrentDir()
-        console.log(`${copy_cmd} to`, currentDir)
-        copy(null, currentDir, copy_cmd)
-    }
-}))
 
 function showDirMenu() {
-    dir_menu.popup({ window: remote.getCurrentWindow() })
+    window.electronAPI.showDirMenu()
 }
-
-/* ******tab menu******* */
-const tab_menu = new Menu()
-
-var tab_id = -1
-
-tab_menu.append(new MenuItem({
-    label: '关闭',
-    click() {
-        console.log('close', tab_id)
-        closeTab(tab_id)
-    }
-}))
 
 function showTabMenu(id) {
     tab_id = id
-    tab_menu.popup({ window: remote.getCurrentWindow() })
+    window.electronAPI.showTabMenu(id)
 }
