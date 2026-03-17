@@ -1,7 +1,10 @@
-const { contextBridge, ipcRenderer } = require('electron')
+const { contextBridge, ipcRenderer, webUtils } = require('electron')
 
 // 暴露给渲染进程的安全 API
 contextBridge.exposeInMainWorld('electronAPI', {
+    // ---- 拖拽文件路径（Electron 32+ 需用 webUtils，File.path 已被移除）----
+    getPathForFile: (file) => webUtils.getPathForFile(file),
+
     // ---- 主题 ----
     getIsDark: () => ipcRenderer.invoke('get_is_dark'),
     onThemeChanged: (cb) => {

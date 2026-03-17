@@ -1,62 +1,51 @@
-document.getElementById('drag_box').addEventListener("drop", (e) => {
-    console.log('drag')
-    const files = e.dataTransfer.files;
+// drag.js — 拖放上传
+// Electron 32+ 的 contextIsolation 模式下 File.path 已被移除，
+// 必须通过 preload 暴露的 webUtils.getPathForFile(file) 获取真实路径。
+
+document.getElementById('drag_box').addEventListener('drop', (e) => {
+    e.preventDefault()
+    const files = e.dataTransfer.files
     if (files && files.length > 0) {
-        var file_list = []
-        var alert_file_list = []
-        for (i = 0; i < files.length; i++) {
-            file_list.push(files[i].path)
-            alert_file_list.push('--' + getFileName(files[i].path))
+        const file_list = []
+        for (let i = 0; i < files.length; i++) {
+            // 使用 webUtils.getPathForFile 获取真实本地路径
+            const filePath = window.electronAPI.getPathForFile(files[i])
+            if (filePath) file_list.push(filePath)
         }
-        var deng = ''
-        if (file_list.length > 10) {
-            deng = '...'
+        if (file_list.length > 0) {
+            upload_file(file_list)
         }
-        // if (confirm(`确定上传:\n${alert_file_list.slice(0, 10).join('\n')}\n${deng}文件\n到:${currentDir}?`)) {
-        //     upload_file(file_list)
-        // }
-        upload_file(file_list) //跳过确定直接上传
+    }
+    showDargBox(false)
+})
+
+// 必须阻止默认行为，dragover 才能触发 drop
+document.getElementById('drag_area').addEventListener('dragover', (e) => {
+    e.preventDefault()
+    showDargBox(true)
+})
+
+// 拖拽文件放到 drag_area 背景区（不是 drag_box）时，关闭遮罩
+document.getElementById('drag_area').addEventListener('drop', (e) => {
+    e.preventDefault()
+    showDargBox(false)
+})
+
+// 拖拽离开整个窗口时，关闭遮罩（防止卡住）
+document.addEventListener('dragleave', (e) => {
+    // relatedTarget 为 null 表示真正离开了窗口
+    if (e.relatedTarget === null) {
         showDargBox(false)
     }
 })
 
-//很重要！屏蔽默认操作才能有事件触发（拖到外面的drag_box上时显示drag_area区域）
-document.getElementById('drag_area').addEventListener("dragover", (e) => {
-    e.preventDefault();
-    showDargBox(true)
-})
-
-//离开区域(放到外面的drag_box上)
-document.getElementById('drag_area').addEventListener("drop", (e) => {
-    e.preventDefault();
-    showDargBox(false)
-})
-
 function showDargBox(isShow) {
-    if (isShow) {
-        document.getElementById('drag_box').style.display = 'block'
-    } else {
-        document.getElementById('drag_box').style.display = 'none'
-    }
+    document.getElementById('drag_box').style.display = isShow ? 'block' : 'none'
 }
 
-// 监听键盘事件
+// 键盘 ESC 关闭遮罩
 document.onkeydown = (event) => {
-    event = event || window.event; /*||为或语句，当IE不能识别event时候，就执行window.event 赋值*/
-    // console.log(event.keyCode);
-    switch (event.keyCode) { /*keyCode:字母和数字键的键码值*/
-        case 27:
-            //esc
-            showDargBox(false)
-            break;
-            /*37、38、39、40分别对应左上右下*/
-            // case 37:
-            // case 38:
-            //     previous()
-            //     break;
-            // case 39:
-            // case 40:
-            //     next()
-            //     break;
+    if ((event || window.event).keyCode === 27) {
+        showDargBox(false)
     }
 }
