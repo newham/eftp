@@ -86,10 +86,12 @@ function addError(msg) {
     document.getElementById('infos').insertAdjacentHTML("beforeend", `<div class="line-div"><p class="txt-danger">${msg}</p></div>`)
 }
 
+let _infoIdCounter = 0
 function addInfo(msg, file = '', isArray = false, path = '') {
     if (isArray) file = file.join(',<br>')
     const loading_html = LOADING_HTML
-    const id = new Date().getTime()
+    // 用自增计数器保证唯一，避免同一毫秒内多次调用产生重复 id
+    const id = `info_${++_infoIdCounter}`
     if (msg == 'download') {
         file = `<a onclick="open_file('${id}','${path + file}')" class="link">${file}</a>`
     }
