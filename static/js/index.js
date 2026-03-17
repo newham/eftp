@@ -132,6 +132,14 @@ function ls(dir, isShowHidden = getIsShowHidden()) {
     }
     if (dir == null && ssh_list[current_ssh_id].fileList.length > 0) {
         showPath(getCurrentDir())
+        // ../行不在 fileList 中，需要单独补充渲染
+        if (getCurrentDir() != "/") {
+            const up_file = init_fileInfo()
+            up_file.name = UP_FILE_NAME
+            up_file.isDir = true
+            up_file.time = ''
+            document.querySelector('#file_list').insertAdjacentHTML('beforeend', getFileHTML(up_file))
+        }
         ssh_list[current_ssh_id].fileList.forEach((fileInfo) => {
             document.querySelector('#file_list').insertAdjacentHTML('beforeend', getFileHTML(fileInfo))
         })
@@ -265,7 +273,10 @@ function getFileHTML(fileInfo) {
 }
 
 function set_file_info_html(fileInfo) {
-    ssh_list[current_ssh_id].fileList.push(fileInfo)
+    // ../ 仅用于 DOM 展示，不计入 fileList，避免 id 与数组索引错位
+    if (fileInfo.name !== UP_FILE_NAME) {
+        ssh_list[current_ssh_id].fileList.push(fileInfo)
+    }
     document.querySelector('#file_list').insertAdjacentHTML('beforeend', getFileHTML(fileInfo))
 }
 
