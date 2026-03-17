@@ -11,21 +11,31 @@ global.shareData = {
 
 let processLock = 0
 
-// SSH 连接池（按渲染进程 webContents id + sshId 索引）
-const sshPool = new Map()
+// ==================== SFTP 连接池 ====================
+// 每个连接条目结构：{ sftp: SftpClient, ssh2: ssh2.Client, connected: bool }
+const sftpPool = new Map()
 
 function getSshKey(senderId, sshId) {
     return `${senderId}_${sshId}`
 }
+
+function getPoolEntry(senderId, sshId) {
+    return sftpPool.get(getSshKey(senderId, sshId))
+}
+
+async function disposeEntry(entry) {
+    if (!entry) return
+    try { await entry.sftp.end() } catch(e) {}
+}
+
+// ==================== 菜单 ====================
 
 function createMenu() {
     var template = [{
             label: "Estp",
             submenu: [{
                     label: "关于",
-                    click: function() {
-                        app.showAboutPanel()
-                    }
+                    click: function() { app.showAboutPanel() }
                 },
                 { type: 'separator' },
                 { label: "退出", accelerator: "CmdOrCtrl+Q", click: function() { app.quit() } },
@@ -126,7 +136,7 @@ app.on('activate', () => {
     }
 })
 
-// ==================== IPC Handlers ====================
+// ==================== 基础 IPC ====================
 
 ipcMain.handle('get_share_data', () => global.shareData)
 ipcMain.handle('get_is_dark', () => nativeTheme.shouldUseDarkColors)
@@ -254,122 +264,361 @@ function setTheme(isDark) {
     })
 }
 
-// ==================== SSH IPC ====================
+// ==================== SFTP IPC ====================
 
+/**
+ * 建立 SFTP 连接（ssh2-sftp-client）
+ * 同时保存原始 ssh2 Client 供 exec 使用
+ */
 ipcMain.handle('ssh_connect', async (event, sshId, userSSHInfo) => {
-    const { NodeSSH } = require('node-ssh')
+    const SftpClient = require('ssh2-sftp-client')
+    const { Client: SSH2Client } = require('ssh2')
+
     const key = getSshKey(event.sender.id, sshId)
+
     // 关闭旧连接
-    if (sshPool.has(key)) {
-        try { sshPool.get(key).dispose() } catch(e) {}
-        sshPool.delete(key)
+    const old = sftpPool.get(key)
+    if (old) {
+        await disposeEntry(old)
+        sftpPool.delete(key)
     }
 
-    const ssh = new NodeSSH()
     const connectOpts = {
         host: userSSHInfo.host,
+        port: parseInt(userSSHInfo.port) || 22,
         username: userSSHInfo.username,
-        port: userSSHInfo.port,
+        readyTimeout: 15000,
+        retries: 1,
     }
     if (userSSHInfo.privateKey && userSSHInfo.privateKey !== '') {
-        connectOpts.privateKeyPath = userSSHInfo.privateKey
+        try {
+            connectOpts.privateKey = fs.readFileSync(userSSHInfo.privateKey)
+        } catch(e) {
+            return { ok: false, error: `读取私钥失败: ${e.message}` }
+        }
     } else {
         connectOpts.password = userSSHInfo.password
     }
 
+    // 1. 建立 SFTP 连接
+    const sftp = new SftpClient()
     try {
-        await ssh.connect(connectOpts)
-        sshPool.set(key, ssh)
-        return { ok: true }
-    } catch (e) {
+        await sftp.connect(connectOpts)
+    } catch(e) {
         return { ok: false, error: e.message || String(e) }
     }
+
+    // 2. 建立独立的 ssh2 exec 连接（用于 shell 命令）
+    const ssh2 = new SSH2Client()
+    const execConnected = await new Promise((resolve) => {
+        ssh2.on('ready', () => resolve(true))
+        ssh2.on('error', () => resolve(false))
+        ssh2.connect(connectOpts)
+    })
+
+    sftpPool.set(key, { sftp, ssh2, execConnected })
+    return { ok: true }
 })
 
+/**
+ * 执行远程命令（通过 ssh2 exec）
+ */
 ipcMain.handle('ssh_exec', async (event, sshId, cmd, args, options = {}) => {
-    const key = getSshKey(event.sender.id, sshId)
-    const ssh = sshPool.get(key)
-    if (!ssh) return { ok: false, error: 'not connected' }
+    const entry = getPoolEntry(event.sender.id, sshId)
+    if (!entry) return { ok: false, error: 'not connected' }
 
-    const stdoutChunks = []
-    const stderrChunks = []
+    const fullCmd = args && args.length > 0
+        ? `${cmd} ${args.map(a => `'${String(a).replace(/'/g, "'\\''")}'`).join(' ')}`
+        : cmd
+
+    const encoding = options.encoding || 'utf8'
+
+    return new Promise((resolve) => {
+        if (!entry.execConnected || !entry.ssh2) {
+            resolve({ ok: false, error: 'exec channel not available' })
+            return
+        }
+        entry.ssh2.exec(fullCmd, { env: options.env || {} }, (err, stream) => {
+            if (err) { resolve({ ok: false, error: err.message }); return }
+
+            let stdout = ''
+            let stderr = ''
+            stream.on('data', (d) => { stdout += d.toString(encoding) })
+            stream.stderr.on('data', (d) => { stderr += d.toString(encoding) })
+            stream.on('close', (code) => {
+                resolve({ ok: code === 0, stdout, stderr, code })
+            })
+        })
+    })
+})
+
+/**
+ * 列出远程目录（sftp.list）
+ * 返回统一格式的文件条目数组
+ */
+ipcMain.handle('sftp_list', async (event, sshId, remotePath) => {
+    const entry = getPoolEntry(event.sender.id, sshId)
+    if (!entry) return { ok: false, error: 'not connected' }
+    try {
+        const list = await entry.sftp.list(remotePath)
+        // 标准化字段：name, size, type('d'|'-'|'l'), modifyTime, rights.octal
+        const files = list.map(f => ({
+            name: f.name,
+            size: f.size,
+            type: f.type,  // 'd' = dir, '-' = file, 'l' = symlink
+            modifyTime: f.modifyTime,
+            accessTime: f.accessTime,
+            rights: f.rights,
+            owner: f.owner,
+            group: f.group,
+        }))
+        return { ok: true, files }
+    } catch(e) {
+        return { ok: false, error: e.message || String(e) }
+    }
+})
+
+/**
+ * 获取远程文件信息（stat）
+ */
+ipcMain.handle('sftp_stat', async (event, sshId, remotePath) => {
+    const entry = getPoolEntry(event.sender.id, sshId)
+    if (!entry) return { ok: false, error: 'not connected' }
+    try {
+        const stat = await entry.sftp.stat(remotePath)
+        return { ok: true, size: stat.size, isDirectory: stat.isDirectory }
+    } catch(e) {
+        return { ok: false, error: e.message || String(e) }
+    }
+})
+
+/**
+ * 下载文件（支持断点续传）
+ * 通过 sftp.createReadStream + fs.createWriteStream 实现
+ * 进度通过 IPC push 推送给渲染进程
+ */
+ipcMain.handle('sftp_download', async (event, sshId, remotePath, localPath) => {
+    const entry = getPoolEntry(event.sender.id, sshId)
+    if (!entry) return { ok: false, error: 'not connected' }
 
     try {
-        await ssh.exec(cmd, args || [], {
-            cwd: options.cwd || undefined,
-            onStdout(chunk) {
-                stdoutChunks.push(chunk.toString(options.encoding || 'utf8'))
-            },
-            onStderr(chunk) {
-                stderrChunks.push(chunk.toString(options.encoding || 'utf8'))
+        // 断点续传：检查本地已有大小
+        let startByte = 0
+        if (fs.existsSync(localPath)) {
+            startByte = fs.statSync(localPath).size
+        }
+
+        // 获取远程文件大小
+        const stat = await entry.sftp.stat(remotePath)
+        const totalBytes = stat.size
+
+        if (startByte >= totalBytes) {
+            return { ok: true, resumed: false, message: 'already complete' }
+        }
+
+        const progressChannel = `sftp_progress_${sshId}`
+        let downloadedBytes = startByte
+
+        const readStream = entry.sftp.createReadStream(remotePath, { start: startByte })
+        const writeStream = fs.createWriteStream(localPath, { flags: 'a' })
+
+        await new Promise((resolve, reject) => {
+            readStream.on('data', (chunk) => {
+                downloadedBytes += chunk.length
+                // 推送进度给渲染进程
+                if (!event.sender.isDestroyed()) {
+                    event.sender.send(progressChannel, {
+                        transferred: downloadedBytes,
+                        total: totalBytes,
+                        percent: Math.floor(downloadedBytes / totalBytes * 100)
+                    })
+                }
+            })
+            readStream.on('error', reject)
+            writeStream.on('error', reject)
+            writeStream.on('finish', resolve)
+            readStream.pipe(writeStream)
+        })
+
+        return { ok: true, resumed: startByte > 0, size: totalBytes }
+    } catch(e) {
+        return { ok: false, error: e.message || String(e) }
+    }
+})
+
+/**
+ * 上传单个文件（支持断点续传）
+ * 通过 sftp.append 追加写入实现
+ */
+ipcMain.handle('sftp_upload', async (event, sshId, localPath, remotePath) => {
+    const entry = getPoolEntry(event.sender.id, sshId)
+    if (!entry) return { ok: false, error: 'not connected' }
+
+    try {
+        const localFileSize = fs.statSync(localPath).size
+        const progressChannel = `sftp_progress_${sshId}`
+
+        // 检查远程文件已有大小（断点续传）
+        let remoteFileSize = 0
+        try {
+            const remoteStat = await entry.sftp.stat(remotePath)
+            remoteFileSize = remoteStat.size
+        } catch(e) {
+            // 文件不存在，从头上传
+        }
+
+        if (remoteFileSize >= localFileSize) {
+            return { ok: true, resumed: false, message: 'already complete' }
+        }
+
+        let totalTransferred = remoteFileSize
+
+        const readStream = fs.createReadStream(localPath, { start: remoteFileSize })
+
+        readStream.on('data', (chunk) => {
+            totalTransferred += chunk.length
+            if (!event.sender.isDestroyed()) {
+                event.sender.send(progressChannel, {
+                    transferred: totalTransferred,
+                    total: localFileSize,
+                    percent: Math.floor(totalTransferred / localFileSize * 100)
+                })
             }
         })
-        return { ok: true, stdout: stdoutChunks.join(''), stderr: stderrChunks.join('') }
-    } catch (e) {
-        return { ok: false, error: e.message || String(e), stdout: stdoutChunks.join(''), stderr: stderrChunks.join('') }
-    }
-})
 
-ipcMain.handle('ssh_get_file', async (event, sshId, localPath, remotePath) => {
-    const key = getSshKey(event.sender.id, sshId)
-    const ssh = sshPool.get(key)
-    if (!ssh) return { ok: false, error: 'not connected' }
-    try {
-        await ssh.getFile(localPath, remotePath)
-        return { ok: true }
-    } catch (e) {
+        if (remoteFileSize === 0) {
+            // 全新上传
+            await entry.sftp.put(readStream, remotePath)
+        } else {
+            // 追加（断点续传）
+            await entry.sftp.append(readStream, remotePath)
+        }
+
+        return { ok: true, resumed: remoteFileSize > 0, size: localFileSize }
+    } catch(e) {
         return { ok: false, error: e.message || String(e) }
     }
 })
 
-ipcMain.handle('ssh_put_files', async (event, sshId, fileItems) => {
-    const key = getSshKey(event.sender.id, sshId)
-    const ssh = sshPool.get(key)
-    if (!ssh) return { ok: false, error: 'not connected' }
-    try {
-        await ssh.putFiles(fileItems)
-        return { ok: true }
-    } catch (e) {
-        return { ok: false, error: e.message || String(e) }
+/**
+ * 批量上传文件
+ */
+ipcMain.handle('sftp_put_files', async (event, sshId, fileItems) => {
+    const entry = getPoolEntry(event.sender.id, sshId)
+    if (!entry) return { ok: false, error: 'not connected' }
+
+    const errors = []
+    for (const item of fileItems) {
+        try {
+            await entry.sftp.fastPut(item.local, item.remote)
+        } catch(e) {
+            errors.push({ file: item.local, error: e.message })
+        }
     }
+    return errors.length === 0
+        ? { ok: true }
+        : { ok: false, error: errors.map(e => e.error).join('; '), errors }
 })
 
-ipcMain.handle('ssh_put_directory', async (event, sshId, localDir, remoteDir) => {
-    const key = getSshKey(event.sender.id, sshId)
-    const ssh = sshPool.get(key)
-    if (!ssh) return { ok: false, error: 'not connected' }
+/**
+ * 上传整个目录（递归）
+ */
+ipcMain.handle('sftp_put_directory', async (event, sshId, localDir, remoteDir) => {
+    const entry = getPoolEntry(event.sender.id, sshId)
+    if (!entry) return { ok: false, error: 'not connected' }
     try {
-        await ssh.putDirectory(localDir, remoteDir, {
-            recursive: true,
-            concurrency: 10,
-            validate: function(itemPath) {
-                const baseName = path.basename(itemPath)
-                return baseName.substr(0, 1) !== '.' && baseName !== 'node_modules'
+        await entry.sftp.uploadDir(localDir, remoteDir, {
+            filter: (itemPath) => {
+                const base = path.basename(itemPath)
+                return !base.startsWith('.') && base !== 'node_modules'
             }
         })
         return { ok: true }
-    } catch (e) {
+    } catch(e) {
         return { ok: false, error: e.message || String(e) }
     }
 })
 
-ipcMain.handle('ssh_mkdir', async (event, sshId, remotePath) => {
-    const key = getSshKey(event.sender.id, sshId)
-    const ssh = sshPool.get(key)
-    if (!ssh) return { ok: false, error: 'not connected' }
+/**
+ * 下载整个目录
+ */
+ipcMain.handle('sftp_get_directory', async (event, sshId, remoteDir, localDir) => {
+    const entry = getPoolEntry(event.sender.id, sshId)
+    if (!entry) return { ok: false, error: 'not connected' }
     try {
-        await ssh.mkdir(remotePath)
+        await entry.sftp.downloadDir(remoteDir, localDir)
         return { ok: true }
-    } catch (e) {
+    } catch(e) {
         return { ok: false, error: e.message || String(e) }
     }
 })
 
-ipcMain.handle('ssh_dispose', (event, sshId) => {
+/**
+ * 创建远程目录
+ */
+ipcMain.handle('sftp_mkdir', async (event, sshId, remotePath) => {
+    const entry = getPoolEntry(event.sender.id, sshId)
+    if (!entry) return { ok: false, error: 'not connected' }
+    try {
+        await entry.sftp.mkdir(remotePath, true)  // true = 递归创建
+        return { ok: true }
+    } catch(e) {
+        return { ok: false, error: e.message || String(e) }
+    }
+})
+
+/**
+ * 删除远程文件
+ */
+ipcMain.handle('sftp_delete', async (event, sshId, remotePath) => {
+    const entry = getPoolEntry(event.sender.id, sshId)
+    if (!entry) return { ok: false, error: 'not connected' }
+    try {
+        await entry.sftp.delete(remotePath)
+        return { ok: true }
+    } catch(e) {
+        return { ok: false, error: e.message || String(e) }
+    }
+})
+
+/**
+ * 删除远程目录（递归）
+ */
+ipcMain.handle('sftp_rmdir', async (event, sshId, remotePath) => {
+    const entry = getPoolEntry(event.sender.id, sshId)
+    if (!entry) return { ok: false, error: 'not connected' }
+    try {
+        await entry.sftp.rmdir(remotePath, true)  // true = 递归
+        return { ok: true }
+    } catch(e) {
+        return { ok: false, error: e.message || String(e) }
+    }
+})
+
+/**
+ * 重命名远程文件/目录
+ */
+ipcMain.handle('sftp_rename', async (event, sshId, oldPath, newPath) => {
+    const entry = getPoolEntry(event.sender.id, sshId)
+    if (!entry) return { ok: false, error: 'not connected' }
+    try {
+        await entry.sftp.rename(oldPath, newPath)
+        return { ok: true }
+    } catch(e) {
+        return { ok: false, error: e.message || String(e) }
+    }
+})
+
+/**
+ * 断开连接
+ */
+ipcMain.handle('ssh_dispose', async (event, sshId) => {
     const key = getSshKey(event.sender.id, sshId)
-    if (sshPool.has(key)) {
-        try { sshPool.get(key).dispose() } catch(e) {}
-        sshPool.delete(key)
+    const entry = sftpPool.get(key)
+    if (entry) {
+        await disposeEntry(entry)
+        if (entry.ssh2) { try { entry.ssh2.end() } catch(e) {} }
+        sftpPool.delete(key)
     }
     return { ok: true }
 })
