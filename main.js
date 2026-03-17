@@ -392,9 +392,15 @@ ipcMain.handle('sftp_stat', async (event, sshId, remotePath) => {
     }
 })
 
+// fastGet/fastPut 的性能参数：大并发窗口 + 大 chunk，充分利用带宽
+const SFTP_CONCURRENCY = 64   // 并发请求窗口数（默认 64，可视网络质量调整）
+const SFTP_CHUNK_SIZE  = 32768 // 每个请求的数据块大小 32 KB（ssh2 协议上限）
+
 /**
  * 下载文件（支持断点续传）
- * 通过 sftp.createReadStream + fs.createWriteStream 实现
+ *
+ * 全新下载：fastGet（多并发窗口，可打满带宽）
+ * 断点续传：先用 fastGet 下到临时文件，完成后追加合并
  * 进度通过 IPC push 推送给渲染进程
  */
 ipcMain.handle('sftp_download', async (event, sshId, remotePath, localPath) => {
@@ -402,43 +408,63 @@ ipcMain.handle('sftp_download', async (event, sshId, remotePath, localPath) => {
     if (!entry) return { ok: false, error: 'not connected' }
 
     try {
+        // 获取远程文件大小
+        const stat = await entry.sftp.stat(remotePath)
+        const totalBytes = stat.size
+
         // 断点续传：检查本地已有大小
         let startByte = 0
         if (fs.existsSync(localPath)) {
             startByte = fs.statSync(localPath).size
         }
 
-        // 获取远程文件大小
-        const stat = await entry.sftp.stat(remotePath)
-        const totalBytes = stat.size
-
         if (startByte >= totalBytes) {
             return { ok: true, resumed: false, message: 'already complete' }
         }
 
         const progressChannel = `sftp_progress_${sshId}`
-        let downloadedBytes = startByte
+        const sendProgress = (transferred) => {
+            if (!event.sender.isDestroyed()) {
+                event.sender.send(progressChannel, {
+                    transferred,
+                    total: totalBytes,
+                    percent: Math.floor(transferred / totalBytes * 100)
+                })
+            }
+        }
 
-        const readStream = entry.sftp.createReadStream(remotePath, { start: startByte })
-        const writeStream = fs.createWriteStream(localPath, { flags: 'a' })
-
-        await new Promise((resolve, reject) => {
-            readStream.on('data', (chunk) => {
-                downloadedBytes += chunk.length
-                // 推送进度给渲染进程
-                if (!event.sender.isDestroyed()) {
-                    event.sender.send(progressChannel, {
-                        transferred: downloadedBytes,
-                        total: totalBytes,
-                        percent: Math.floor(downloadedBytes / totalBytes * 100)
-                    })
-                }
+        if (startByte === 0) {
+            // 全新下载：直接 fastGet，带进度步进回调
+            await entry.sftp.fastGet(remotePath, localPath, {
+                concurrency: SFTP_CONCURRENCY,
+                chunkSize: SFTP_CHUNK_SIZE,
+                step: (transferred, _chunk, total) => sendProgress(transferred)
             })
-            readStream.on('error', reject)
-            writeStream.on('error', reject)
-            writeStream.on('finish', resolve)
-            readStream.pipe(writeStream)
-        })
+        } else {
+            // 断点续传：下载剩余部分到临时文件，再追加合并
+            const tmpPath = localPath + '.part'
+            try {
+                await entry.sftp.fastGet(remotePath, tmpPath, {
+                    concurrency: SFTP_CONCURRENCY,
+                    chunkSize: SFTP_CHUNK_SIZE,
+                    // fastGet 不支持 start offset，只能下完整文件到 tmp
+                    // 但比 createReadStream 仍快很多；进度从 startByte 起算
+                    step: (transferred, _chunk, total) => sendProgress(startByte + transferred)
+                })
+                // 追加合并：将 tmp 内容从 startByte 处截取后 append 到原文件
+                // 注意：fastGet 会下载完整文件到 tmp，取 [startByte, end] 段追加
+                await new Promise((resolve, reject) => {
+                    const rs = fs.createReadStream(tmpPath, { start: startByte })
+                    const ws = fs.createWriteStream(localPath, { flags: 'a' })
+                    rs.on('error', reject)
+                    ws.on('error', reject)
+                    ws.on('finish', resolve)
+                    rs.pipe(ws)
+                })
+            } finally {
+                try { if (fs.existsSync(tmpPath)) fs.unlinkSync(tmpPath) } catch(e) {}
+            }
+        }
 
         return { ok: true, resumed: startByte > 0, size: totalBytes }
     } catch(e) {
@@ -448,7 +474,12 @@ ipcMain.handle('sftp_download', async (event, sshId, remotePath, localPath) => {
 
 /**
  * 上传单个文件（支持断点续传）
- * 通过 sftp.append 追加写入实现
+ *
+ * 全新上传：fastPut（多并发窗口，可打满带宽）
+ * 断点续传：先用 append（单通道）从断点处续传
+ *   — 注意：fastPut 不支持 offset，断点续传只能退回 append，
+ *     但 99% 的场景是全新上传，速度有质的提升
+ * 进度通过 IPC push 推送给渲染进程
  */
 ipcMain.handle('sftp_upload', async (event, sshId, localPath, remotePath) => {
     const entry = getPoolEntry(event.sender.id, sshId)
@@ -471,26 +502,31 @@ ipcMain.handle('sftp_upload', async (event, sshId, localPath, remotePath) => {
             return { ok: true, resumed: false, message: 'already complete' }
         }
 
-        let totalTransferred = remoteFileSize
-
-        const readStream = fs.createReadStream(localPath, { start: remoteFileSize })
-
-        readStream.on('data', (chunk) => {
-            totalTransferred += chunk.length
+        const sendProgress = (transferred) => {
             if (!event.sender.isDestroyed()) {
                 event.sender.send(progressChannel, {
-                    transferred: totalTransferred,
+                    transferred,
                     total: localFileSize,
-                    percent: Math.floor(totalTransferred / localFileSize * 100)
+                    percent: Math.floor(transferred / localFileSize * 100)
                 })
             }
-        })
+        }
 
         if (remoteFileSize === 0) {
-            // 全新上传
-            await entry.sftp.put(readStream, remotePath)
+            // 全新上传：fastPut 多并发窗口，带进度步进回调
+            await entry.sftp.fastPut(localPath, remotePath, {
+                concurrency: SFTP_CONCURRENCY,
+                chunkSize: SFTP_CHUNK_SIZE,
+                step: (transferred, _chunk, total) => sendProgress(transferred)
+            })
         } else {
-            // 追加（断点续传）
+            // 断点续传：从断点处追加，单通道但保证正确性
+            let totalTransferred = remoteFileSize
+            const readStream = fs.createReadStream(localPath, { start: remoteFileSize })
+            readStream.on('data', (chunk) => {
+                totalTransferred += chunk.length
+                sendProgress(totalTransferred)
+            })
             await entry.sftp.append(readStream, remotePath)
         }
 
