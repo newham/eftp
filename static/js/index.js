@@ -134,17 +134,19 @@ function ls(dir, isShowHidden = getIsShowHidden()) {
     }
     if (dir == null && ssh_list[current_ssh_id].fileList.length > 0) {
         showPath(getCurrentDir())
-        // ../行不在 fileList 中，需要单独补充渲染
+        // 批量拼接 HTML，一次性写入，避免多次 reflow
+        let html = ''
         if (getCurrentDir() != "/") {
             const up_file = init_fileInfo()
             up_file.name = UP_FILE_NAME
             up_file.isDir = true
             up_file.time = ''
-            document.querySelector('#file_list').insertAdjacentHTML('beforeend', getFileHTML(up_file))
+            html += getFileHTML(up_file)
         }
         ssh_list[current_ssh_id].fileList.forEach((fileInfo) => {
-            document.querySelector('#file_list').insertAdjacentHTML('beforeend', getFileHTML(fileInfo))
+            html += getFileHTML(fileInfo)
         })
+        document.querySelector('#file_list').innerHTML = html
         return
     }
     resetFileList()
@@ -171,13 +173,13 @@ function ls(dir, isShowHidden = getIsShowHidden()) {
     set_ls_lock(true)
 
     // 先渲染 ".." 返回行
-    document.querySelector('#file_list').innerHTML = ""
+    let listHTML = ""
     if (getCurrentDir() != "/") {
         const up_file = init_fileInfo()
         up_file.name = UP_FILE_NAME
         up_file.isDir = true
         up_file.time = ''
-        set_file_info_html(up_file)
+        listHTML += getFileHTML(up_file)
     }
 
     const sshId = getSSH_ID()
@@ -205,16 +207,20 @@ function ls(dir, isShowHidden = getIsShowHidden()) {
             if (n >= MAX_LIST_NUM) {
                 if (!over) {
                     over = true
-                    document.querySelector('#file_list').insertAdjacentHTML("beforeend",
-                        `<tr><td colspan="5" class="txt-center">只能显示前${MAX_LIST_NUM}行</td></tr>`)
+                    listHTML += `<tr><td colspan="5" class="txt-center">只能显示前${MAX_LIST_NUM}行</td></tr>`
                 }
                 return
             }
 
             const fileInfo = sftp_entry_to_fileInfo(f, n)
             n++
-            set_file_info_html(fileInfo)
+            // 只累积到 fileList，HTML 先拼字符串不写入 DOM
+            ssh_list[current_ssh_id].fileList.push(fileInfo)
+            listHTML += getFileHTML(fileInfo)
         })
+
+        // 一次性写入 DOM，只触发 1 次 reflow
+        document.querySelector('#file_list').innerHTML = listHTML
 
         // 更新隐藏文件按钮样式
         if (isShowHidden) {
