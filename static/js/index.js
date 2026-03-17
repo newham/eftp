@@ -303,12 +303,15 @@ function upload_file(files) {
         const id = addInfo('upload', fileName)
         push_bs(id, fileName, '↑')
 
-        // 注册进度监听
-        const unsubscribe = window.electronAPI.onSftpProgress(sshId, (progress) => {
+        // 每个文件独立的传输 ID，避免多文件并发时进度 channel 串台
+        const transferId = `${sshId}_${id}`
+
+        // 注册进度监听（按 transferId 隔离）
+        const unsubscribe = window.electronAPI.onSftpProgress(transferId, (progress) => {
             set_transfer_progress(id, progress.transferred, progress.total, progress.percent)
         })
 
-        window.electronAPI.sftpUpload(sshId, localPath, remotePath).then((result) => {
+        window.electronAPI.sftpUpload(sshId, localPath, remotePath, transferId).then((result) => {
             unsubscribe()
             if (result.ok) {
                 done_process(id)
@@ -375,12 +378,15 @@ function download_file(file, f_size) {
         const localPath = folder + file
         const remotePath = currentDir + file
 
-        // 注册进度监听
-        const unsubscribe = window.electronAPI.onSftpProgress(sshId, (progress) => {
+        // 每次下载独立的传输 ID
+        const transferId = `${sshId}_${id}`
+
+        // 注册进度监听（按 transferId 隔离）
+        const unsubscribe = window.electronAPI.onSftpProgress(transferId, (progress) => {
             set_transfer_progress(id, progress.transferred, progress.total, progress.percent)
         })
 
-        window.electronAPI.sftpDownload(sshId, remotePath, localPath).then((result) => {
+        window.electronAPI.sftpDownload(sshId, remotePath, localPath, transferId).then((result) => {
             unsubscribe()
             remove_bs(id)
             if (result.ok) {

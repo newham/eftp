@@ -75,10 +75,10 @@ contextBridge.exposeInMainWorld('electronAPI', {
     sftpStat: (sshId, remotePath) => ipcRenderer.invoke('sftp_stat', sshId, remotePath),
 
     // SFTP 下载（断点续传），进度通过 onSftpProgress 监听
-    sftpDownload: (sshId, remotePath, localPath) => ipcRenderer.invoke('sftp_download', sshId, remotePath, localPath),
+    sftpDownload: (sshId, remotePath, localPath, transferId) => ipcRenderer.invoke('sftp_download', sshId, remotePath, localPath, transferId),
 
     // SFTP 上传单文件（断点续传），进度通过 onSftpProgress 监听
-    sftpUpload: (sshId, localPath, remotePath) => ipcRenderer.invoke('sftp_upload', sshId, localPath, remotePath),
+    sftpUpload: (sshId, localPath, remotePath, transferId) => ipcRenderer.invoke('sftp_upload', sshId, localPath, remotePath, transferId),
 
     // SFTP 批量上传文件（不带进度，适合小文件）
     sftpPutFiles: (sshId, fileItems) => ipcRenderer.invoke('sftp_put_files', sshId, fileItems),
@@ -103,13 +103,13 @@ contextBridge.exposeInMainWorld('electronAPI', {
 
     /**
      * 监听传输进度推送
-     * 主进程通过 event.sender.send(`sftp_progress_${sshId}`, { transferred, total, percent }) 推送
-     * @param {string} sshId  - 连接标识
-     * @param {function} cb   - ({ transferred, total, percent }) => void
-     * @returns {function}    - 取消监听的函数
+     * 主进程通过 event.sender.send(`sftp_progress_${transferId}`, { transferred, total, percent }) 推送
+     * @param {string} transferId - 每次传输的唯一 ID（由渲染进程生成）
+     * @param {function} cb       - ({ transferred, total, percent }) => void
+     * @returns {function}        - 取消监听的函数
      */
-    onSftpProgress: (sshId, cb) => {
-        const channel = `sftp_progress_${sshId}`
+    onSftpProgress: (transferId, cb) => {
+        const channel = `sftp_progress_${transferId}`
         const handler = (event, data) => cb(data)
         ipcRenderer.on(channel, handler)
         // 返回取消监听的函数
