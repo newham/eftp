@@ -266,6 +266,7 @@ body {
     overflow-y: auto;
     border-right: none;
     background: var(--body-bg-color);
+    border: 1px solid red;
 }
 
 .foot-bar {
