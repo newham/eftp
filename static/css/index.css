@@ -31,6 +31,7 @@ body {
     font-weight: 600;
     white-space: nowrap;
     user-select: none;
+    text-align: left;
 }
 
 #file_thead .th-icon {
