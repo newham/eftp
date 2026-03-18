@@ -35,8 +35,9 @@ body {
 }
 
 #file_thead .th-icon {
-    width: 14px;
-    padding: 5px 0;
+    width: 32px;
+    padding-left: 5px;
+    padding-right: 0;
 }
 #file_thead .th-name {
     text-align: left;
