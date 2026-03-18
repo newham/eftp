@@ -239,12 +239,17 @@ ipcMain.handle('show_open_folder_dialog', async (event) => {
 ipcMain.on('go_ssh', (event, userSSHInfo) => {
     const current_win = BrowserWindow.fromWebContents(event.sender)
     if (BrowserWindow.getAllWindows().length == 1) {
+        // 只有一个窗口（主窗口），直接加载 SSH 连接
         global.shareData.userSSHInfo = userSSHInfo
         current_win.loadFile('index.html')
     } else {
+        // 有多个窗口（主窗口 + 登录窗口），关闭登录窗口，给主窗口发事件
         current_win.close()
         BrowserWindow.getAllWindows().forEach((win) => {
-            win.webContents.send('add_ssh', userSSHInfo)
+            // 只给还活着的窗口发事件（排除已关闭或即将关闭的当前窗口）
+            if (win !== current_win && !win.isDestroyed()) {
+                win.webContents.send('add_ssh', userSSHInfo)
+            }
         })
     }
 })
