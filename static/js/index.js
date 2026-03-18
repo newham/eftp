@@ -42,6 +42,76 @@ function get_copy_from() { return ssh_list[current_ssh_id].copy_from }
 function set_copy_from(from) { ssh_list[current_ssh_id].copy_from = from }
 // ---------------data-end--------------
 
+// ==================== 排序 ====================
+// sortField: 'name' | 'time' | 'size'，sortAsc: true=升序 false=降序
+let sortField = 'name'
+let sortAsc = true
+
+/**
+ * 点击表头时调用，切换排序字段/方向并重新渲染
+ */
+function sortBy(field) {
+    if (sortField === field) {
+        sortAsc = !sortAsc
+    } else {
+        sortField = field
+        sortAsc = true
+    }
+    updateSortArrows()
+    renderFileList()
+}
+
+/**
+ * 更新表头排序箭头指示器
+ */
+function updateSortArrows() {
+    const fields = ['name', 'time', 'size']
+    fields.forEach(f => {
+        const el = document.getElementById(`sort-arrow-${f}`)
+        if (!el) return
+        if (f === sortField) {
+            el.textContent = sortAsc ? ' ↑' : ' ↓'
+        } else {
+            el.textContent = ''
+        }
+    })
+}
+
+/**
+ * 根据当前 sortField/sortAsc 对 fileList 排序，然后重新渲染 DOM
+ * 目录始终排在文件前面
+ */
+function renderFileList() {
+    const list = getFileList()
+    list.sort((a, b) => {
+        // 目录优先
+        if (a.isDir !== b.isDir) return a.isDir ? -1 : 1
+        let cmp = 0
+        if (sortField === 'name') {
+            cmp = a.name.localeCompare(b.name)
+        } else if (sortField === 'time') {
+            cmp = a.modifyTime - b.modifyTime
+        } else if (sortField === 'size') {
+            cmp = a.size - b.size
+        }
+        return sortAsc ? cmp : -cmp
+    })
+
+    // 重新分配 id（索引对齐 fileList）
+    list.forEach((fileInfo, i) => { fileInfo.id = i })
+
+    let html = ''
+    if (getCurrentDir() !== '/') {
+        const up_file = init_fileInfo()
+        up_file.name = UP_FILE_NAME
+        up_file.isDir = true
+        up_file.time = ''
+        html += getFileHTML(up_file)
+    }
+    list.forEach(fileInfo => { html += getFileHTML(fileInfo) })
+    document.querySelector('#file_list').innerHTML = html
+}
+
 function getHome(username, osType = 'Linux') {
     let home = `/home/${username}/`
     if (osType == 'Darwin') {
@@ -134,19 +204,7 @@ function ls(dir, isShowHidden = getIsShowHidden()) {
     }
     if (dir == null && ssh_list[current_ssh_id].fileList.length > 0) {
         showPath(getCurrentDir())
-        // 批量拼接 HTML，一次性写入，避免多次 reflow
-        let html = ''
-        if (getCurrentDir() != "/") {
-            const up_file = init_fileInfo()
-            up_file.name = UP_FILE_NAME
-            up_file.isDir = true
-            up_file.time = ''
-            html += getFileHTML(up_file)
-        }
-        ssh_list[current_ssh_id].fileList.forEach((fileInfo) => {
-            html += getFileHTML(fileInfo)
-        })
-        document.querySelector('#file_list').innerHTML = html
+        renderFileList()
         return
     }
     resetFileList()
@@ -171,17 +229,7 @@ function ls(dir, isShowHidden = getIsShowHidden()) {
     setBackIndex(backIndex)
     put_ls_history(getCurrentDir(), dir)
     set_ls_lock(true)
-
-    // 先渲染 ".." 返回行
-    let listHTML = ""
-    if (getCurrentDir() != "/") {
-        const up_file = init_fileInfo()
-        up_file.name = UP_FILE_NAME
-        up_file.isDir = true
-        up_file.time = ''
-        listHTML += getFileHTML(up_file)
-    }
-
+    document.querySelector('#file_list').innerHTML = ""
     const sshId = getSSH_ID()
 
     // 使用 sftp.list 获取目录列表
@@ -194,33 +242,23 @@ function ls(dir, isShowHidden = getIsShowHidden()) {
         }
 
         let n = 0
-        let over = false
 
-        // 先显示目录，再显示文件（按名字排序）
-        const dirs = result.files.filter(f => f.type === 'd').sort((a, b) => a.name.localeCompare(b.name))
-        const files = result.files.filter(f => f.type !== 'd').sort((a, b) => a.name.localeCompare(b.name))
-        const sorted = [...dirs, ...files]
-
-        sorted.forEach((f) => {
-            // 隐藏文件过滤
+        // 过滤隐藏文件后全部 push 进 fileList，排序由 renderFileList 统一处理
+        result.files.forEach((f) => {
             if (!isShowHidden && f.name.startsWith('.')) return
-            if (n >= MAX_LIST_NUM) {
-                if (!over) {
-                    over = true
-                    listHTML += `<tr><td colspan="5" class="txt-center">只能显示前${MAX_LIST_NUM}行</td></tr>`
-                }
-                return
-            }
-
+            if (n >= MAX_LIST_NUM) return
             const fileInfo = sftp_entry_to_fileInfo(f, n)
             n++
-            // 只累积到 fileList，HTML 先拼字符串不写入 DOM
             ssh_list[current_ssh_id].fileList.push(fileInfo)
-            listHTML += getFileHTML(fileInfo)
         })
 
-        // 一次性写入 DOM，只触发 1 次 reflow
-        document.querySelector('#file_list').innerHTML = listHTML
+        if (n >= MAX_LIST_NUM) {
+            document.querySelector('#file_list').insertAdjacentHTML("beforeend",
+                `<tr><td colspan="5" class="txt-center">只能显示前${MAX_LIST_NUM}行</td></tr>`)
+        }
+
+        renderFileList()
+        updateSortArrows()
 
         // 更新隐藏文件按钮样式
         if (isShowHidden) {
@@ -251,7 +289,8 @@ function sftp_entry_to_fileInfo(f, id) {
     fileInfo.type = getFileType(f.name, fileInfo.isDir)
     fileInfo.rights = f.rights ? f.rights.octal || '' : ''
 
-    // 格式化修改时间
+    // 保存原始时间戳（用于排序），以及格式化展示字符串
+    fileInfo.modifyTime = f.modifyTime || 0
     if (f.modifyTime) {
         const d = new Date(f.modifyTime * 1000)
         const mon = d.toLocaleString('en', { month: 'short' })
@@ -265,7 +304,7 @@ function sftp_entry_to_fileInfo(f, id) {
 }
 
 let init_fileInfo = () => {
-    return { rights: "", fileCount: 0, type: "file", user: "", group: "", size: 0, formatSize: '', month: "", day: "", year: "", name: "", isDir: true, id: 0, time: '' }
+    return { rights: "", fileCount: 0, type: "file", user: "", group: "", size: 0, formatSize: '', month: "", day: "", year: "", name: "", isDir: true, id: 0, time: '', modifyTime: 0 }
 }
 
 function getFileHTML(fileInfo) {

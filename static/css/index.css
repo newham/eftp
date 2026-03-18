@@ -20,6 +20,50 @@ body {
     white-space: nowrap;
 }
 
+/* ========== 文件列表表头 ========== */
+#file_thead th {
+    position: sticky;
+    top: 0;
+    z-index: 1;
+    background: var(--body-bg-color);
+    border-bottom: var(--line-border);
+    padding: 5px;
+    font-weight: 600;
+    white-space: nowrap;
+    user-select: none;
+}
+
+#file_thead .th-icon {
+    width: 14px;
+    padding: 5px 0;
+}
+#file_thead .th-name {
+    text-align: left;
+    padding-left: 5px;
+    cursor: pointer;
+}
+#file_thead .th-time {
+    text-align: right;
+    cursor: pointer;
+    min-width: 90px;
+}
+#file_thead .th-size {
+    text-align: right;
+    cursor: pointer;
+    min-width: 56px;
+}
+#file_thead .th-download {
+    width: 14px;
+}
+#file_thead th[onclick]:hover {
+    color: var(--blue-2);
+}
+.sort-arrow {
+    font-size: 12px;
+    opacity: 0.8;
+}
+
+
 #title-bar {
     width: 100%;
     /* width: calc(100% - var(--side-bar-r-w) - var(--side-bar-l-w) - 20px); */

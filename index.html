@@ -50,6 +50,21 @@
         </div>
         <div class="main" oncontextmenu="showDirMenu()" onclick="hideMenu()">
             <table>
+                <thead id="file_thead">
+                    <tr class="no-hover">
+                        <th class="th-icon"></th>
+                        <th class="th-name" onclick="sortBy('name')">
+                            <span>文件名</span><span class="sort-arrow" id="sort-arrow-name"></span>
+                        </th>
+                        <th class="th-time" onclick="sortBy('time')">
+                            <span>修改时间</span><span class="sort-arrow" id="sort-arrow-time"></span>
+                        </th>
+                        <th class="th-size" onclick="sortBy('size')">
+                            <span>大小</span><span class="sort-arrow" id="sort-arrow-size"></span>
+                        </th>
+                        <th class="th-download"></th>
+                    </tr>
+                </thead>
                 <tbody id="file_list">
 
                 </tbody>
