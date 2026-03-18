@@ -4,61 +4,73 @@
     --blue-3: #0068d1;
     --blue-4: #2302CF;
     --title-bar-h: 38px;
-    --tool-bar-h: 50px;
-    --side-bar-r-w: 300px;
-    --side-bar-l-w: 120px;
+    --tool-bar-h: 48px;
+    --side-bar-r-w: 280px;
+    --side-bar-l-w: 70px;
     --side-bar-padding: 0px;
     --foot-bar-h: 0px;
     --dialog-w: calc(100% - 160px);
     --dialog-fixed-w: 260px;
-    --btn-radius: 8px;
-    --box-radius: 8px;
+    --btn-radius: 12px;
+    --box-radius: 16px;
     --box-w: 200px;
-    --input-radius: 2px;
+    --input-radius: 8px;
     /* --btn-h: 26px; */
     --btn-font-size: 15px;
     --title-bar-padding: 78px;
     --drag-box-h: calc(100% - var(--tool-bar-h) - var(--title-bar-h) - 44px);
-    --box-shadow: 0 9px 30px -6px rgba(0, 0, 0, .2), 0 18px 20px -10px rgba(0, 0, 0, .04), 0 18px 20px -10px rgba(0, 0, 0, .04), 0 10px 20px -10px rgba(0, 0, 0, .04);
+    --box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12), 0 4px 8px rgba(0, 0, 0, 0.08);
+    --box-shadow-hover: 0 12px 32px rgba(0, 0, 0, 0.16), 0 6px 12px rgba(0, 0, 0, 0.1);
 }
 
 
 /* 滚动条样式 */
 
 ::-webkit-scrollbar {
-    background: var(--tr-odd-bg-color);
-    width: 8px;
-    height: 12px;
+    background: transparent;
+    width: 10px;
+    height: 10px;
     /* border-left: var(--bar-border); */
 }
 
 ::-webkit-scrollbar-thumb {
-    background: var(--blue-2);
-    border-radius: 4px;
+    background: rgba(0, 0, 0, 0.2);
+    border-radius: 5px;
+    transition: all 0.2s ease;
 }
 
+::-webkit-scrollbar-thumb:hover {
+    background: rgba(0, 0, 0, 0.3);
+}
+
+/* ==================== 按钮基础样式 ==================== */
 button {
     text-align: center;
     min-width: 32px;
-    /* height: var(--btn-h); */
-    /* line-height: var(--btn-h - 2px); */
     border-radius: var(--btn-radius);
     background: var(--btn-bg-color);
     color: var(--btn-color);
-    border: var(--btn-border);
-    font-size: 14px;
-    /* font-weight: bold; */
-    padding: 3px;
-    margin: 0px;
+    border: none;
+    font-size: 13px;
+    font-weight: 500;
+    padding: 6px 12px;
+    margin: 4px;
     outline: none;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    box-shadow: none;
 }
 
 button:hover {
     background: var(--btn-hover-bg-color);
+    transform: translateY(-2px);
+    box-shadow: var(--box-shadow);
 }
 
 button:active {
     background: var(--btn-active-bg-color);
+    transform: translateY(0);
+    box-shadow: none;
 }
 
 button label {
@@ -67,6 +79,40 @@ button label {
     width: 100%;
     padding: 0 !important;
     margin: 0 !important;
+}
+
+/* ==================== 按钮组（浮空效果） ==================== */
+.btn-group {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin: 8px 0;
+    padding: 8px;
+    background: rgba(255, 255, 255, 0.6);
+    backdrop-filter: blur(10px);
+    border-radius: var(--box-radius);
+    box-shadow: var(--box-shadow);
+    width: fit-content;
+}
+
+.btn-group button {
+    margin: 0;
+    padding: 8px 14px;
+    border-radius: 20px;
+    border: 2px solid transparent;
+    background: var(--btn-bg-color);
+    transition: all 0.2s ease;
+}
+
+.btn-group button:hover {
+    background: var(--btn-hover-bg-color);
+    transform: scale(1.05);
+}
+
+.btn-group button.active {
+    background: var(--blue-1);
+    color: #fff;
+    border: 2px solid var(--blue-2);
 }
 
 a {
@@ -89,18 +135,26 @@ p {
 
 input {
     font-size: var(--btn-font-size);
-    height: 30px;
-    background: #fff;
+    height: 32px;
+    background: var(--btn-bg-color);
     color: var(--blue-4);
     border: none;
     border-radius: var(--input-radius);
-    padding-left: 5px;
+    padding: 0 12px;
+    transition: all 0.2s ease;
+    box-shadow: inset 0 2px 6px rgba(0, 0, 0, 0.06);
+}
+
+input:focus {
+    outline: none;
+    background: var(--btn-hover-bg-color);
+    box-shadow: inset 0 2px 6px rgba(0, 0, 0, 0.06), 0 0 0 3px rgba(48, 113, 227, 0.1);
 }
 
 input::-webkit-input-placeholder {
     /* WebKit browsers */
     color: var(--font-color-light);
-    font-size: 16px;
+    font-size: 14px;
 }
 
 .c {
@@ -222,26 +276,30 @@ input::-webkit-input-placeholder {
     width: 100% !important;
 }
 
-.btn-half,
-.btn-half-danger {
-    width: calc(50% - 3px) !important;
-    border: none;
+.btn-danger {
+    background: linear-gradient(135deg, #ff6b6b 0%, #ff5252 100%);
+    color: #fff !important;
 }
 
-.btn-half-danger,
-.btn-danger {
+.btn-danger:hover {
+    background: linear-gradient(135deg, #ff7a7a 0%, #ff6464 100%);
+    transform: translateY(-2px);
+}
+
+.btn-half,
+.btn-half-danger {
+    width: calc(50% - 6px) !important;
+    border: none;
+    border-radius: var(--btn-radius);
+}
+
+.btn-half-danger {
     background: var(--blue-1);
     color: #fff !important;
 }
 
-.btn-half-danger:hover,
-.btn-danger:hover {
+.btn-half-danger:hover {
     background: var(--blue-2);
-}
-
-.btn-half-danger:active,
-.btn-danger:active {
-    background: var(--blue-3);
 }
 
 .dialog-fixed {
@@ -250,9 +308,11 @@ input::-webkit-input-placeholder {
     top: calc(50% - 200px) !important;
     /* top: 60px !important; */
     /* top: calc(var(--title-bar-h) + var(--tool-bar-h) + 10px) !important; */
-    border-radius: 10px !important;
-    border-top: 1px solid var(--menu-border-color) !important;
+    border-radius: var(--box-radius) !important;
+    border-top: none !important;
     min-height: 300px !important;
+    background: var(--dialog-bg-color) !important;
+    box-shadow: var(--box-shadow-hover) !important;
 }
 
 .dialog-fixed .r {
@@ -270,32 +330,31 @@ input::-webkit-input-placeholder {
     z-index: 99;
     background: var(--dialog-bg-color);
     position: fixed;
-    /* width: calc(var(--dialog-w) - 20px); */
-    /* left: calc(50% - var(--dialog-w) / 2); */
     width: calc(100% - var(--side-bar-l-w) * 2 - 20px);
     max-height: 80%;
     overflow-y: auto;
     left: var(--side-bar-l-w);
-    padding: 10px;
-    top: 0px;
+    padding: 20px;
+    top: calc(var(--title-bar-h) + 10px);
     text-align: center;
-    border: 1px solid var(--menu-border-color);
-    border-top: none;
+    border: none;
     display: none;
     color: var(--font-color);
-    /* border-radius: 10px; */
-    border-bottom-left-radius: 10px;
-    border-bottom-right-radius: 10px;
-    box-shadow: var(--box-shadow);
+    border-radius: var(--box-radius);
+    box-shadow: var(--box-shadow-hover);
+    backdrop-filter: blur(10px);
 }
 
 .dialog input {
-    width: calc(100% - 10px);
-    margin-bottom: 15px;
+    width: calc(100% - 24px);
+    margin-bottom: 12px;
+    background: var(--btn-bg-color);
+    border: 1px solid rgba(0, 0, 0, 0.1) !important;
 }
 
 .dialog button {
-    height: 32px;
+    height: 36px;
+    border-radius: 8px;
 }
 
 .dialog label {
@@ -311,8 +370,9 @@ input::-webkit-input-placeholder {
 .dialog-title {
     text-align: center !important;
     color: var(--blue-1);
-    font-weight: bolder;
-    font-size: 16px;
+    font-weight: 600;
+    font-size: 18px;
+    margin-bottom: 16px;
 }
 
 table,
@@ -324,17 +384,16 @@ tbody {
 
 tr {
     margin: 0;
+    transition: all 0.15s ease;
 }
 
 tr:hover {
-    background: var(--tr-hover-bg-color) !important;
+    background: rgba(48, 113, 227, 0.08) !important;
 }
 
-
-/* .no-hover {} */
-
-.no-hover:hover {
-    background: none !important;
+tr:nth-child(even) {
+    color: var(--font-color);
+    background: rgba(0, 0, 0, 0.02);
 }
 
 td {
@@ -344,10 +403,11 @@ td {
     border-right: 0px;
     margin: 0px;
     text-align: right;
-    padding: 5px;
+    padding: 8px;
     text-overflow: ellipsis;
     white-space: nowrap;
     overflow: hidden;
+    font-size: 13px;
 }
 
 .td-num {
@@ -415,15 +475,15 @@ p {
 }
 
 .txt-danger {
-    color: rgb(226, 89, 89);
+    color: #ff6b6b;
 }
 
 .txt-warning {
-    color: rgb(243, 192, 98);
+    color: #ffa500;
 }
 
 .txt-success {
-    color: rgb(112, 199, 112);
+    color: #4caf50;
 }
 
 .txt-info {
@@ -440,17 +500,23 @@ p {
     width: calc(100% - var(--side-bar-r-w) - var(--side-bar-l-w) - 45px);
     left: calc(10px + var(--side-bar-l-w));
     height: var(--drag-box-h);
-    border: 2px dashed var(--brag-box-border-color);
-    background: var(--brag-box-bg-color);
+    border: 2px dashed rgba(48, 113, 227, 0.3);
+    background: rgba(48, 113, 227, 0.04);
     text-align: center;
     display: none;
-    border-radius: 5px;
+    border-radius: var(--box-radius);
     color: var(--font-color-light);
     padding: 10px;
     /* box-shadow: var(--box-shadow); */
     /* 透明度 */
     opacity: 1.0;
     user-select: none;
+    transition: all 0.2s ease;
+}
+
+.drag_box:hover {
+    border-color: rgba(48, 113, 227, 0.6);
+    background: rgba(48, 113, 227, 0.08);
 }
 
 .drag_box label {
