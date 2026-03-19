@@ -20,7 +20,7 @@ function show_dialog(isShow, title = '新建HOST') {
     }
 }
 
-function new_ssh() {
+function new_host() {
     if (lock) return false
     setSSHDialogVal(null)
     show_dialog(true)
@@ -139,7 +139,7 @@ function loadConf() {
             list_html.insertAdjacentHTML('beforeend', `<div class="c-2-5"><a class="box bg-color-${userSSHInfo.color}" oncontextmenu="showHostMenu(${userSSHInfo.id})" onclick="goSSH(${userSSHInfo.id})">${icon}${userSSHInfo.label}<br><label>${userSSHInfo.username}@${userSSHInfo.host}</label></a></div>`)
         })
 
-        list_html.insertAdjacentHTML('beforeend', '<div class="c-2-5"><a class="box" onclick="new_ssh()">＋<br><label>New Host</label></a></div>')
+        list_html.insertAdjacentHTML('beforeend', '<div class="c-2-5"><a class="box" onclick="new_host()">＋<br><label>New Host</label></a></div>')
     })
 }
 
@@ -220,5 +220,4 @@ function setColor(color = 0) {
     }
 }
 
-setTheme()
-loadConf()
+// 初始化由 index.js 的 showLoginView() 调用 loadConf() 完成

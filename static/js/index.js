@@ -715,7 +715,7 @@ function checkRename(filename, isDir) {
 }
 
 function to_login() {
-    window.electronAPI.newWin()
+    showLoginView()
 }
 
 // ==================== SSH 连接 ====================
@@ -846,6 +846,7 @@ window.electronAPI.onAddSSH((userSSHInfo) => {
 })
 
 function new_ssh(userSSHInfo) {
+    showIndexView()
     const sshId = `ssh_${Date.now()}_${ssh_list.length}`
     ssh_list.push({
         userSSHInfo: userSSHInfo,
@@ -903,7 +904,7 @@ function closeTab(id) {
 }
 
 function to_ssh(id, isNew = false) {
-    if (ssh_list.length == 0) { document.location.href = 'login.html'; return }
+    if (ssh_list.length == 0) { showLoginView(); return }
     if (id == current_ssh_id && !isNew) return
     current_ssh_id = id
     setTabs()
@@ -968,12 +969,21 @@ function refresh() {
     }
 }
 
+// ==================== 视图切换 ====================
+
+function showLoginView() {
+    document.getElementById('login-view').style.display = ''
+    document.getElementById('index-view').style.display = 'none'
+    loadConf()
+}
+
+function showIndexView() {
+    document.getElementById('login-view').style.display = 'none'
+    document.getElementById('index-view').style.display = ''
+}
+
 // ==================== 初始化 ====================
 
 setTheme().then(() => {
-    window.electronAPI.getShareData().then((shareData) => {
-        if (shareData && shareData.userSSHInfo && shareData.userSSHInfo.host) {
-            new_ssh(shareData.userSSHInfo)
-        }
-    })
+    showLoginView()
 })

@@ -2,15 +2,13 @@
     --header-h: 75px
 }
 
-body {
+#login-view {
+    position: fixed;
+    inset: 0;
     background: var(--login-bg-color);
-    margin: 0;
-    padding: 0;
-    height: 100%;
 }
 
 h1 {
-    /* margin: 5px 10px; */
     color: var(--blue-1);
     margin: 0;
     padding: 0;
@@ -36,10 +34,6 @@ h1 {
     width: calc(25% - 10px) !important;
 }
 
-td {
-    background: #fff;
-}
-
 .title-bar {
     height: var(--title-bar-h);
     -webkit-app-region: drag;
@@ -50,10 +44,9 @@ td {
     color: var(--font-color);
 }
 
-.main {
-    position: fixed;
+.login-main {
+    position: absolute;
     top: calc(var(--title-bar-h) + 5px);
-    /* top: calc(var(--title-bar-h) + var(--header-h) + 10px); */
     left: 0;
     height: calc(100% - var(--title-bar-h) - 20px);
     width: 100%;
@@ -62,10 +55,6 @@ td {
 }
 
 #color-group {
-    /* width: 50%;
-    float: left;
-    height: 37px;
-    line-height: 50px; */
     padding: 5px 0px;
     text-align: center;
 }
