@@ -11,122 +11,191 @@
     <link rel="stylesheet" type="text/css" href="static/css/light.css" id="theme-css" />
     <!-- <link rel="stylesheet" type="text/css" href="static/css/dark.css" id="theme-css" /> -->
     <link rel="stylesheet" type="text/css" href="static/css/site.css" />
+    <link rel="stylesheet" type="text/css" href="static/css/login.css" />
     <link rel="stylesheet" type="text/css" href="static/css/index.css" />
-    <!-- load js -->
-    <!-- <script src="static/js/jquery-3.5.0.min.js"></script> -->
-    <!-- <script src="static/js/vue.min.js"></script> -->
+    <link rel="stylesheet" type="text/css" href="static/css/loading.css" />
 </head>
 
 <body id="drag_area">
-    <!-- <h1>Demo</h1> -->
-    <div class="sidebar-l">
-        <div id="tab-bar" class="tab-bar"></div>
-        <div class="tab-bar">
-            <div onclick="to_login()" class="txt-center">＋</div>
-            <div onclick="show_space()" class="bottom txt-center">剩余空间</div>
-        </div>
-    </div>
-    <div class="container" id="container">
-        <div id="title-bar">
-            <div id="path" class="path" ondblclick="maxWindow()"></div>
-        </div>
-        <div class="tool-bar">
-            <button onclick="ls_back()"><label class="label-icon">←</label><label>返回</label></button>
-            <button onclick="ls_up()"><label class="label-icon">↑</label><label>向上</label></button>
-            <button onclick="ls_home()"><label class="label-icon">~</label><label>主目录</label></button>
-            <button onclick="refresh()"><label class="label-icon">↺</label><label>刷新</label></button>
-            <button onclick="showfavouritesMenu()"><label class="label-icon">☆</label><label>收藏</label></button>
-            <button onclick="showHiddenFile()" id="btn-show-hidden"><label class="label-icon">•</label><label>隐藏</label></button>
-            <button onclick="show_folder_dialog(true)"><label class="label-icon">+/</label><label>新建文件夹</label></button>
-            <button onclick="show_backstageMenu()" id="btn_bs"><label class="label-icon">⇅</label><label>后台任务</label></button>
-            <!-- <button onclick="upload_folder()"><label class="label-icon">⇧/</label><label>上传目录</label></button> -->
-            <button onclick="upload()"><label class="label-icon">⇧</label><label>上传文件</label></button>
-            <!-- <button onclick="show('video_dialog',true)"><label class="label-icon">↺</label><label>视频</label></button> -->
-            <div style="float: right;margin-right: 5px;">
-                <button onclick="clean_infos()"><label class="label-icon">×</label><label>清屏</label></button>
-                <button onclick="showSidebar()" id="siderbar-hide-btn" style="color: var(--blue-2);"><label class="label-icon">≡</label><label>日志</label></button>
+
+    <!-- ========== LOGIN 视图（服务器管理） ========== -->
+    <div id="login-view">
+        <div class="dialog" id="new_ssh_dialog">
+            <p id="dialog_title" class="dialog-title"></p>
+            <!-- 第一行 -->
+            <input type="text" id="username" placeholder="*用户名" value="" class="c-1-4">
+            <label> @ </label>
+            <input type="text" id="host" placeholder="*服务器地址/域名" class="c-2-4" value="">
+            <label> : </label>
+            <input type="number" id="port" placeholder="*端口" class="c-1-4" value="22">
+            <!-- 第二行 -->
+            <input type="password" id="password" placeholder="*密码" class="c-2-4" value="">
+            <label>or</label>
+            <input type="password" id="privateKey" placeholder="*私钥路径(点击选择)" onclick="selectPK()" class="c-2-4">
+            <!-- 第三行 -->
+            <input type="text" id="label" placeholder="标签（默认: 用户名@服务器地址/域名）">
+            <input type="hidden" id="id" value="-1">
+            <input type="hidden" id="color" value="0">
+            <input type="hidden" id="osType" value="Linux">
+            <!-- 第4行 -->
+            <div class="btn-group" id="color-group">
+                <button class="active bg-color-0" onclick="setColor(0)"></button>
+                <button class="bg-color-1" onclick="setColor(1)"></button>
+                <button onclick="setColor(2)" class="bg-color-2"></button>
+                <button onclick="setColor(3)" class="bg-color-3"></button>
+                <button onclick="setColor(4)" class="bg-color-4"></button>
+                <button onclick="setColor(5)" class="bg-color-5"></button>
+                <button onclick="setColor(6)" class="bg-color-6"></button>
             </div>
-            <!-- <button onclick="ctrl_c()">X</button> -->
-        </div>
-        <div class="main" oncontextmenu="showDirMenu()" onclick="hideMenu()">
-            <table>
-                <thead id="file_thead">
-                    <tr class="no-hover">
-                        <th class="th-name" colspan="2" onclick="sortBy('name')">
-                            <span>文件名</span><span class="sort-arrow" id="sort-arrow-name"></span>
-                        </th>
-                        <th class="th-time" onclick="sortBy('time')">
-                            <span>修改时间</span><span class="sort-arrow" id="sort-arrow-time"></span>
-                        </th>
-                        <th class="th-size" onclick="sortBy('size')">
-                            <span>大小</span><span class="sort-arrow" id="sort-arrow-size"></span>
-                        </th>
-                        <th class="th-download"></th>
-                    </tr>
-                </thead>
-                <tbody id="file_list">
-
-                </tbody>
-            </table>
-        </div>
-        <!-- <div class="siderbar-r-btn show-btn" onclick="showSidebar()" id="siderbar-hide-btn"> </div> -->
-        <div class="sidebar-r" id="sidebar" style="display: block;">
-            <div id="infos">
-
+            <!-- 第5行 -->
+            <div class="r">
+                <button onclick="addUserSSHInfo()" class="btn-half-danger"> 保存 </button>
+                <button onclick="show_dialog(false)" class="btn-half"> 取消 </button>
             </div>
         </div>
-    </div>
-    <div class="foot-bar">
-    </div>
-    <div class="dialog" id="new_folder_dialog">
-        <p class="dialog-title">新建文件夹</p>
-        <input type="text" id="dir_name" onkeydown="keydown_mkdir()">
-        <button onclick="mkdir()" class="btn-half-danger">确定</button>
-        <button onclick="show_folder_dialog(false)" class="btn-half">取消</button>
-    </div>
-    <div class="dialog" id="rename_dialog">
-        <p class="dialog-title">重命名</p>
-        <input type="text" id="file_rename" onkeydown="rename_file()">
-        <button onclick="rename_file()" class="btn-half-danger">确定</button>
-        <button onclick="show_folder_dialog(false)" class="btn-half">取消</button>
-    </div>
-    <div class="dialog" id="space_dialog">
-        <p class="dialog-title">剩余空间</p>
-        <div style="height:280px;display:block;overflow-y:auto;overflow-x:hidden;margin-bottom: 10px;">
-            <table>
-                <tbody id="left_space"></tbody>
-            </table>
+        <div class="title-bar" ondblclick="maxWindow()">
+            <button onclick="show('about_dialog',true)">! 关于</button>
+            <button onclick="show('help_dialog',true)">? 帮助</button>
         </div>
-        <button onclick="show('space_dialog',false)" class="btn btn-danger">确定</button>
-    </div>
-    <div class="drag_box" id="drag_box">
-        <label onclick="showDargBox(false)">
-            <img src="static/img/svg/icon-close.svg">
-        </label>
-        <h1>请把文件拖放于此</h1>
-        <img class="bg-img" src="static/img/svg/icon-collect.svg">
-    </div>
-    <div class="menu" id="favouritesMenu" style="display: none;">
-        <label class="triangle-up-box">
-            <label class="triangle-up"></label>
-        </label>
-        <div id="favourites" class="menu-body">
+        <div class="dialog dialog-fixed" id="about_dialog">
+            <p class="dialog-title">! 关于</p>
+            <div>
+                <img src="static/img/icon.ico" style="width: 80px;">
+            </div>
+            <div>
+                免费&开源的SFTP客户端 <br><br>您的所有数据都保存在本地<br>我们不会上传用户的任何隐私<br>（用户名、地址、密码、私钥等等）<br><br>
+            </div>
+            <div class="r">
+                <button onclick="show('about_dialog',false)" class="btn-full btn-danger"> OK </button>
+            </div>
+        </div>
+        <div class="dialog dialog-fixed" id="help_dialog">
+            <p class="dialog-title">? 帮助</p>
+            <div class="txt-left">
+                1.点击位于列表最后的[ + New Host ]图标，添加一个sftp服务器。<br><br> 2.右键已有sftp服务器图标弹出菜单，可编辑、删除、拷贝。<br><br> 3.支持连接到 Linux、Mac OS、Windows 服务器
+            </div>
+            <div class="r">
+                <button onclick="show('help_dialog',false)" class="btn-full btn-danger"> OK </button>
+            </div>
+        </div>
+        <div class="dialog dialog-fixed" id="loading_dialog">
+            <p class="dialog-title">添加服务器</p>
+            <div>
+                正在测试连接到:<br><label class="txt-info txt-bold" id="host_address"></label>
+                <div class="loading-1" style="margin-top: 65px;">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </div>
+            </div>
+            <div class="r">
+                <button class="btn-full"> 请稍后 </button>
+            </div>
+        </div>
+        <div class="login-main">
+            <div id='userSSH_list' class="r"></div>
         </div>
     </div>
-    <div class="menu" id="backstageMenu" style="display: none;">
-        <label class="triangle-up-box">
-            <label class="triangle-up"></label>
-        </label>
-        <div id="bs_list" class="menu-body">
+
+    <!-- ========== INDEX 视图（文件管理） ========== -->
+    <div id="index-view" style="display:none; height:100%;">
+        <div class="sidebar-l">
+            <div id="tab-bar" class="tab-bar"></div>
+            <div class="tab-bar">
+                <div onclick="to_login()" class="txt-center">＋</div>
+                <div onclick="show_space()" class="bottom txt-center">剩余空间</div>
+            </div>
+        </div>
+        <div class="container" id="container">
+            <div id="title-bar">
+                <div id="path" class="path" ondblclick="maxWindow()"></div>
+            </div>
+            <div class="tool-bar">
+                <button onclick="ls_back()"><label class="label-icon">←</label><label>返回</label></button>
+                <button onclick="ls_up()"><label class="label-icon">↑</label><label>向上</label></button>
+                <button onclick="ls_home()"><label class="label-icon">~</label><label>主目录</label></button>
+                <button onclick="refresh()"><label class="label-icon">↺</label><label>刷新</label></button>
+                <button onclick="showfavouritesMenu()"><label class="label-icon">☆</label><label>收藏</label></button>
+                <button onclick="showHiddenFile()" id="btn-show-hidden"><label class="label-icon">•</label><label>隐藏</label></button>
+                <button onclick="show_folder_dialog(true)"><label class="label-icon">+/</label><label>新建文件夹</label></button>
+                <button onclick="show_backstageMenu()" id="btn_bs"><label class="label-icon">⇅</label><label>后台任务</label></button>
+                <button onclick="upload()"><label class="label-icon">⇧</label><label>上传文件</label></button>
+                <div style="float: right;margin-right: 5px;">
+                    <button onclick="clean_infos()"><label class="label-icon">×</label><label>清屏</label></button>
+                    <button onclick="showSidebar()" id="siderbar-hide-btn" style="color: var(--blue-2);"><label class="label-icon">≡</label><label>日志</label></button>
+                </div>
+            </div>
+            <div class="main" oncontextmenu="showDirMenu()" onclick="hideMenu()">
+                <table>
+                    <thead id="file_thead">
+                        <tr class="no-hover">
+                            <th class="th-name" colspan="2" onclick="sortBy('name')">
+                                <span>文件名</span><span class="sort-arrow" id="sort-arrow-name"></span>
+                            </th>
+                            <th class="th-time" onclick="sortBy('time')">
+                                <span>修改时间</span><span class="sort-arrow" id="sort-arrow-time"></span>
+                            </th>
+                            <th class="th-size" onclick="sortBy('size')">
+                                <span>大小</span><span class="sort-arrow" id="sort-arrow-size"></span>
+                            </th>
+                            <th class="th-download"></th>
+                        </tr>
+                    </thead>
+                    <tbody id="file_list"></tbody>
+                </table>
+            </div>
+            <div class="sidebar-r" id="sidebar" style="display: block;">
+                <div id="infos"></div>
+            </div>
+        </div>
+        <div class="foot-bar"></div>
+        <div class="dialog" id="new_folder_dialog">
+            <p class="dialog-title">新建文件夹</p>
+            <input type="text" id="dir_name" onkeydown="keydown_mkdir()">
+            <button onclick="mkdir()" class="btn-half-danger">确定</button>
+            <button onclick="show_folder_dialog(false)" class="btn-half">取消</button>
+        </div>
+        <div class="dialog" id="rename_dialog">
+            <p class="dialog-title">重命名</p>
+            <input type="text" id="file_rename" onkeydown="rename_file()">
+            <button onclick="rename_file()" class="btn-half-danger">确定</button>
+            <button onclick="show_folder_dialog(false)" class="btn-half">取消</button>
+        </div>
+        <div class="dialog" id="space_dialog">
+            <p class="dialog-title">剩余空间</p>
+            <div style="height:280px;display:block;overflow-y:auto;overflow-x:hidden;margin-bottom: 10px;">
+                <table>
+                    <tbody id="left_space"></tbody>
+                </table>
+            </div>
+            <button onclick="show('space_dialog',false)" class="btn btn-danger">确定</button>
+        </div>
+        <div class="drag_box" id="drag_box">
+            <label onclick="showDargBox(false)">
+                <img src="static/img/svg/icon-close.svg">
+            </label>
+            <h1>请把文件拖放于此</h1>
+            <img class="bg-img" src="static/img/svg/icon-collect.svg">
+        </div>
+        <div class="menu" id="favouritesMenu" style="display: none;">
+            <label class="triangle-up-box"><label class="triangle-up"></label></label>
+            <div id="favourites" class="menu-body"></div>
+        </div>
+        <div class="menu" id="backstageMenu" style="display: none;">
+            <label class="triangle-up-box"><label class="triangle-up"></label></label>
+            <div id="bs_list" class="menu-body"></div>
+        </div>
+        <div class="dialog" id="video_dialog" style="overflow: hidden;">
+            <p class="dialog-title">
+                播放器
+                <span class="right" onclick="show('video_dialog',false)"><img src="static/img/svg/icon-close.svg"></span>
+            </p>
+            <video style="width: 100%;" controls id="video"></video>
         </div>
     </div>
-    <div class="dialog" id="video_dialog" style="overflow: hidden;">
-        <p class="dialog-title">
-            播放器
-            <span class="right" onclick="show('video_dialog',false)"><img src="static/img/svg/icon-close.svg"></span>
-        </p>
-        <video style="width: 100%;" controls id="video"></video>
-    </div>
+
     <!-- js -->
     <script src="static/js/demo.js"></script>
     <script src="static/js/common.js"></script>
@@ -134,6 +203,7 @@
     <script src="static/js/dialog.js"></script>
     <script src="static/js/buf.js"></script>
     <script src="static/js/conf.js"></script>
+    <script src="static/js/login.js"></script>
     <script src="static/js/index.js"></script>
     <script src="static/js/menu.js"></script>
     <script src="static/js/drag.js"></script>

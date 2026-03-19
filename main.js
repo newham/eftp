@@ -115,7 +115,7 @@ function createIndexWindow() {
         }
     })
 
-    win.loadFile('login.html')
+    win.loadFile('index.html')
 
     if (process.argv.includes('-t')) {
         win.webContents.openDevTools()
@@ -235,23 +235,9 @@ ipcMain.handle('show_open_folder_dialog', async (event) => {
     return { ok: false }
 })
 
-// 跳转 SSH 主界面
+// 在当前窗口建立 SSH 连接（不再切换页面）
 ipcMain.on('go_ssh', (event, userSSHInfo) => {
-    const current_win = BrowserWindow.fromWebContents(event.sender)
-    if (BrowserWindow.getAllWindows().length == 1) {
-        // 只有一个窗口（主窗口），直接加载 SSH 连接
-        global.shareData.userSSHInfo = userSSHInfo
-        current_win.loadFile('index.html')
-    } else {
-        // 有多个窗口（主窗口 + 登录窗口），关闭登录窗口，给主窗口发事件
-        current_win.close()
-        BrowserWindow.getAllWindows().forEach((win) => {
-            // 只给还活着的窗口发事件（排除已关闭或即将关闭的当前窗口）
-            if (win !== current_win && !win.isDestroyed()) {
-                win.webContents.send('add_ssh', userSSHInfo)
-            }
-        })
-    }
+    event.sender.send('add_ssh', userSSHInfo)
 })
 
 ipcMain.on('new_win', () => createWindow())

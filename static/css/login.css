@@ -2,15 +2,13 @@
     --header-h: 75px
 }
 
-body {
+#login-view {
+    position: fixed;
+    inset: 0;
     background: var(--login-bg-color);
-    margin: 0;
-    padding: 0;
-    height: 100%;
 }
 
 h1 {
-    /* margin: 5px 10px; */
     color: var(--blue-1);
     margin: 0;
     padding: 0;
@@ -41,11 +39,6 @@ h1 {
     width: calc(25% - 10px) !important;
 }
 
-td {
-    background: var(--btn-bg-color);
-    border-radius: 8px;
-}
-
 .title-bar {
     height: var(--title-bar-h);
     -webkit-app-region: drag;
@@ -57,10 +50,9 @@ td {
     background: var(--title-bar-bg-color);
 }
 
-.main {
-    position: fixed;
+.login-main {
+    position: absolute;
     top: calc(var(--title-bar-h) + 5px);
-    /* top: calc(var(--title-bar-h) + var(--header-h) + 10px); */
     left: 0;
     height: calc(100% - var(--title-bar-h) - 20px);
     width: 100%;
@@ -69,11 +61,7 @@ td {
 }
 
 #color-group {
-    /* width: 50%;
-    float: left;
-    height: 37px;
-    line-height: 50px; */
-    padding: 12px 0px;
+    padding: 5px 0px;
     text-align: center;
 }
 
@@ -86,10 +74,4 @@ td {
 #os-group img {
     border: 2px solid var(--dialog-bg-color);
     width: 38px;
-    border-radius: 8px;
-    transition: all 0.2s ease;
-}
-
-#os-group img:hover {
-    transform: scale(1.1);
 }
