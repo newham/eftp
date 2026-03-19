@@ -83,6 +83,11 @@ function updateSortArrows() {
  */
 function renderFileList() {
     const list = getFileList()
+    console.log('=== renderFileList ===')
+    console.log('fileList length:', list.length)
+    console.log('currentDir:', getCurrentDir())
+    console.log('ssh_list:', ssh_list)
+    
     list.sort((a, b) => {
         // 目录优先
         if (a.isDir !== b.isDir) return a.isDir ? -1 : 1
@@ -109,7 +114,19 @@ function renderFileList() {
         html += getFileHTML(up_file)
     }
     list.forEach(fileInfo => { html += getFileHTML(fileInfo) })
-    document.querySelector('#file_list').innerHTML = html
+    
+    const fileListElem = document.querySelector('#file_list')
+    console.log('file_list element:', fileListElem)
+    console.log('Generated HTML length:', html.length)
+    console.log('First 200 chars of HTML:', html.substring(0, 200))
+    
+    if (fileListElem) {
+        fileListElem.innerHTML = html
+        console.log('✓ innerHTML set successfully')
+        console.log('tbody children count:', fileListElem.children.length)
+    } else {
+        console.error('✗ file_list element not found!')
+    }
 }
 
 function getHome(username, osType = 'Linux') {
@@ -310,13 +327,18 @@ let init_fileInfo = () => {
 function getFileHTML(fileInfo) {
     let font_class = ""
     if (fileInfo.name.startsWith('.')) font_class = 'font-light'
+    let html = ''
     if (fileInfo.isDir) {
         let tr_html = `<tr oncontextmenu="showFolderMenu(${fileInfo.id})">`
         if (fileInfo.name == UP_FILE_NAME) tr_html = '<tr>'
-        return `${tr_html}<td class="td-icon"><img class="icon" src="static/img/svg/doctype/icon-${fileInfo.type}-m.svg"></td><td class="td-head"><a onclick="ls('${fileInfo.name}')" href="#" class="hover-link"><div class="${font_class}">${fileInfo.name}</div></a></td><td>${fileInfo.time}</td><td colspan="2"></td></div>`
+        html = `${tr_html}<td class="td-icon"><img class="icon" src="static/img/svg/doctype/icon-${fileInfo.type}-m.svg"></td><td class="td-head"><a onclick="ls('${fileInfo.name}')" href="#" class="hover-link"><div class="${font_class}">${fileInfo.name}</div></a></td><td>${fileInfo.time}</td><td colspan="2"></td></tr>`
     } else {
-        return `<tr oncontextmenu="showFileMenu(${fileInfo.id})" id="f-${fileInfo.id}"><td class="td-icon"><img class="icon" src="static/img/svg/doctype/icon-${fileInfo.type}-m.svg"></td><td class="td-head"><div class="${font_class}">${fileInfo.name}</div></td><td>${fileInfo.time}</td><td>${fileInfo.formatSize}</td><td class="td-download"> <a href="#" onclick="download_file('${fileInfo.name}',${fileInfo.size})">⇩</a></div>`
+        html = `<tr oncontextmenu="showFileMenu(${fileInfo.id})" id="f-${fileInfo.id}"><td class="td-icon"><img class="icon" src="static/img/svg/doctype/icon-${fileInfo.type}-m.svg"></td><td class="td-head"><div class="${font_class}">${fileInfo.name}</div></td><td>${fileInfo.time}</td><td>${fileInfo.formatSize}</td><td class="td-download"> <a href="#" onclick="download_file('${fileInfo.name}',${fileInfo.size})">⇩</a></td></tr>`
     }
+    if (!html.includes('</tr>')) {
+        console.error('ERROR: Missing </tr> in generated HTML for file:', fileInfo.name)
+    }
+    return html
 }
 
 function set_file_info_html(fileInfo) {

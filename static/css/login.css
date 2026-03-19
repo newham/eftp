@@ -15,19 +15,24 @@ h1 {
 }
 
 .header {
-    padding: 0px 15px;
+    padding: 0px 20px;
     -webkit-app-region: drag;
+    background: linear-gradient(135deg, var(--side-bar-l-bg-color) 0%, rgba(41, 151, 255, 0.8) 100%);
+    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
 }
 
 .header h1 {
-    font-size: calc(var(--header-h));
-    padding: 0;
+    font-size: 24px;
+    padding: 12px 0;
     margin: 0;
+    color: #fff;
+    font-weight: 600;
 }
 
 .header img {
     float: left;
-    max-height: var(--header-h);
+    max-height: 28px;
+    margin-right: 10px;
 }
 
 .input-quarter {
@@ -42,6 +47,7 @@ h1 {
     text-align: right;
     font-size: 13px;
     color: var(--font-color);
+    background: var(--title-bar-bg-color);
 }
 
 .login-main {
